@@ -1,8 +1,9 @@
 import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 import type { Metadata } from 'next'
-import { Menu } from '../custom/menu';
-import { Sidebar } from '../custom/sidebar';
+import { Menu } from '@/components/custom/menu';
+import { Sidebar } from '@/components/custom/sidebar';
+import { Toaster } from '@/components/ui/toaster';
 
 // metadata for the layout
 export const metadata: Metadata = {
@@ -19,6 +20,8 @@ const AppLayout = ({ children }: any) => {
       <div className="p-4 sm:ml-64">
         {children}
       </div>
+
+      <Toaster />
     </main>
   );
 };

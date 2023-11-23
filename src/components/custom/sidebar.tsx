@@ -44,14 +44,14 @@ export function Sidebar({ className }: SidebarProps) {
               </Link>
             </Button>
           </li>
-          <li>
+          {/* <li>
             <Button variant="ghost" className="w-full justify-start" asChild>
               <Link href="/karyawan/berkas">
                 <IconBooks className="w-5 h-5 mr-2" />
                 Berkas Karyawan
               </Link>
             </Button>
-          </li>
+          </li> */}
         </ul>
       </div>
     </aside>
