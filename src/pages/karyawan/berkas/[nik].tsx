@@ -1,9 +1,11 @@
 import AppLayout from "@/components/layouts/app";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getDate } from "@/lib/date";
 import { ReactElement } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+
 
 const BerkasKaryawan = ({ berkas, nik }: any) => {
   // https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/get/berkas
@@ -40,7 +42,17 @@ const BerkasKaryawan = ({ berkas, nik }: any) => {
                         </div>
                       </div>
                       <div className="flex justify-end items-center">
-                        <Button variant="default" size="sm" className="w-20">Lihat</Button>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button>Lihat</Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-md md:max-w-2xl lg:max-w-3xl">
+                            <DialogHeader>
+                              <DialogTitle>Preview Berkas</DialogTitle>
+                            </DialogHeader>
+                            <iframe src={"https://sim.rsiaaisyiyah.com/webapps/penggajian/" + item.berkas} className="w-full h-[calc(100vh-110px)]"></iframe>
+                          </DialogContent>
+                        </Dialog>
                       </div>
                     </div>
                   )
