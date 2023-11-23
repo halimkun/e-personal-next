@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       if (response.success) {
         const accessToken = response.access_token;
         sessionStorage.setItem('access_token', accessToken);
-        setToken({ token: accessToken });
+        setToken(accessToken);
         setCookie('access_token', accessToken, {
           maxAge: 60 * 60 * 24,
           path: '/',

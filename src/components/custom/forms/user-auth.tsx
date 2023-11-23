@@ -12,7 +12,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 	const [isLoading, setIsLoading] = React.useState<boolean>(false)
-	const { token, login, logout } = useAuth();
+	const { login } = useAuth();
 
 	async function onSubmit(event: React.SyntheticEvent) {
 		event.preventDefault()
