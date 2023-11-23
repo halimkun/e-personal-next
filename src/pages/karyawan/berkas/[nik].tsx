@@ -27,7 +27,7 @@ const BerkasKaryawan = ({ berkas, nik }: any) => {
               {
                 berkas.map((item: any, index: number) => {
                   return (
-                    <div className="p-4 rounded-lg border flex flex-col justify-between bg-background hover:scale-[.97] transition-all duration-200 ease-in-out">
+                    <div className="p-4 rounded-lg border flex flex-col justify-between bg-background hover:scale-[.97] transition-all duration-200 ease-in-out" key={index}>
                       <div>
                         <div className="flex flex-col gap-1">
                           <p className="text-lg font-bold">Berkas {item.master_berkas_pegawai.nama_berkas}</p>

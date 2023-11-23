@@ -71,7 +71,7 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
     setIsLoading(true);
     const newUrl = new URL(dataSrc);
     newUrl.searchParams.set('page', page.toString());
-
+  
     fetchData({
       url: newUrl.toString(),
       method: fetcher.method,
@@ -80,11 +80,11 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
     }).then((res) => {
       setData(res.data.data);
       delete res.data.data;
-
+  
       setOptions(res.data);
       setIsLoading(false);
     })
-  }, [page]);
+  }, [page, dataSrc, fetcher?.body, fetcher?.headers, fetcher.method]);  
 
   return (
     <>

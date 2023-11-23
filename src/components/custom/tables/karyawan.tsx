@@ -30,7 +30,7 @@ const Tablekaryawan = ({ karyawan }: karyawanDataType) => {
       </TableHeader>
       <TableBody>
         {karyawan.map((d: any) => (
-          <TableRow>
+          <TableRow key={d.id}>
             <TableCell className="font-medium">INV001</TableCell>
             <TableCell>Paid</TableCell>
             <TableCell>Credit Card</TableCell>
