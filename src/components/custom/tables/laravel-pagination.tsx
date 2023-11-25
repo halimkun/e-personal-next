@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getPageNumber } from "@/lib/urls";
 import { getCookie } from "cookies-next";
 import { IconInnerShadowTop } from "@tabler/icons-react";
+import { Input } from "@/components/ui/input";
 
 
 interface FetcherProps {
@@ -63,32 +64,48 @@ async function fetchData({ url, method, headers, body }: FetcherProps) {
 const LaravelPagination = (props: LaravelPaginationProps) => {
   const { columns, dataSrc, fetcher } = props;
   const [page, setPage] = useState(1);
+  const [keword, setKeyword] = useState<string>('');
   const [data, setData] = useState([]);
   const [options, setOptions] = useState<optionsProps | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    setIsLoading(true);
-    const newUrl = new URL(dataSrc);
-    newUrl.searchParams.set('page', page.toString());
+    const delayDebounceFn = setTimeout(() => {
+      setIsLoading(true);
+      const newUrl = new URL(dataSrc);
+      newUrl.searchParams.set('page', page.toString());
+      newUrl.searchParams.set('keyword', keword);
   
-    fetchData({
-      url: newUrl.toString(),
-      method: fetcher.method,
-      headers: fetcher?.headers,
-      body: fetcher?.body
-    }).then((res) => {
-      setData(res.data.data);
-      delete res.data.data;
+      fetchData({
+        url: newUrl.toString(),
+        method: fetcher.method,
+        headers: fetcher?.headers,
+        body: fetcher?.body
+      }).then((res) => {
+        setData(res.data.data);
+        delete res.data.data;
   
-      setOptions(res.data);
-      setIsLoading(false);
-    })
-  }, [page, dataSrc, fetcher?.body, fetcher?.headers, fetcher.method]);  
+        setOptions(res.data);
+        setIsLoading(false);
+      })
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [page, keword, dataSrc, fetcher?.body, fetcher?.headers, fetcher.method]);
 
   return (
     <>
-      {/* TODO : Top table components */}
+      <div className="mb-4 w-full flex items-center justify-between">
+        <div></div>
+        <div>
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full"
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+        </div>
+      </div>
 
       {/* table */}
       <Table>
