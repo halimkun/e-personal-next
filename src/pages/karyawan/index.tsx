@@ -6,7 +6,7 @@ import AppLayout from '@/components/layouts/app';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { IconDotsVertical, IconCopy, IconEditCircle, IconReportSearch } from '@tabler/icons-react';
+import { IconDotsVertical, IconEditCircle, IconReportSearch } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast, useToast } from '@/components/ui/use-toast';
@@ -62,9 +62,6 @@ const suratInternalColumns = [
         <DropdownMenuContent align="end" className='w-40'>
           <DropdownMenuLabel>Data</DropdownMenuLabel>
           <span className="flex flex-col gap-1">
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.nik)} className='cursor-pointer hover:bg-secondary'>
-              <IconCopy className='h-4 w-4 mr-2' /> Copy NIK
-            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => toast({
               title: 'Edit Data',
               description: 'Fitur ini belum tersedia',
