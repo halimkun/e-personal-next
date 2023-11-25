@@ -3,19 +3,20 @@ import type { NextPageWithLayout } from '../_app';
 
 import AppLayout from '@/components/layouts/app';
 import FormAddSuratInternal from "@/components/custom/forms/add-surat-internal"
+import LaravelPagination from '@/components/custom/tables/laravel-pagination';
 
 import { useState } from 'react';
-import { IconPlus, IconDotsVertical } from "@tabler/icons-react"
-import { Button } from "@/components/ui/button"
+import { getDate, getTime } from '@/lib/date';
 import { getCookie } from 'cookies-next';
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { IconPlus, IconDotsVertical } from "@tabler/icons-react"
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { DialogDescription, DialogTitle, DialogTrigger } from "@radix-ui/react-dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Badge } from "@/components/ui/badge"
-import { getDate, getTime } from '@/lib/date';
-import LaravelPagination from '@/components/custom/tables/laravel-pagination';
+
 
 const suratInternalColumns = [
   {
@@ -84,9 +85,6 @@ const suratInternalColumns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.no_surat)} className='cursor-pointer'>
-              Copy Nomor Surat
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -139,24 +137,6 @@ const SuratInternal: NextPageWithLayout = ({ data }: any) => {
     </div>
   )
 };
-
-// export async function getServerSideProps(context: { req: any; res: any; }) {
-//   const token = context.req.cookies.access_token || '';
-//   const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal`, {
-//     method: 'GET',
-//     headers: {
-//       Authorization: `Bearer ${token}`
-//     }
-//   });
-
-//   const data = await res.json();
-
-//   return {
-//     props: {
-//       data: data.data
-//     }
-//   }
-// }
 
 SuratInternal.getLayout = function getLayout(page: ReactElement) {
   return (
