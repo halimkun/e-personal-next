@@ -91,7 +91,7 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [page, keword, dataSrc, fetcher?.body, fetcher?.headers, fetcher.method]);
+  }, [page, keword]);
 
   return (
     <>
