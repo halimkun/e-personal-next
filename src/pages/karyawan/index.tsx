@@ -4,7 +4,7 @@ import { getCookie } from 'cookies-next';
 import LaravelPagination from '@/components/custom/tables/laravel-pagination';
 import AppLayout from '@/components/layouts/app';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { IconDotsVertical, IconEditCircle, IconReportSearch } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
@@ -61,22 +61,26 @@ const suratInternalColumns = [
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className='w-40'>
           <DropdownMenuLabel>Data</DropdownMenuLabel>
-          <span className="flex flex-col gap-1">
-            <DropdownMenuItem onClick={() => toast({
-              title: 'Edit Data',
-              description: 'Fitur ini belum tersedia',
-              duration: 5000,
-            })} className='cursor-pointer hover:bg-secondary'>
-              <IconEditCircle className='h-4 w-4 mr-2' /> Edit Data
+          <DropdownMenuGroup>
+            <span className="flex flex-col gap-1">
+              <DropdownMenuItem onClick={() => toast({
+                title: 'Edit Data',
+                description: 'Fitur ini belum tersedia',
+                duration: 5000,
+              })} className='cursor-pointer hover:bg-secondary'>
+                <IconEditCircle className='h-4 w-4 mr-2' /> Edit Data
+              </DropdownMenuItem>
+            </span>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Berkas</DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuItem className='cursor-pointer hover:bg-secondary'>
+              <Link href={`/karyawan/berkas/${row.nik}`} className='flex gap-1'>
+                <IconReportSearch className='h-4 w-4 mr-2' /> Lihat Berkas
+              </Link>
             </DropdownMenuItem>
-          </span>
-          <div className="divide-y"></div>
-          <DropdownMenuLabel className='mt-2'>Berkas</DropdownMenuLabel>
-          <DropdownMenuItem className='cursor-pointer hover:bg-secondary'>
-            <Link href={`/karyawan/berkas/${row.nik}`} className='flex gap-1'>
-              <IconReportSearch className='h-4 w-4 mr-2' /> Lihat Berkas
-            </Link>
-          </DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     )
