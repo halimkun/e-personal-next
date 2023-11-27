@@ -4,53 +4,84 @@ import { getCookie } from "cookies-next"
 import { useRouter } from "next/router";
 import { Combobox } from "../inputs/combo-box";
 import { useEffect, useState } from "react";
-
-
-interface FormAddSuratInternalProps {
-  setOpen: any;
-}
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import LaravelPagination from "../tables/laravel-pagination";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "@/components/ui/use-toast";
 
 interface selectItemType {
   value: string;
   label: string;
 }
 
-export default function FormAddSuratInternal({ setOpen }: FormAddSuratInternalProps) {
+export default function FormAddSuratInternal(penanggungJawab: any) {
   const router = useRouter();
-  const [pj, setPj] = useState<selectItemType[]>([])
+
+  const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
   const [selectedPj, setSelectedPj] = useState("")
 
-  useEffect(() => {
-    const getPetugas = async () => {
-      await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + getCookie('access_token')
-        }
-      }).then(response => response.json())
-        .then(data => {
-          const dataPj = data.data.map((item: any) => {
-            return {
-              value: item.nik,
-              label: item.nama
-            }
-          })
-          setPj(dataPj)
-        });
+  const KaryawanColumns = [
+    {
+      name: 'Nama',
+      selector: 'nama',
+      data: (row: any) => (
+        <div className="flex items-center gap-4">
+          <Checkbox
+            id={row.nik}
+            name="karyawan[]"
+            value={row.nik}
+            checked={selectedKaryawan.includes(row.nik)}
+            onCheckedChange={() => {
+              if (selectedKaryawan.includes(row.nik)) {
+                setSelectedKaryawan(selectedKaryawan.filter((item) => item !== row.nik))
+              } else {
+                setSelectedKaryawan([...selectedKaryawan, row.nik])
+              }
+            }}
+          />
+          <label
+            htmlFor={row.nik}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            <div>{row.nama}</div>
+            <div className="mt-1">
+              <Badge variant="secondary" className="cursor-pointer">
+                {row.nik}
+              </Badge>
+            </div>
+          </label>
+        </div>
+      )
+    },
+    {
+      name: 'Bidang',
+      selector: 'bidang',
+      data: (row: any) => <div>{row.bidang}</div>
+    },
+    {
+      name: 'Jabatan',
+      selector: 'jabatan',
+      data: (row: any) => <div>{row.jbtn}</div>
+    },
+    {
+      name: 'Departemen',
+      selector: 'departemen',
+      data: (row: any) => <div>{row.dpt.nama}</div>
     }
-
-    getPetugas()
-  }, [])
+  ]
 
   const onFormAddSuratInternalSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
-    // all value from input
+
     const tanggal = (event.target as any).tanggal.value
     const pj = (event.target as any).pj.value
     const tempat = (event.target as any).tempat.value
     const perihal = (event.target as any).perihal.value
+    const karyawan = selectedKaryawan
 
-    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/create', {
+    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,32 +91,40 @@ export default function FormAddSuratInternal({ setOpen }: FormAddSuratInternalPr
         tanggal: tanggal,
         pj: pj,
         tempat: tempat,
-        perihal: perihal
+        perihal: perihal,
+        karyawan: karyawan
       })
     }).then(response => response.json())
 
-    // reload
-    setOpen(false)
-    router.replace(router.asPath)
+    if (response.success) {
+      router.push('/surat/internal')
+    } else {
+      toast({
+        title: "Gagal",
+        description: response.message,
+        duration: 2000,
+      })
+    }
+
   }
 
   return (
     <form action="#!" method="post" onSubmit={onFormAddSuratInternalSubmit}>
       <div className="grid gap-3 py-4">
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-full space-y-1">
+          <div className="w-[60%] space-y-1">
             <Label className="" htmlFor="tanggal">Tannggal</Label>
             <Input type="datetime-local" name="tanggal" placeholder="tanggal" id="tanggal" />
           </div>
           <div className="w-full space-y-1">
             <Label className="" htmlFor="PJ">Penanggung Jawab</Label>
             <Input type="hidden" name="pj" value={selectedPj} />
-            <Combobox selectItems={pj} setSelectedPj={setSelectedPj} />
+            <Combobox selectItems={penanggungJawab.penanggungJawab} setSelectedPj={setSelectedPj} />
           </div>
-        </div>
-        <div className="w-full space-y-1">
-          <Label className="" htmlFor="tempat">Tempat</Label>
-          <Input type="text" name="tempat" placeholder="Tempat" id="tempat" />
+          <div className="w-full space-y-1">
+            <Label className="" htmlFor="tempat">Tempat</Label>
+            <Input type="text" name="tempat" placeholder="Tempat" id="tempat" />
+          </div>
         </div>
         <div className="w-full space-y-1">
           <Label className="" htmlFor="perihal">Perihal</Label>
@@ -93,8 +132,30 @@ export default function FormAddSuratInternal({ setOpen }: FormAddSuratInternalPr
         </div>
       </div>
 
+      <div className="mt-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Pilih Karyawan</CardTitle>
+            <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <LaravelPagination
+              columns={KaryawanColumns}
+              dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
+              fetcher={{
+                method: "GET",
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${getCookie('access_token')}`,
+                }
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="mt-4 flex justify-end">
-        <button type="submit" className="btn btn-primary">Simpan</button>
+        <Button type="submit">Simpan</Button>
       </div>
     </form>
   )
