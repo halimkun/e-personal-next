@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks } from '@tabler/icons-react';
+import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate } from '@tabler/icons-react';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
@@ -23,12 +23,20 @@ export function Sidebar({ className }: SidebarProps) {
         </ul>
 
         <ul className="py-4 space-y-2 font-medium">
-          <li className="mb-2 px-4 text-lg font-semibold tracking-tight">Surat</li>
+          <li className="mb-2 px-4 text-lg font-semibold tracking-tight">Surat & Berkas</li>
           <li>
             <Button variant="ghost" className="w-full justify-start" asChild>
               <Link href="/surat/internal">
                 <IconMailStar className="w-5 h-5 mr-2" />
                 Internal
+              </Link>
+            </Button>
+          </li>
+          <li>
+            <Button variant="ghost" className="w-full justify-start" asChild>
+              <Link href="/berkas/kerjasama">
+                <IconFileCertificate className="w-5 h-5 mr-2" />
+                Kerjasama
               </Link>
             </Button>
           </li>
