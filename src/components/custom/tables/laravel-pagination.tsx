@@ -151,13 +151,13 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
 
         {/* right pagination next and prefv */}
         <div className="flex items-center gap-2">
-          <Button variant="default" size="icon" className="w-7 h-7" disabled={options?.prev_page_url === null} onClick={() => setPage(getPageNumber(options?.prev_page_url))}>
+          <Button type="button" variant="default" size="icon" className="w-7 h-7" disabled={options?.prev_page_url === null} onClick={() => setPage(getPageNumber(options?.prev_page_url))}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10.707 4.293a1 1 0 010 1.414L7.414 10l3.293 3.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </Button>
 
-          <Button variant="default" size="icon" className="w-7 h-7" disabled={options?.next_page_url === null} onClick={() => setPage(getPageNumber(options?.next_page_url))}>
+          <Button type="button" variant="default" size="icon" className="w-7 h-7" disabled={options?.next_page_url === null} onClick={() => setPage(getPageNumber(options?.next_page_url))}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-[1.2rem] w-[1.2rem] rotate-180 scale-100 transition-all" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10.707 4.293a1 1 0 010 1.414L7.414 10l3.293 3.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
