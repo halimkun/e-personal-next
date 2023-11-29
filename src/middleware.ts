@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { getCookie } from "cookies-next";
 
 export async function middleware(req: NextRequest) {
-    const path = req.nextUrl.pathname;
     const { pathname, origin } = req.nextUrl;
 
     // Hanya lakukan middleware pada path tertentu

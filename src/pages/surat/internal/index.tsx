@@ -179,7 +179,7 @@ const SuratInternal: NextPageWithLayout = () => {
           </CardHeader>
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'disetujui').map((metric: any) => (
-              <div className='w-full flex justify-end font-bold text-2xl text-green-500'>
+              <div className='w-full flex justify-end font-bold text-2xl text-green-500' key={metric.status}>
                 <CountUp
                   start={0}
                   end={metric.total}
@@ -200,7 +200,7 @@ const SuratInternal: NextPageWithLayout = () => {
           </CardHeader>
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'pengajuan').map((metric: any) => (
-              <div className='w-full flex justify-end font-bold text-2xl text-yellow-500'>
+              <div className='w-full flex justify-end font-bold text-2xl text-yellow-500' key={metric.status}>
                 <CountUp
                   start={0}
                   end={metric.total}
@@ -221,7 +221,7 @@ const SuratInternal: NextPageWithLayout = () => {
           </CardHeader>
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'ditolak').map((metric: any) => (
-              <div className='w-full flex justify-end font-bold text-2xl text-red-500'>
+              <div className='w-full flex justify-end font-bold text-2xl text-red-500' key={metric.status}>
                 <CountUp
                   start={0}
                   end={metric.total}

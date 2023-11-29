@@ -21,6 +21,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
   const [penanggungJawab, setPenanggungJawab] = useState<any>("")
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
+  const [tempat, setTempat] = useState("")
   const [perihal, setPerihal] = useState("")
 
   const detailsFetcher = (url: string) => fetch(url, {
@@ -43,6 +44,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
         const d = data.data
         setSelectedKaryawan(d.penerima.map((item: any) => item.penerima))
         setPerihal(d.perihal)
+        setTempat(d.tempat)
         setPenanggungJawab(d.pj)
       } else {
         toast({
@@ -186,7 +188,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
               </div>
               <div className="w-full space-y-1">
                 <Label className="" htmlFor="tempat">Tempat</Label>
-                <Input type="text" name="tempat" placeholder="Tempat" id="tempat" value={data?.data?.tempat} />
+                <Input type="text" name="tempat" placeholder="Tempat" id="tempat" value={tempat} onChange={(e) => setTempat(e.target.value)} />
               </div>
             </div>
             <div className="w-full space-y-1">
