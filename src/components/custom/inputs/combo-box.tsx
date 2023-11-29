@@ -28,7 +28,7 @@ export function Combobox({ selectItems, setSelectedPj }: { selectItems: selectIt
             !val && "text-muted-foreground"
           )}
         >
-          {val ? selectItems.find((item) => item.value === val)?.label : "Select language"}
+          {val ? selectItems.find((item) => item.value === val)?.label : "Select item"}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
