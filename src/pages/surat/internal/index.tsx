@@ -19,6 +19,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
 
 
 const SuratInternal: NextPageWithLayout = () => {
@@ -28,7 +29,6 @@ const SuratInternal: NextPageWithLayout = () => {
     { status: 'ditolak', total: 0 }
   ])
   const [status, setStatus] = useState<any>('pengajuan')
-  const [isLoading , setIsLoading] = useState<boolean>(false)
   const route = useRouter()
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const SuratInternal: NextPageWithLayout = () => {
         'text-right'
       ],
       data: (row: any) => (
-        <div className='space-x-1 text-right whitespace-nowrap'>
+        <div className='space-x-1 text-right'>
           <Dialog>
             <DialogTrigger>
               <Button variant="ghost" className="h-8 w-8 p-0" size='icon' onClick={() => {
@@ -135,45 +135,8 @@ const SuratInternal: NextPageWithLayout = () => {
                 <DialogTitle>Update Status Surat ?</DialogTitle>
                 <DialogDescription>Anda dapat mengubah status surat sesuai dengan kebutuhan.</DialogDescription>
               </DialogHeader>
-              
-              <RadioGroup defaultValue={status} onValueChange={(value) => { setStatus(value) }} className='mt-4'>
-                <div className="flex justify-evenly">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="pengajuan" id="r3" className='text-yellow-500 border-yellow-500 outline-yellow-500' />
-                    <Label htmlFor="r3">Pengajuan</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="disetujui" id="r1" className='text-green-500 border-green-500 outline-green-500'/>
-                    <Label htmlFor="r1">Setujui</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="ditolak" id="r2" className='text-red-500 border-red-500 outline-red-500'/>
-                    <Label htmlFor="r2">tolak / batal</Label>
-                  </div>
-                </div>
-              </RadioGroup>
 
-              {/* simpan button */}
-              <div className="mt-4 flex justify-end space-x-2">
-                <Button onClick={async () => {
-                  const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/update`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${getCookie('access_token')}`,
-                    },
-                    body: JSON.stringify({
-                      no_surat: row.no_surat,
-                      status: status
-                    })
-                  });
-
-                  const data = await res.json();
-                  if (data.success) {
-                    route.reload()
-                  }
-                }} size="sm">SIMPAN</Button>
-              </div>
+              <UpdateStatusSuratInternal status={status} setStatus={setStatus} nomor_surat={row.no_surat} />
             </DialogContent>
           </Dialog>
 
@@ -188,10 +151,10 @@ const SuratInternal: NextPageWithLayout = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => {
-                  const no = row.no_surat.split('/').join('_')
-                  route.push(`/surat/internal/${no}`)
-                }}>
+                <DropdownMenuItem onClick={() => route.push(`/surat/internal/${row.no_surat.split('/').join('_')}/edit`)}>
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => route.push(`/surat/internal/${row.no_surat.split('/').join('_')}/detail`)}>
                   Detail
                 </DropdownMenuItem>
               </DropdownMenuGroup>
