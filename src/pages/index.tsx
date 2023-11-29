@@ -6,11 +6,11 @@ export default function Home() {
 
   useEffect(() => {
     router.push("/dashboard");
-  }, [router]); 
+  }, [router]);
 
   return (
     <div>
-      <p>Loading...</p>
+      Loading...
     </div>
   );
 }

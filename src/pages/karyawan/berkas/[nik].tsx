@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 
 const BerkasKaryawan = ({ data, nik }: any) => {
   const router = useRouter()
-  
+
   const handleDelete = async (nik: string, kode: string, berkas: string) => {
     const confirm = window.confirm("Apakah anda yakin ingin menghapus berkas ini?")
     if (!confirm) return
@@ -36,7 +36,7 @@ const BerkasKaryawan = ({ data, nik }: any) => {
           title: "Berhasil",
           description: "Berhasil menghapus berkas",
         })
-        
+
         router.replace(router.asPath)
       } else {
         toast({
@@ -105,7 +105,7 @@ const BerkasKaryawan = ({ data, nik }: any) => {
                             {item.master_berkas_pegawai.kategori}
                           </Badge>
                           <Badge variant="outline" className="mt-2 bg-secondary">
-                            <p>{getDate(item.tgl_uploud)}</p>
+                            {getDate(item.tgl_uploud)}
                           </Badge>
                         </div>
                       </div>

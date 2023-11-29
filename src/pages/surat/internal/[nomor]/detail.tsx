@@ -5,13 +5,41 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getDate, getTime } from "@/lib/date"
 import { cn } from "@/lib/utils"
 import { NextPageWithLayout } from "@/pages/_app"
-import { IconArrowLeft } from "@tabler/icons-react"
+import { IconArrowLeft, IconLoader } from "@tabler/icons-react"
+import { getCookie } from "cookies-next"
 import { useRouter } from "next/router"
 import { ReactElement } from "react"
+import useSWR from "swr"
 
-const DetailSuratInternal: NextPageWithLayout = ({ nomor, data }: any) => {
-  const detail = data.data;
+const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
+
+  const fetcher = (url: string) => fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getCookie('access_token')}`,
+    },
+    body: JSON.stringify({
+      nomor: nomor
+    })
+  }).then(res => res.json())
+
+  const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`, fetcher)
+
+  if (error) return (
+    <div className="flex flex-col items-start justify-center h-full gap-4">
+      <div className="text-2xl font-bold">Error {error.message}</div>
+    </div>
+  )
+
+  if (!data) return (
+    <div className="flex flex-col items-start justify-center h-full gap-4">
+      <IconLoader className="animate-spin w-10 h-10" />
+    </div>
+  )
+
+  const detail = data.data
 
   return (
     <Card>
@@ -95,26 +123,12 @@ const DetailSuratInternal: NextPageWithLayout = ({ nomor, data }: any) => {
 }
 
 export async function getServerSideProps(context: any) {
-  const { nomor } = context.query
-  const realNomor = nomor?.toString().replace(/_/g, '/')
-
-  const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${context.req.cookies.access_token}`
-    },
-    body: JSON.stringify({
-      nomor: realNomor
-    })
-  });
-
-  const data = await res.json();
+  const { nomor } = await context.query
+  const realNomor = await nomor?.toString().replace(/_/g, '/')
 
   return {
     props: {
-      nomor: realNomor,
-      data: data
+      nomor: realNomor
     }
   }
 

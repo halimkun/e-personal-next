@@ -14,8 +14,8 @@ interface selectItemType {
   label: string;
 }
 
-export function Combobox({ selectItems, setSelectedPj }: { selectItems: selectItemType[], setSelectedPj: any }) {
-  const [val, setVal] = useState('')
+export function Combobox({ items, setSelectedItem, selectedItem }: { items: selectItemType[], setSelectedItem: any, selectedItem?: string }) {
+  const [val, setVal] = useState(selectedItem ?? "")
 
   return (
     <Popover modal={true}>
@@ -28,26 +28,27 @@ export function Combobox({ selectItems, setSelectedPj }: { selectItems: selectIt
             !val && "text-muted-foreground"
           )}
         >
-          {val ? selectItems.find((item) => item.value === val)?.label : "Select item"}
+          {val ? items.find((item) => item.value === val)?.label : "Select item"}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
-        <Command>
+        <Command className="w-full">
           <CommandInput
             placeholder="Search framework..."
             className="h-9"
           />
-          <ScrollArea className="max-h-72 overflow-auto rounded-md border">
+          <ScrollArea className="max-h-72 w-full overflow-auto rounded-md border">
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
-              {selectItems.map((item) => (
+              {/* if items empty dont map */}
+              {items.length > 0 ? items.map((item) => (
                 <CommandItem
                   value={item.label}
                   key={item.value}
                   onSelect={() => {
                     setVal(item.value)
-                    setSelectedPj(item.value)
+                    setSelectedItem(item.value)
                   }}
                 >
                   {item.label}
@@ -57,7 +58,7 @@ export function Combobox({ selectItems, setSelectedPj }: { selectItems: selectIt
                     )}
                   />
                 </CommandItem>
-              ))}
+              )) : <CommandEmpty>No framework found.</CommandEmpty>}
             </CommandGroup>
           </ScrollArea>
         </Command>

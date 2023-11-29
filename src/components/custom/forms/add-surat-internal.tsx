@@ -119,7 +119,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
           <div className="w-full space-y-1">
             <Label className="" htmlFor="PJ">Penanggung Jawab</Label>
             <Input type="hidden" name="pj" value={selectedPj} />
-            <Combobox selectItems={penanggungJawab.penanggungJawab} setSelectedPj={setSelectedPj} />
+            <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} />
           </div>
           <div className="w-full space-y-1">
             <Label className="" htmlFor="tempat">Tempat</Label>

@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/router"
 import { getCookie } from "cookies-next"
+import { toast } from "@/components/ui/use-toast"
 
 const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_surat: string, status: string, setStatus: any }) => {
   const route = useRouter()
@@ -28,14 +29,14 @@ const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_s
       {/* simpan button */}
       <div className="mt-4 flex justify-end space-x-2">
         <Button onClick={async () => {
-          const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/update`, {
+          const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/update/status`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${getCookie('access_token')}`,
             },
             body: JSON.stringify({
-              no_surat: nomor_surat,
+              nomor: nomor_surat,
               status: status
             })
           });
@@ -43,6 +44,12 @@ const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_s
           const data = await res.json();
           if (data.success) {
             route.reload()
+          } else {
+            toast({
+              title: 'Gagal',
+              description: data.message,
+              duration: 5000,
+            })
           }
         }} size="sm">SIMPAN</Button>
       </div>
