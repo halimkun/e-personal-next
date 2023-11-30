@@ -1,23 +1,24 @@
+import { useEffect, useState } from 'react';
+
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
 import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../../_app';
 
 import CountUp from 'react-countup';
 import AppLayout from '@/components/layouts/app';
 import LaravelPagination from '@/components/custom/tables/laravel-pagination';
+import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
 
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
 import { Badge } from "@/components/ui/badge"
 import { getDate, getTime } from '@/lib/date';
 import { Button } from "@/components/ui/button"
 import { IconPlus, IconDotsVertical, IconTag } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
-import { getSession } from 'next-auth/react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 
 const SuratInternal: NextPageWithLayout = () => {
@@ -53,21 +54,23 @@ const SuratInternal: NextPageWithLayout = () => {
     {
       name: 'Nomor',
       selector: 'no_surat',
-      data: (row: any) => <Badge variant="default" className='whitespace-nowrap'>{row.no_surat}</Badge>
-    },
-    {
-      name: 'Status',
-      selector: 'status',
       data: (row: any) => (
-        <div className='whitespace-nowrap flex gap-2 items-center'>
-          <div className={cn(
-            'h-2 w-2 rounded-full', {
-            'bg-green-500': row.status == 'disetujui',
-            'bg-yellow-500': row.status == 'pengajuan',
-            'bg-red-500': row.status == 'ditolak',
-          }
-          )}></div> {row.status}
-        </div>
+        <TooltipProvider delayDuration={50}>
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant={
+                row.status == 'disetujui' ? 'default' :
+                  row.status == 'pengajuan' ? 'warning' :
+                    row.status == 'ditolak' ? 'danger' : 'outline'
+              } className='whitespace-nowrap'>{row.no_surat}</Badge>
+            </TooltipTrigger>
+            <TooltipContent className={cn("font-bold shadow", {
+              "bg-yellow-100 border-[1.5px] text-warning border-warning": row.status == 'pengajuan',
+              "bg-blue-100 border-[1.5px] text-primary border-primary": row.status == 'disetujui',
+              "bg-red-100 border-[1.5px] text-danger border-danger": row.status == 'ditolak',
+            })}>{row.status}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )
     },
     {
@@ -77,11 +80,22 @@ const SuratInternal: NextPageWithLayout = () => {
         <TooltipProvider delayDuration={50}>
           <Tooltip>
             <TooltipTrigger>
-              <Badge variant="outline" className="cursor-pointer group-hover:border-primary">
+              <Badge variant={"outline"} className={
+                cn("cursor-pointer", {
+                  "group-hover:bg-yellow-100 group-hover:border-yellow-600 group-hover:text-yellow-600": row.status == 'pengajuan',
+                  "group-hover:bg-blue-100 group-hover:border-blue-600 group-hover:text-blue-600": row.status == 'disetujui',
+                  "group-hover:bg-red-100 group-hover:border-red-600 group-hover:text-red-600": row.status == 'ditolak',
+                })
+              }>
                 {row.pj}
               </Badge>
             </TooltipTrigger>
-            <TooltipContent>{row.pj_detail.nama}</TooltipContent>
+            <TooltipContent className={cn("font-bold shadow", {
+              "bg-warning border-warning": row.status == 'pengajuan',
+              "bg-primary border-primary": row.status == 'disetujui',
+              "bg-danger border-danger": row.status == 'ditolak',
+            })
+            }>{row.pj_detail.nama}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )
