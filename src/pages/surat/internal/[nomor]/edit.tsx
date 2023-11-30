@@ -64,7 +64,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor, token }: any) => {
     </div>
   )
   if (!data) return (
-    <Loading1 height={8} width={8}/>
+    <Loading1 height={8} width={8} />
   )
 
 
@@ -208,9 +208,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor, token }: any) => {
                 <LaravelPagination
                   columns={KaryawanColumns}
                   dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
-                  fetcher={{
-                    method: "GET",
-                  }}
+                  fetcher={{ method: "GET" }}
                 />
               </CardContent>
             </Card>

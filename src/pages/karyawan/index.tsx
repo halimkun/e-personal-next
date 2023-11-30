@@ -98,9 +98,7 @@ const KaryawanPage: NextPageWithLayout = () => {
         <LaravelPagination
           columns={suratInternalColumns}
           dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
-          fetcher={{
-            method: "GET"
-          }}
+          fetcher={{ method: "GET" }}
         />
       </CardContent>
     </Card>

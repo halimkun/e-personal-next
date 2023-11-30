@@ -14,7 +14,12 @@ interface selectItemType {
   label: string;
 }
 
-export function Combobox({ items, setSelectedItem, selectedItem }: { items: selectItemType[], setSelectedItem: any, selectedItem?: string }) {
+export function Combobox({ items, setSelectedItem, selectedItem, placeholder }: {
+  items: selectItemType[],
+  setSelectedItem: any,
+  selectedItem?: string,
+  placeholder?: string
+}) {
   const [val, setVal] = useState(selectedItem ?? "")
 
   return (
@@ -28,14 +33,14 @@ export function Combobox({ items, setSelectedItem, selectedItem }: { items: sele
             !val && "text-muted-foreground"
           )}
         >
-          {val ? items.find((item) => item.value === val)?.label : "Select item"}
+          {val ? items.find((item) => item.value === val)?.label : (placeholder ?? "Search item") ?? "Search item"}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command className="w-full">
           <CommandInput
-            placeholder="Search framework..."
+            placeholder={placeholder ?? "Search item"}
             className="h-9"
           />
           <ScrollArea className="max-h-72 w-full overflow-auto rounded-md border">

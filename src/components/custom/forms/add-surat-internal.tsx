@@ -11,11 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
-
-interface selectItemType {
-  value: string;
-  label: string;
-}
+import { cn } from "@/lib/utils";
 
 export default function FormAddSuratInternal(penanggungJawab: any) {
   const router = useRouter();
@@ -23,6 +19,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
 
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
   const [selectedPj, setSelectedPj] = useState("")
+  const [withKaryawan, setWithKaryawan] = useState(false)
 
   const KaryawanColumns = [
     {
@@ -116,25 +113,35 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-[60%] space-y-1">
             <Label className="" htmlFor="tanggal">Tannggal</Label>
-            <Input type="datetime-local" name="tanggal" placeholder="tanggal" id="tanggal" />
+            <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
           </div>
           <div className="w-full space-y-1">
             <Label className="" htmlFor="PJ">Penanggung Jawab</Label>
             <Input type="hidden" name="pj" value={selectedPj} />
-            <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} />
+            <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab"/>
           </div>
           <div className="w-full space-y-1">
             <Label className="" htmlFor="tempat">Tempat</Label>
-            <Input type="text" name="tempat" placeholder="Tempat" id="tempat" />
+            <Input type="text" name="tempat" placeholder="Tempat Kegiatan" id="tempat" />
           </div>
         </div>
         <div className="w-full space-y-1">
           <Label className="" htmlFor="perihal">Perihal</Label>
-          <Input type="text" name="perihal" placeholder="perihal" id="perihal" />
+          <Input type="text" name="perihal" placeholder="Perihal Surat . . ." id="perihal" />
         </div>
       </div>
 
       <div className="mt-4">
+        <Button type="button" variant={withKaryawan ? 'default' : 'outline'} onClick={() => {
+          setWithKaryawan(!withKaryawan)
+        }}>
+          {withKaryawan ? 'Hide karyawan' : 'Show Karyawan'}
+        </Button>
+      </div>
+
+      <div className={cn(
+        'mt-4', withKaryawan ? 'block' : 'hidden'
+      )}>
         <Card>
           <CardHeader>
             <CardTitle>Pilih Karyawan</CardTitle>
@@ -144,9 +151,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
             <LaravelPagination
               columns={KaryawanColumns}
               dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
-              fetcher={{
-                method: "GET",
-              }}
+              fetcher={{ method: "GET" }}
             />
           </CardContent>
         </Card>

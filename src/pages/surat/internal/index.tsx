@@ -121,7 +121,7 @@ const SuratInternal: NextPageWithLayout = () => {
         'text-right'
       ],
       data: (row: any) => (
-        <div className='space-x-1 text-right'>
+        <div className='space-x-1 text-right whitespace-nowrap'>
           <Dialog>
             <DialogTrigger>
               <Button variant="ghost" className="h-8 w-8 p-0" size='icon' onClick={() => {
