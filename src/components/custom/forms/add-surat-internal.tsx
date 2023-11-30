@@ -1,15 +1,16 @@
+import LaravelPagination from "../tables/laravel-pagination";
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { getCookie } from "cookies-next"
 import { useRouter } from "next/router";
 import { Combobox } from "../inputs/combo-box";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import LaravelPagination from "../tables/laravel-pagination";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
+import { useSession } from "next-auth/react";
 
 interface selectItemType {
   value: string;
@@ -18,6 +19,7 @@ interface selectItemType {
 
 export default function FormAddSuratInternal(penanggungJawab: any) {
   const router = useRouter();
+  const { data } = useSession();
 
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
   const [selectedPj, setSelectedPj] = useState("")
@@ -85,7 +87,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getCookie('access_token')
+        'Authorization': 'Bearer ' + data?.rsiap?.access_token
       },
       body: JSON.stringify({
         tanggal: tanggal,
@@ -144,10 +146,6 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
               dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
               fetcher={{
                 method: "GET",
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${getCookie('access_token')}`,
-                }
               }}
             />
           </CardContent>

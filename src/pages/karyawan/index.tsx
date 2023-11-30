@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import { NextPageWithLayout } from '../_app';
-import { getCookie } from 'cookies-next';
 import LaravelPagination from '@/components/custom/tables/laravel-pagination';
 import AppLayout from '@/components/layouts/app';
 
@@ -100,11 +99,7 @@ const KaryawanPage: NextPageWithLayout = () => {
           columns={suratInternalColumns}
           dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
           fetcher={{
-            method: "GET",
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${getCookie('access_token')}`,
-            }
+            method: "GET"
           }}
         />
       </CardContent>

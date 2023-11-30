@@ -1,21 +1,23 @@
-import { useState } from "react";
 import { Combobox } from "./combo-box";
-import { getCookie } from "cookies-next";
 import useSWR from "swr";
+import { getSession } from "next-auth/react";
 
 const SelectPenanggungJawab = ({ ...props }: any) => {
-  const fetcher = (url: string) => fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getCookie('access_token')}`,
-    },
-  }).then(res => {
-    if (!res.ok) {
-      throw Error(res.status + ' ' + res.statusText)
-    }
-    return res.json()
-  });
+  const fetcher = async (url: string) => {
+    const session = await getSession()
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+    }).then(res => {
+      if (!res.ok) {
+        throw Error(res.status + ' ' + res.statusText)
+      }
+      return res.json()
+    });
+  }
 
   const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama`, fetcher);
 

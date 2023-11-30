@@ -2,11 +2,13 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/router"
-import { getCookie } from "cookies-next"
 import { toast } from "@/components/ui/use-toast"
+import { useSession } from "next-auth/react"
 
 const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_surat: string, status: string, setStatus: any }) => {
   const route = useRouter()
+  const { data } = useSession()
+
   return (
     <>
       <RadioGroup defaultValue={status} onValueChange={(value) => { setStatus(value) }} className='mt-4'>
@@ -33,7 +35,7 @@ const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_s
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${getCookie('access_token')}`,
+              'Authorization': `Bearer ${data?.rsiap?.access_token}`,
             },
             body: JSON.stringify({
               nomor: nomor_surat,
@@ -41,13 +43,13 @@ const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_s
             })
           });
 
-          const data = await res.json();
-          if (data.success) {
+          const d = await res.json();
+          if (d.success) {
             route.reload()
           } else {
             toast({
               title: 'Gagal',
-              description: data.message,
+              description: d.message,
               duration: 5000,
             })
           }

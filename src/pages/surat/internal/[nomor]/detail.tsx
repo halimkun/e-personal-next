@@ -6,7 +6,7 @@ import { getDate, getTime } from "@/lib/date"
 import { cn } from "@/lib/utils"
 import { NextPageWithLayout } from "@/pages/_app"
 import { IconArrowLeft, IconLoader } from "@tabler/icons-react"
-import { getCookie } from "cookies-next"
+import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { ReactElement } from "react"
 import useSWR from "swr"
@@ -14,16 +14,19 @@ import useSWR from "swr"
 const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
 
-  const fetcher = (url: string) => fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getCookie('access_token')}`,
-    },
-    body: JSON.stringify({
-      nomor: nomor
-    })
-  }).then(res => res.json())
+  const fetcher = async (url: string) => {
+    const session = await getSession()
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+      body: JSON.stringify({
+        nomor: nomor
+      })
+    }).then(res => res.json())
+  }
 
   const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`, fetcher)
 

@@ -2,33 +2,26 @@ import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useEffect, useState } from "react"
-import { getCookie } from "cookies-next"
 import { useRouter } from "next/router"
 import { IconInnerShadowTop } from "@tabler/icons-react"
+import { getSession } from "next-auth/react"
 
 
 const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
-  const [isLoading, setIsLoading] = useState(false) 
+  const [isLoading, setIsLoading] = useState(false)
   const [kategori, setKategori] = useState([])
   const [berkas, setBerkas] = useState([])
   const router = useRouter()
 
   useEffect(() => {
     const fetchKategori = async () => {
+      const session = await getSession()
       const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/berkas/kategori`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getCookie('access_token')}`,
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`
         }
       })
       const data = await res.json()
@@ -48,10 +41,11 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
 
   const fetchBerkas = async (kategori: string) => {
     setBerkas([])
+    const session = await getSession()
     const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/berkas/nama-berkas?kategori=${kategori}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getCookie('access_token')}`,
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`
       }
     })
     const data = await res.json()
@@ -70,13 +64,14 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
     e.preventDefault()
     setIsLoading(true)
 
+    const session = await getSession()
     const formData = new FormData(e.target)
     formData.append('nik', nik)
 
     const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/upload/berkas`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${getCookie('access_token')}`,
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`
       },
       body: formData
     })
@@ -98,7 +93,7 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
         title: "Gagal",
         description: "Gagal mengupload berkas",
       })
-      
+
     }
   }
 

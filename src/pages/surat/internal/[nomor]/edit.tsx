@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox";
-import { getCookie } from "cookies-next"
 import { useRouter } from "next/router"
 import { IconArrowLeft } from "@tabler/icons-react"
 import { NextPageWithLayout } from "@/pages/_app"
@@ -16,8 +15,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import SelectPenanggungJawab from '@/components/custom/inputs/penanggung-jawab-select'
 import { toast } from '@/components/ui/use-toast'
 import Loading1 from '@/components/custom/icon-loading'
+import { getSession } from 'next-auth/react'
 
-const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
+const EditSuratInternal: NextPageWithLayout = ({ nomor, token }: any) => {
   const route = useRouter();
   const [penanggungJawab, setPenanggungJawab] = useState<any>("")
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
@@ -28,7 +28,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getCookie('access_token')}`,
+      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify({
       nomor: nomor
@@ -71,6 +71,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const onSubmit = async (e: any) => {
     e.preventDefault()
     const formData = new FormData(e.target)
+    const session = await getSession()
     const data = {
       nomor: nomor,
       perihal: formData.get('perihal'),
@@ -87,7 +88,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getCookie('access_token')
+        'Authorization': 'Bearer ' + session?.rsiap?.access_token,
       },
       body: JSON.stringify(data)
     }).then(response => response.json())
@@ -209,10 +210,6 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
                   dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
                   fetcher={{
                     method: "GET",
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${getCookie('access_token')}`,
-                    }
                   }}
                 />
               </CardContent>
@@ -231,24 +228,13 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
 // get server side props
 export async function getServerSideProps(context: any) {
   const { nomor } = context.query;
+  const session = await getSession({ req: context.req })
   const realNomor = nomor?.toString().replace(/_/g, '/')
-
-  // const detailsFetcher = (url: string) => fetch(url, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': `Bearer ${getCookie('access_token')}`,
-  //   },
-  //   body: JSON.stringify({
-  //     nomor: realNomor
-  //   })
-  // }).then(res => res.json())
-
-  // const data = await detailsFetcher(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`)
 
   return {
     props: {
-      nomor: realNomor
+      nomor: realNomor,
+      token: session?.rsiap?.access_token
     }
   }
 

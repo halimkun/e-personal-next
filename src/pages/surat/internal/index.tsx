@@ -7,7 +7,6 @@ import AppLayout from '@/components/layouts/app';
 import LaravelPagination from '@/components/custom/tables/laravel-pagination';
 
 import { cn } from '@/lib/utils';
-import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
 import { Badge } from "@/components/ui/badge"
 import { getDate, getTime } from '@/lib/date';
@@ -17,12 +16,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
+import { getSession } from 'next-auth/react';
 
 
 const SuratInternal: NextPageWithLayout = () => {
+  const [ss, setSS] = useState<any>()
   const [metrics, setMetrics] = useState<any>([
     { status: 'disetujui', total: 0 },
     { status: 'pengajuan', total: 0 },
@@ -33,16 +32,18 @@ const SuratInternal: NextPageWithLayout = () => {
 
   useEffect(() => {
     const fetchMetrics = async () => {
+      const session = await getSession()
+      setSS(session)
       const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/metrics', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getCookie('access_token')}`,
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`,
         }
       });
 
-      const data = await res.json();
-      setMetrics(data.data)
+      const d = await res.json();
+      setMetrics(d.data)
     }
 
     fetchMetrics();
@@ -248,13 +249,7 @@ const SuratInternal: NextPageWithLayout = () => {
           <LaravelPagination
             columns={suratInternalColumns}
             dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal"}
-            fetcher={{
-              method: "GET",
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getCookie('access_token')}`,
-              }
-            }}
+            fetcher={{ method: "GET" }}
           />
         </CardContent>
       </Card>

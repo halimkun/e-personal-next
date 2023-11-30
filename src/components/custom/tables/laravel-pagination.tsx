@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useState, useEffect } from "react";
 import { getPageNumber } from "@/lib/urls";
-import { getCookie } from "cookies-next";
 import { IconInnerShadowTop } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
+import { getSession } from "next-auth/react";
 
 
 interface FetcherProps {
@@ -46,11 +46,11 @@ interface LaravelPaginationProps {
 }
 
 async function fetchData({ url, method, headers, body }: FetcherProps) {
+  const sesstion = await getSession();
   const requestOptions: any = {
     method: method ?? 'GET',
     headers: headers ?? {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getCookie('access_token')}`,
+      'Authorization': `Bearer ${sesstion?.rsiap?.access_token}`,
     },
   };
 
@@ -75,18 +75,22 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
       const newUrl = new URL(dataSrc);
       newUrl.searchParams.set('page', page.toString());
       newUrl.searchParams.set('keyword', keword);
-  
+
       fetchData({
         url: newUrl.toString(),
         method: fetcher.method,
         headers: fetcher?.headers,
         body: fetcher?.body
       }).then((res) => {
-        setData(res.data.data);
-        delete res.data.data;
+        if (res.success) {
+          setData(res.data.data);
+          delete res.data.data;
   
-        setOptions(res.data);
-        setIsLoading(false);
+          setOptions(res.data);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
       })
     }, 500);
 

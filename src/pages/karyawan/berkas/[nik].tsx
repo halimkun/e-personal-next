@@ -7,9 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import UploadBerkasKaryawan from "@/components/custom/modals/upload-berkas-karyawan";
 import { IconFileSearch, IconTrash } from "@tabler/icons-react";
-import { getCookie } from "cookies-next";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
 
 
 const BerkasKaryawan = ({ data, nik }: any) => {
@@ -17,13 +17,14 @@ const BerkasKaryawan = ({ data, nik }: any) => {
 
   const handleDelete = async (nik: string, kode: string, berkas: string) => {
     const confirm = window.confirm("Apakah anda yakin ingin menghapus berkas ini?")
+    const session = await getSession()
     if (!confirm) return
 
     await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/delete/berkas', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getCookie('access_token')}`,
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
       },
       body: JSON.stringify({
         nik: nik,
@@ -142,12 +143,13 @@ const BerkasKaryawan = ({ data, nik }: any) => {
 
 export async function getServerSideProps(context: any) {
   const { nik } = context.params
+  const session = await getSession({ req: context.req })
 
   const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/get/berkas`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${context.req.cookies.access_token}`,
+      'Authorization': `Bearer ${session?.rsiap?.access_token}`,
     },
     body: JSON.stringify({ nik: nik })
   });

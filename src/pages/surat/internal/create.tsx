@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { NextPageWithLayout } from "@/pages/_app"
 import { IconArrowLeft } from "@tabler/icons-react";
+import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactElement} from "react";
+import { ReactElement } from "react";
 
 const SuratInternal: NextPageWithLayout = ({ penanggungJawab }: any) => {
   const route = useRouter();
-  
+
   return (
     <Card className="max-w-screen">
       <CardHeader>
@@ -24,18 +25,19 @@ const SuratInternal: NextPageWithLayout = ({ penanggungJawab }: any) => {
         </div>
       </CardHeader>
       <CardContent>
-        <FormAddSuratInternal penanggungJawab={penanggungJawab}/>
+        <FormAddSuratInternal penanggungJawab={penanggungJawab} />
       </CardContent>
     </Card>
   )
 }
 
 export async function getServerSideProps(context: any) {
+  const session = await getSession({ req: context.req })
   const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${context.req.cookies.access_token}`,
+      'Authorization': `Bearer ${session?.rsiap?.access_token}`,
     },
   }).then(response => response.json())
 
