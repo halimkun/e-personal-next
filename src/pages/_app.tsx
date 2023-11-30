@@ -4,6 +4,7 @@ import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { useTheme } from 'next-themes'
 import { AuthProvider } from '@/context/auth-context'
+import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from '@/components/theme-provider'
 import NextNProgress from 'nextjs-progressbar';
 
@@ -16,14 +17,19 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-export default function App({ Component, pageProps }: AppPropsWithLayout) {
+export default function App({ Component, pageProps: {
+  session,
+  ...pageProps
+} }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
   return (
     <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-      <AuthProvider>
+      {/* <AuthProvider> */}
+      <SessionProvider session={session}>
         <NextNProgress />
         {getLayout(<Component {...pageProps} />)}
-      </AuthProvider>
+      </SessionProvider>
+      {/* </AuthProvider> */}
     </ThemeProvider>
   )
 }

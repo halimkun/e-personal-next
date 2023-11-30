@@ -4,15 +4,18 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { signIn } from "next-auth/react";
 
 import { IconInnerShadowTop } from "@tabler/icons-react"
-import { useAuth } from "@/context/auth-context";
+import { useRouter } from "next/router"
+import { useSearchParams } from "next/navigation"
+import { ro } from "date-fns/locale"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 	const [isLoading, setIsLoading] = React.useState<boolean>(false)
-	const { login } = useAuth();
+	const router = useRouter();
 
 	async function onSubmit(event: React.SyntheticEvent) {
 		event.preventDefault()
@@ -22,9 +25,29 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 		const username = (event.target as any).username.value
 		const password = (event.target as any).password.value
 
-		login(username, password);
+		const callbackUrl = router.query.callbackUrl as string || '/'
 
-		setIsLoading(false)
+		try {
+			const res = await signIn("credentials", {
+				redirect: false,
+				username: username,
+				password: password,
+				callbackUrl: callbackUrl,
+			});
+
+			setIsLoading(false);
+
+			console.log(res);
+			if (!res?.error) {
+				router.push(callbackUrl);
+			} else {
+				console.log(res?.error);
+			}
+		} catch (error: any) {
+			setIsLoading(false);
+			console.log(error);
+		}
+
 	};
 
 	return (
