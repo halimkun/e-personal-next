@@ -25,7 +25,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 		const username = (event.target as any).username.value
 		const password = (event.target as any).password.value
 
-		const callbackUrl = router.query.callbackUrl as string || '/'
+		const callbackUrl = router.query.callbackUrl as string || '/dashboard'
 
 		try {
 			const res = await signIn("credentials", {
@@ -37,7 +37,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
 			setIsLoading(false);
 
-			console.log(res);
 			if (!res?.error) {
 				router.push(callbackUrl);
 			} else {
