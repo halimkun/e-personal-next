@@ -187,14 +187,14 @@ const SuratInternal: NextPageWithLayout = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
-                <CardTitle>Disetujui</CardTitle>
+                <CardTitle className="text-success">Disetujui</CardTitle>
                 <CardDescription>Surat internal diseujui.</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'disetujui').map((metric: any) => (
-              <div className='w-full flex justify-end font-bold text-2xl text-green-500' key={metric.status}>
+              <div className='w-full flex justify-end font-bold text-2xl text-success' key={metric.status}>
                 <CountUp
                   start={0}
                   end={metric.total}
@@ -208,14 +208,14 @@ const SuratInternal: NextPageWithLayout = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
-                <CardTitle>Pengajuan</CardTitle>
+                <CardTitle className="text-warning">Pengajuan</CardTitle>
                 <CardDescription>Surat internal dalam pengajuan.</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'pengajuan').map((metric: any) => (
-              <div className='w-full flex justify-end font-bold text-2xl text-yellow-500' key={metric.status}>
+              <div className='w-full flex justify-end font-bold text-2xl text-warning' key={metric.status}>
                 <CountUp
                   start={0}
                   end={metric.total}
@@ -229,14 +229,14 @@ const SuratInternal: NextPageWithLayout = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
-                <CardTitle>Batal / Ditolak</CardTitle>
+                <CardTitle className="text-danger">Batal / Ditolak</CardTitle>
                 <CardDescription>Surat internal batal atau ditolak.</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'ditolak').map((metric: any) => (
-              <div className='w-full flex justify-end font-bold text-2xl text-red-500' key={metric.status}>
+              <div className='w-full flex justify-end font-bold text-2xl text-danger' key={metric.status}>
                 <CountUp
                   start={0}
                   end={metric.total}
