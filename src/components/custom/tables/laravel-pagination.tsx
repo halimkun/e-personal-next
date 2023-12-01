@@ -106,7 +106,10 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
             type="search"
             placeholder="Search..."
             className="w-full"
-            onChange={(e) => setKeyword(e.target.value)}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+              setPage(1);
+            }}
           />
         </div>
       </div>
