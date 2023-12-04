@@ -7,7 +7,7 @@ import LaravelPagination from "@/components/custom/tables/laravel-pagination";
 import { getDate } from "@/lib/date";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { IconDotsVertical, IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconDotsVertical, IconEdit, IconInnerShadowTop, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -21,11 +21,13 @@ import { useRouter } from "next/router";
 
 const BerkasKerjasama: NextPageWithLayout = () => {
   const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true)
 
     const session = await getSession();
     const data = new FormData(e.target);
@@ -46,8 +48,10 @@ const BerkasKerjasama: NextPageWithLayout = () => {
       })
       setIsOpen(false)
       router.reload()
+      setIsLoading(false)
     } else {
       console.log(result);
+      setIsLoading(false)
     }
   }
 
@@ -191,7 +195,13 @@ const BerkasKerjasama: NextPageWithLayout = () => {
                   </div>
 
                   <div className="flex justify-end gap-2">
-                    <Button type="submit" variant="default">Simpan</Button>
+                    <Button type="submit" variant="default">
+                      {isLoading ? (
+                        <span className="flex items-center justify-center gap-2 w-full">
+                          <IconInnerShadowTop className="h-4 w-4 animate-spin" /> Uploading . . .
+                        </span>
+                      ) : 'Simpan'}
+                    </Button>
                   </div>
                 </form>
               </DialogContent>
