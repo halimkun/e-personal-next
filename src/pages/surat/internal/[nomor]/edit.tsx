@@ -17,8 +17,9 @@ import { toast } from '@/components/ui/use-toast'
 import Loading1 from '@/components/custom/icon-loading'
 import { getSession } from 'next-auth/react'
 
-const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
+const EditSuratInternal: NextPageWithLayout = () => {
   const route = useRouter();
+  const nomor = route.query.nomor?.toString().replace(/_/g, '/')
   const [penanggungJawab, setPenanggungJawab] = useState<any>("")
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
   const [tempat, setTempat] = useState("")
@@ -26,38 +27,40 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
 
   const detailsFetcher = async (url: string) => {
     const session = await getSession()
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-      body: JSON.stringify({
-        nomor: nomor
-      })
-    }).then(res => {
-      if (!res.ok) {
-        throw Error(res.status + ' ' + res.statusText)
-      }
-
-      const response = res.json()
-      response.then((data) => {
-        if (data.success) {
-          const d = data.data
-          setSelectedKaryawan(d.penerima.map((item: any) => item.penerima))
-          setPerihal(d.perihal)
-          setTempat(d.tempat)
-          setPenanggungJawab(d.pj)
-        } else {
-          toast({
-            title: 'Error',
-            description: data.message,
-            duration: 5000,
-          })
+    if (route.isReady) {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+        },
+        body: JSON.stringify({
+          nomor: nomor
+        })
+      }).then(res => {
+        if (!res.ok) {
+          throw Error(res.status + ' ' + res.statusText)
         }
+
+        const response = res.json()
+        response.then((data) => {
+          if (data.success) {
+            const d = data.data
+            setSelectedKaryawan(d.penerima.map((item: any) => item.penerima))
+            setPerihal(d.perihal)
+            setTempat(d.tempat)
+            setPenanggungJawab(d.pj)
+          } else {
+            toast({
+              title: 'Error',
+              description: data.message,
+              duration: 5000,
+            })
+          }
+        })
+        return response
       })
-      return response
-    })
+    }
   }
   const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`, detailsFetcher)
 
@@ -97,7 +100,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
     }).then(response => response.json())
 
     if (response.success) {
-      route.push(`/surat/internal/${nomor.replace(/\//g, '_')}/detail`)
+      route.push(`/surat/internal/${nomor?.replace(/\//g, '_')}/detail`)
       toast({
         title: "Berhasil",
         description: response.message,
@@ -224,19 +227,6 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
       </CardContent>
     </Card>
   )
-}
-
-// get server side props
-export async function getServerSideProps(context: any) {
-  const { nomor } = context.query;
-  const realNomor = nomor?.toString().replace(/_/g, '/')
-
-  return {
-    props: {
-      nomor: realNomor,
-    }
-  }
-
 }
 
 EditSuratInternal.getLayout = function getLayout(page: ReactElement) {

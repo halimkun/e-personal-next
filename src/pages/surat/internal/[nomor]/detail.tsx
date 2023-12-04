@@ -11,21 +11,24 @@ import { useRouter } from "next/router"
 import { ReactElement } from "react"
 import useSWR from "swr"
 
-const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
+const DetailSuratInternal: NextPageWithLayout = () => {
   const route = useRouter();
+  const nomor = route.query.nomor?.toString().replace(/_/g, '/')
 
   const fetcher = async (url: string) => {
     const session = await getSession()
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-      body: JSON.stringify({
-        nomor: nomor
-      })
-    }).then(res => res.json())
+    if (route.isReady) {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+        },
+        body: JSON.stringify({
+          nomor: nomor
+        })
+      }).then(res => res.json())
+    }
   }
 
   const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`, fetcher)
@@ -123,18 +126,6 @@ const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
       </CardContent>
     </Card>
   )
-}
-
-export async function getServerSideProps(context: any) {
-  const { nomor } = await context.query
-  const realNomor = await nomor?.toString().replace(/_/g, '/')
-
-  return {
-    props: {
-      nomor: realNomor
-    }
-  }
-
 }
 
 DetailSuratInternal.getLayout = function getLayout(page: ReactElement) {
