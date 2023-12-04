@@ -13,7 +13,7 @@ import { getSession } from "next-auth/react";
 import useSWR from "swr";
 
 
-const BerkasKaryawan = ({ nik }: any) => {
+const BerkasKaryawan = () => {
   const router = useRouter()
   const [data, setData] = useState<any>({
     nama: "",
@@ -23,7 +23,7 @@ const BerkasKaryawan = ({ nik }: any) => {
     berkas: []
   })
 
-  const handleDelete = async (nik: string, kode: string, berkas: string) => {
+  const handleDelete = async (kode: string, berkas: string) => {
     const confirm = window.confirm("Apakah anda yakin ingin menghapus berkas ini?")
     const session = await getSession()
     if (!confirm) return
@@ -35,7 +35,7 @@ const BerkasKaryawan = ({ nik }: any) => {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`,
       },
       body: JSON.stringify({
-        nik: nik,
+        nik: router.query.nik,
         kode: kode,
         berkas: berkas
       })
@@ -58,24 +58,26 @@ const BerkasKaryawan = ({ nik }: any) => {
 
   const fetcher = async (url: string) => {
     const session = await getSession()
-    return await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-      body: JSON.stringify({ nik: nik })
-    }).then(res => {
-      if (!res.ok) {
-        throw Error(res.status + ' ' + res.statusText)
-      }
-
-      const response = res.json()
-      response.then((data) => {
-        setData(data.data)
+    if (router.isReady) {
+      return await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+        },
+        body: JSON.stringify({ nik: router.query.nik })
+      }).then(res => {
+        if (!res.ok) {
+          throw Error(res.status + ' ' + res.statusText)
+        }
+  
+        const response = res.json()
+        response.then((data) => {
+          setData(data.data)
+        })
+        return response
       })
-      return response
-    })
+    }
   }
 
   const { data: berkas, error } = useSWR('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/get/berkas', fetcher)
@@ -101,7 +103,7 @@ const BerkasKaryawan = ({ nik }: any) => {
                 <CardTitle>Berkas Karyawan</CardTitle>
                 <CardDescription>Berkas Karyawan <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
               </div>
-              <UploadBerkasKaryawan nik={nik} />
+              <UploadBerkasKaryawan nik={router.query.nik} />
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -155,7 +157,7 @@ const BerkasKaryawan = ({ nik }: any) => {
                       </div>
                     </div>
                     <div className="flex gap-2 justify-end items-center">
-                      <Button variant='destructive' size="icon" className="h-8 w-8" onClick={() => handleDelete(nik, item.master_berkas_pegawai.kode, item.berkas)}><IconTrash className="h-5 w-5" /></Button>
+                      <Button variant='destructive' size="icon" className="h-8 w-8" onClick={() => handleDelete(item.master_berkas_pegawai.kode, item.berkas)}><IconTrash className="h-5 w-5" /></Button>
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button size="icon" className="h-8 w-8"><IconFileSearch className="h-5 w-5" /></Button>
@@ -177,23 +179,12 @@ const BerkasKaryawan = ({ nik }: any) => {
       ) : (
         <div className="flex flex-col gap-2">
           <p className="text-lg">Berkas Karyawan</p>
-          <p className="text-sm">Berkas karyawan dengan nik <Badge variant='outline'>{nik}</Badge> tidak ditemukan.</p>
+          <p className="text-sm">Berkas karyawan dengan nik <Badge variant='outline'>{router.query.nik}</Badge> tidak ditemukan.</p>
         </div>
       )}
     </div>
   )
 };
-
-export async function getServerSideProps(context: any) {
-  const { nik } = context.params
-
-  return {
-    props: {
-      nik: nik
-    },
-  }
-}
-
 
 BerkasKaryawan.getLayout = function getLayout(page: ReactElement) {
   return (

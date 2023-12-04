@@ -76,7 +76,6 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
       body: formData
     })
     const data = await res.json()
-    console.log(data)
 
     if (data.success) {
       toast({
