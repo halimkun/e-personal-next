@@ -2,18 +2,26 @@ import AppLayout from "@/components/layouts/app";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getDate } from "@/lib/date";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import UploadBerkasKaryawan from "@/components/custom/modals/upload-berkas-karyawan";
-import { IconFileSearch, IconTrash } from "@tabler/icons-react";
+import { IconFileSearch, IconLoader, IconTrash } from "@tabler/icons-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
+import useSWR from "swr";
 
 
-const BerkasKaryawan = ({ data, nik }: any) => {
+const BerkasKaryawan = ({ nik }: any) => {
   const router = useRouter()
+  const [data, setData] = useState<any>({
+    nama: "",
+    nik: "",
+    jbtn: "",
+    bidang: "",
+    berkas: []
+  })
 
   const handleDelete = async (nik: string, kode: string, berkas: string) => {
     const confirm = window.confirm("Apakah anda yakin ingin menghapus berkas ini?")
@@ -47,6 +55,41 @@ const BerkasKaryawan = ({ data, nik }: any) => {
       }
     })
   }
+
+  const fetcher = async (url: string) => {
+    const session = await getSession()
+    return await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+      body: JSON.stringify({ nik: nik })
+    }).then(res => {
+      if (!res.ok) {
+        throw Error(res.status + ' ' + res.statusText)
+      }
+
+      const response = res.json()
+      response.then((data) => {
+        setData(data.data)
+      })
+      return response
+    })
+  }
+
+  const { data: berkas, error } = useSWR('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/get/berkas', fetcher)
+
+  if (error) return (
+    <div className="flex flex-col items-start justify-center h-full gap-4">
+      <div className="text-2xl font-bold">Error {error.message}</div>
+    </div>
+  )
+  if (!berkas) return (
+    <div className="flex flex-col items-start justify-center h-full gap-4">
+      <IconLoader className="animate-spin w-7 h-7" />
+    </div>
+  )
 
   return (
     <div className="flex flex-col gap-4">
@@ -134,7 +177,7 @@ const BerkasKaryawan = ({ data, nik }: any) => {
       ) : (
         <div className="flex flex-col gap-2">
           <p className="text-lg">Berkas Karyawan</p>
-          <p className="text-sm">Berkas karyawan dengan NIK tidak ditemukan.</p>
+          <p className="text-sm">Berkas karyawan dengan nik <Badge variant='outline'>{nik}</Badge> tidak ditemukan.</p>
         </div>
       )}
     </div>
@@ -143,22 +186,9 @@ const BerkasKaryawan = ({ data, nik }: any) => {
 
 export async function getServerSideProps(context: any) {
   const { nik } = context.params
-  const session = await getSession({ req: context.req })
-
-  const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/get/berkas`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-    },
-    body: JSON.stringify({ nik: nik })
-  });
-
-  const data = await res.json();
 
   return {
     props: {
-      data: data.data,
       nik: nik
     },
   }

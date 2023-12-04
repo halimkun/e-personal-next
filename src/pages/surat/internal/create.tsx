@@ -3,13 +3,53 @@ import AppLayout from "@/components/layouts/app";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { NextPageWithLayout } from "@/pages/_app"
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconLoader } from "@tabler/icons-react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
+import useSWR from "swr";
 
-const SuratInternal: NextPageWithLayout = ({ penanggungJawab }: any) => {
+const SuratInternal: NextPageWithLayout = () => {
   const route = useRouter();
+  const [penanggungJawab, setPenanggungJawab] = useState<any>([])
+
+  const fetchPegawai = async (url: string) => {
+    const session = await getSession()
+    return await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+    }).then(response => {
+      if (!response.ok) {
+        throw Error(response.status + ' ' + response.statusText)
+      }
+
+      const data = response.json()
+      const result = data.then((res) => {
+        const data = res.data.map((item: any) => {
+          return {
+            value: item.nik,
+            label: item.nama
+          }
+        })
+
+        setPenanggungJawab(data)
+      })
+
+      return data
+    })
+  }
+
+  const { data, error } = useSWR('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama', fetchPegawai);
+
+  if (error) return <div>Error {error.message}</div>
+  if (!data) return (
+    <div className="flex flex-col items-start justify-center h-full gap-4">
+      <IconLoader className="animate-spin w-7 h-7" />
+    </div>
+  )
 
   return (
     <Card className="max-w-screen">
@@ -29,31 +69,6 @@ const SuratInternal: NextPageWithLayout = ({ penanggungJawab }: any) => {
       </CardContent>
     </Card>
   )
-}
-
-export async function getServerSideProps(context: any) {
-  const session = await getSession({ req: context.req })
-  const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-    },
-  }).then(response => response.json())
-
-
-  const data = res.data.map((item: any) => {
-    return {
-      value: item.nik,
-      label: item.nama
-    }
-  })
-
-  return {
-    props: {
-      penanggungJawab: data
-    }
-  }
 }
 
 SuratInternal.getLayout = function getLayout(page: ReactElement) {
