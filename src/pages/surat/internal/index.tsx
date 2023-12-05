@@ -19,6 +19,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { toast } from '@/components/ui/use-toast';
 
 
 const SuratInternal: NextPageWithLayout = () => {
@@ -262,6 +263,12 @@ const SuratInternal: NextPageWithLayout = () => {
         <CardContent>
           <LaravelPagination
             columns={suratInternalColumns}
+            // onRowClick={(row: any) => {
+            //   toast({
+            //     title: 'Coming soon!',
+            //     description: row.no_surat,
+            //   })
+            // }}
             dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal"}
             fetcher={{ method: "GET" }}
           />

@@ -41,6 +41,7 @@ interface LaravelPaginationProps {
     style?: string[];
     data: (row: any) => JSX.Element;
   }[]
+  onRowClick?: (row: any) => void;
   dataSrc: string;
   fetcher: FetcherProps;
 }
@@ -62,7 +63,7 @@ async function fetchData({ url, method, headers, body }: FetcherProps) {
 }
 
 const LaravelPagination = (props: LaravelPaginationProps) => {
-  const { columns, dataSrc, fetcher } = props;
+  const { columns, onRowClick, dataSrc, fetcher } = props;
   const [page, setPage] = useState(1);
   const [keword, setKeyword] = useState<string>('');
   const [data, setData] = useState([]);
@@ -135,9 +136,9 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
               <TableCell colSpan={columns.length}><span className="flex items-center justify-center gap-2 w-full"><IconInnerShadowTop className="h-4 w-4 animate-spin" /> Loading...</span></TableCell>
             </TableRow>
           ) : data.map((d: any) => (
-            <TableRow key={d.no_surat} className="group">
-              {columns.map((column: any) => (
-                <TableCell key={column.selector}>
+            <TableRow key={d?.no_surat} className="group">
+              {columns.map((column: any, index: number) => (
+                <TableCell key={column.selector} onClick={index == columns.length - 1 ? undefined : () => onRowClick?.(d)}>
                   {column.data(d)}
                 </TableCell>
               ))}
