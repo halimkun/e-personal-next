@@ -4,10 +4,10 @@ import { NextPageWithLayout } from "../_app";
 import AppLayout from "@/components/layouts/app";
 import LaravelPagination from "@/components/custom/tables/laravel-pagination";
 
-import { getDate } from "@/lib/date";
+import { getDate, getFullDate } from "@/lib/date";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { IconDotsVertical, IconEdit, IconInnerShadowTop, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconDotsVertical, IconEdit, IconFileSearch, IconInnerShadowTop, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/custom/inputs/combo-box";
 import { getSession } from "next-auth/react";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 
 
@@ -23,6 +23,10 @@ const BerkasKerjasama: NextPageWithLayout = () => {
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false);
+  const [isRowClick, setIsRowClick] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [pks, setPks] = useState<any>([]);
   const router = useRouter();
 
   const onSubmit = async (e: any) => {
@@ -42,10 +46,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
 
     const result = await res.json();
     if (result.success) {
-      toast({
-        title: "Berhasil",
-        description: "Berkas berhasil ditambahkan",
-      })
+      toast.success('Data berhasil disimpan!');
       setIsOpen(false)
       router.reload()
       setIsLoading(false)
@@ -55,6 +56,52 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     }
   }
 
+  const onUpload = async (e: any) => {
+    e.preventDefault();
+    setIsLoading(true)
+
+    const session = await getSession();
+    const updateData = new FormData(e.target);
+
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/${pks.id}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`
+      },
+      body: updateData
+    });
+    
+    const result = await res.json();
+
+    if (result.success) {
+      toast.success('Data berhasil diperbarui!');
+      setIsOpen(false)
+      router.reload()
+      setIsLoading(false)
+    } else {
+      console.log(result);
+      setIsLoading(false)
+    }
+  }
+
+  const onDelete = async (id: string) => {
+    const session = await getSession();
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`
+      }
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      toast.success('Data berhasil dihapus!');
+      await new Promise(r => setTimeout(r, 1000));
+      router.reload()
+    } else {
+      console.log(result);
+    }
+  }
 
   const pksColumns = [
     {
@@ -104,33 +151,6 @@ const BerkasKerjasama: NextPageWithLayout = () => {
         </TooltipProvider>
       ) : (<></>)
     },
-    {
-      name: '',
-      selector: 'action',
-      style: [
-        'text-right'
-      ],
-      data: (row: any) => (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0" size='icon'>
-              <span className="sr-only">Open menu</span>
-              <IconDotsVertical className="w-5 h-5" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Menu Berkas Perjanjian</DialogTitle>
-              <DialogDescription>
-                Anda bisa mengelola berkas perjanjian kerjasama ini melalui menu dibawah ini.
-              </DialogDescription>
-            </DialogHeader>
-            {/* dialog content */}
-
-          </DialogContent>
-        </Dialog>
-      )
-    }
   ]
 
   return (
@@ -144,7 +164,11 @@ const BerkasKerjasama: NextPageWithLayout = () => {
             </div>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
-                <Button variant="default" size="icon" className="w-7 h-7">
+                <Button variant="default" size="icon" className="w-7 h-7" onClick={() => {
+                  setPks([])
+                  setIsEdit(false)
+                  setIsOpen(true)
+                }}>
                   <span className="sr-only">Open menu</span>
                   <IconPlus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
                 </Button>
@@ -155,33 +179,37 @@ const BerkasKerjasama: NextPageWithLayout = () => {
                   <DialogDescription>Tambahkan data perjanjian kerjasama baru dengan mengisi form dibawah ini.</DialogDescription>
                 </DialogHeader>
                 {/* dialog content */}
-                <form method="post" encType="multipart/form-data" onSubmit={onSubmit}>
+                <form method="post" encType="multipart/form-data" onSubmit={isEdit ? onUpload : onSubmit}>
+                  {isEdit ? (<div className="mb-4 space-y-1.5">
+                    <Label htmlFor="id">Id Berkas</Label>
+                    <Input type="text" id="id" name="id" placeholder="id berkas" defaultValue={isEdit ? pks.id : ''} readOnly={true} />
+                  </div>) : (<></>)}
                   <div className="mb-4 space-y-1.5">
                     <Label htmlFor="judul">Judul</Label>
-                    <Input type="text" id="judul" name="judul" placeholder="Judul / Nama berkas" />
+                    <Input type="text" id="judul" name="judul" placeholder="Judul / Nama berkas" defaultValue={isEdit ? pks.judul : ''} />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="mb-4 space-y-1.5">
                       <Label htmlFor="no_pks_internal">No. PKS Internal</Label>
-                      <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" />
+                      <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" defaultValue={isEdit ? pks.no_pks_internal : ''} />
                     </div>
                     <div className="mb-4 space-y-1.5">
                       <Label htmlFor="no_pks_eksternal">No. PKS Eksternal</Label>
-                      <Input type="text" id="no_pks_eksternal" name="no_pks_eksternal" placeholder="No. PKS Eksternal" />
+                      <Input type="text" id="no_pks_eksternal" name="no_pks_eksternal" placeholder="No. PKS Eksternal" defaultValue={isEdit ? pks.no_pks_eksternal : ''} />
                     </div>
                     {/* tanggal awal dan akhir */}
                     <div className="mb-4 space-y-1.5">
                       <Label htmlFor="tanggal_awal">Tanggal Awal</Label>
-                      <Input type="date" id="tanggal_awal" name="tanggal_awal" placeholder="Tanggal Awal" />
+                      <Input type="date" id="tanggal_awal" name="tanggal_awal" placeholder="Tanggal Awal" defaultValue={isEdit ? pks.tanggal_awal : ''} />
                     </div>
                     <div className="mb-4 space-y-1.5">
                       <Label htmlFor="tanggal_akhir">Tanggal Ahir</Label>
-                      <Input type="date" id="tanggal_akhir" name="tanggal_akhir" placeholder="Tanggal Ahir" />
+                      <Input type="date" id="tanggal_akhir" name="tanggal_akhir" placeholder="Tanggal Ahir" defaultValue={isEdit ? pks.tanggal_akhir : ''} />
                     </div>
                   </div>
                   <div className="mb-4 space-y-1.5">
                     <Label htmlFor="pj">Penanggung Jawab</Label>
-                    <Input type="hidden" id="pj" name="pj" value={selected} />
+                    <Input type="hidden" id="pj" name="pj" defaultValue={selected} />
                     <Combobox items={[
                       { label: "Kicky Eka Shelviani, M.S.M", value: "3.925.0123" },
                       { label: "Nuranisa Heristiani, Amd.Keb", value: "2.318.0217" },
@@ -189,16 +217,18 @@ const BerkasKerjasama: NextPageWithLayout = () => {
                       { label: "Immawan Hudayanto, ST", value: "3.901.1209" },
                     ]} setSelectedItem={setSelected} selectedItem={selected} placeholder="Pilih Penanggung Jawab" />
                   </div>
-                  <div className="mb-4 space-y-1.5">
-                    <Label htmlFor="file">File</Label>
-                    <Input type="file" id="file" name="file" placeholder="File" />
-                  </div>
+                  {!isEdit ? (
+                    <div className="mb-4 space-y-1.5">
+                      <Label htmlFor="file">File</Label>
+                      <Input type="file" id="file" name="file" placeholder="File" />
+                    </div>
+                  ) : (<div className="mb-4"></div>)}
 
                   <div className="flex justify-end gap-2">
                     <Button type="submit" variant="default">
                       {isLoading ? (
                         <span className="flex items-center justify-center gap-2 w-full">
-                          <IconInnerShadowTop className="h-4 w-4 animate-spin" /> Uploading . . .
+                          <IconInnerShadowTop className="h-4 w-4 animate-spin" /> {isEdit ? 'Memperbarui data...' : 'Uploading...'}
                         </span>
                       ) : 'Simpan'}
                     </Button>
@@ -211,11 +241,93 @@ const BerkasKerjasama: NextPageWithLayout = () => {
         <CardContent>
           <LaravelPagination
             columns={pksColumns}
+            onRowClick={(row: any) => {
+              setPks(row)
+              setIsRowClick(true)
+            }}
             dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks"}
             fetcher={{ method: "GET" }}
           />
         </CardContent>
       </Card>
+
+
+      {/* Dialog on Row Click */}
+      <Dialog open={isRowClick} onOpenChange={setIsRowClick}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Menu Berkas Perjanjian</DialogTitle>
+            <DialogDescription>
+              Anda bisa mengelola berkas perjanjian kerjasama ini melalui menu dibawah ini.
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* detail */}
+          <div className="mb-4 space-y-2">
+            <div className="space-y-1">
+              <div className="font-bold text-primary text-xs">Judul : </div>
+              <div>{pks.judul}</div>
+            </div>
+            <div className="grid gap-2 grid-cols-2">
+              <div className="space-y-1">
+                <div className="font-bold text-primary text-xs">No. PKS Internal : </div>
+                <Badge variant='secondary'>{pks.no_pks_internal}</Badge>
+              </div>
+              <div className="space-y-1">
+                <div className="font-bold text-primary text-xs">No. PKS Eksternal : </div>
+                <Badge variant='secondary'>{pks.no_pks_eksternal ?? "-"}</Badge>
+              </div>
+              <div className="space-y-1">
+                <div className="font-bold text-primary text-xs">Tanggal Awal : </div>
+                <div className="cursor-help">{getFullDate(pks.tanggal_awal)}</div>
+              </div>
+              <div className="space-y-1">
+                <div className="font-bold text-primary text-xs">Tanggal Ahir : </div>
+                <div className="cursor-help">{pks.tanggal_akhir == '0000-00-00' ? '-' : getFullDate(pks.tanggal_akhir)}</div>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="font-bold text-primary text-xs">Penanggung Jawab : </div>
+              <div>{pks.pj_detail?.nama}</div>
+            </div>
+          </div>
+
+          <div className="flex justify-between">
+            {/* on click open new window "https://sim.rsiaaisyiyah.com/webapps/rsia_pks/" + pks.berkas */}
+            <Button variant="default" size="sm" className="flex items-center gap-2" onClick={() => {
+              setIsPreview(true)
+            }}>
+              <IconFileSearch className="h-4 w-4" /> Lihat File
+            </Button>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => {
+                setIsEdit(true)
+                setIsOpen(true)
+                setIsRowClick(false)
+                setSelected(pks.pj)
+              }}>
+                <IconEdit className="h-4 w-4" /> Edit
+              </Button>
+              <Button variant="destructive" size="sm" className="flex items-center gap-2" onClick={() => {
+                window.confirm('Apakah anda yakin ingin menghapus data ini?') && onDelete(pks.id)
+              }}>
+                <IconTrash className="h-4 w-4" /> Hapus
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Preview Berkas */}
+      <Dialog open={isPreview} onOpenChange={setIsPreview}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Preview Berkas</DialogTitle>
+          </DialogHeader>
+          <iframe src={"https://sim.rsiaaisyiyah.com/webapps/rsia_pks/" + pks.berkas} className="w-full h-[calc(100vh-110px)]"></iframe>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
