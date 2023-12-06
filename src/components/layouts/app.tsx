@@ -3,7 +3,7 @@ const inter = Inter({ subsets: ['latin'] })
 import type { Metadata } from 'next'
 import { Menu } from '@/components/custom/menu';
 import { Sidebar } from '@/components/custom/sidebar';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from 'react-hot-toast';
 
 // metadata for the layout
 export const metadata: Metadata = {
@@ -21,7 +21,15 @@ const AppLayout = ({ children }: any) => {
         {children}
       </div>
 
-      <Toaster />
+      <Toaster position='bottom-center' toastOptions={
+        {
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        }
+      }/>
     </main>
   );
 };
