@@ -112,21 +112,21 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
       <div className="grid gap-3 py-4">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-[60%] space-y-1">
-            <Label className="" htmlFor="tanggal">Tannggal</Label>
+            <Label className="text-primary" htmlFor="tanggal">Tannggal</Label>
             <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
           </div>
           <div className="w-full space-y-1">
-            <Label className="" htmlFor="PJ">Penanggung Jawab</Label>
+            <Label className="text-primary" htmlFor="PJ">Penanggung Jawab</Label>
             <Input type="hidden" name="pj" value={selectedPj} />
-            <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab"/>
+            <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab" />
           </div>
           <div className="w-full space-y-1">
-            <Label className="" htmlFor="tempat">Tempat</Label>
+            <Label className="text-primary" htmlFor="tempat">Tempat</Label>
             <Input type="text" name="tempat" placeholder="Tempat Kegiatan" id="tempat" />
           </div>
         </div>
         <div className="w-full space-y-1">
-          <Label className="" htmlFor="perihal">Perihal</Label>
+          <Label className="text-primary" htmlFor="perihal">Perihal</Label>
           <Input type="text" name="perihal" placeholder="Perihal Surat . . ." id="perihal" />
         </div>
       </div>
@@ -140,21 +140,15 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
       </div>
 
       <div className={cn(
-        'mt-4', withKaryawan ? 'block' : 'hidden'
+        'mt-4', withKaryawan ? 'block border-y-2 py-4' : 'hidden'
       )}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Pilih Karyawan</CardTitle>
-            <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <LaravelPagination
-              columns={KaryawanColumns}
-              dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
-              fetcher={{ method: "GET" }}
-            />
-          </CardContent>
-        </Card>
+        <CardTitle>Pilih Karyawan</CardTitle>
+        <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
+        <LaravelPagination
+          columns={KaryawanColumns}
+          dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
+          fetcher={{ method: "GET" }}
+        />
       </div>
 
       <div className="mt-4 flex justify-end">

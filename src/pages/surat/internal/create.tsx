@@ -52,22 +52,34 @@ const SuratInternal: NextPageWithLayout = () => {
   )
 
   return (
-    <Card className="max-w-screen">
-      <CardHeader>
-        <div className="flex items-center gap-4">
-          <Button variant="outline" size='icon' onClick={() => route.push('/surat/internal')}>
-            <IconArrowLeft className="rotate-0 scale-100 transition-all" />
-          </Button>
-          <div className="flex flex-col gap-0.5">
-            <CardTitle>Buat Surat Internal Baru</CardTitle>
-            <CardDescription>Buat surat internal baru | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+    <div className="flex flex-col lg:flex-row gap-3 items-start">
+      <Card className="max-w-screen">
+        <CardHeader>
+          <div className="flex items-center gap-4">
+            <Button variant="outline" size='icon' onClick={() => route.push('/surat/internal')}>
+              <IconArrowLeft className="rotate-0 scale-100 transition-all" />
+            </Button>
+            <div className="flex flex-col gap-0.5">
+              <CardTitle className="text-primary">Buat Surat Internal Baru</CardTitle>
+              <CardDescription>Buat surat internal baru | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+            </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <FormAddSuratInternal penanggungJawab={penanggungJawab} />
-      </CardContent>
-    </Card>
+        </CardHeader>
+        <CardContent>
+          <FormAddSuratInternal penanggungJawab={penanggungJawab} />
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-sm sticky top-[4.5rem]">
+        <CardHeader>
+          <CardTitle className="text-primary">Catatan</CardTitle>
+          <CardDescription>Harap mengisi data dengan benar dan teliti.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos minima eveniet officia vel odit tempore similique aperiam incidunt, assumenda quas modi sunt ad vitae nulla quo porro commodi iure voluptatem.
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 

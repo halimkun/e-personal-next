@@ -60,14 +60,14 @@ const SuratInternal: NextPageWithLayout = () => {
           <Tooltip>
             <TooltipTrigger>
               <Badge variant={
-                row.status == 'disetujui' ? 'default' :
-                  row.status == 'pengajuan' ? 'warning' :
+                row.status == 'disetujui' ? 'success' :
+                  row.status == 'pengajuan' ? 'outline' :
                     row.status == 'ditolak' ? 'danger' : 'outline'
               } className='whitespace-nowrap'>{row.no_surat}</Badge>
             </TooltipTrigger>
             <TooltipContent className={cn("font-bold shadow", {
               "bg-yellow-100 border-[1.5px] text-warning border-warning": row.status == 'pengajuan',
-              "bg-blue-100 border-[1.5px] text-primary border-primary": row.status == 'disetujui',
+              "bg-green-100 border-[1.5px] text-success-foreground border-border": row.status == 'disetujui',
               "bg-red-100 border-[1.5px] text-danger border-danger": row.status == 'ditolak',
             })}>{row.status}</TooltipContent>
           </Tooltip>
@@ -84,7 +84,7 @@ const SuratInternal: NextPageWithLayout = () => {
               <Badge variant={"outline"} className={
                 cn("cursor-pointer", {
                   "group-hover:bg-yellow-100 group-hover:border-yellow-600 group-hover:text-yellow-600": row.status == 'pengajuan',
-                  "group-hover:bg-blue-100 group-hover:border-blue-600 group-hover:text-blue-600": row.status == 'disetujui',
+                  "group-hover:bg-green-100 group-hover:border-green-600 group-hover:text-green-700": row.status == 'disetujui',
                   "group-hover:bg-red-100 group-hover:border-red-600 group-hover:text-red-600": row.status == 'ditolak',
                 })
               }>
@@ -92,9 +92,9 @@ const SuratInternal: NextPageWithLayout = () => {
               </Badge>
             </TooltipTrigger>
             <TooltipContent className={cn("font-bold shadow", {
-              "bg-warning border-warning": row.status == 'pengajuan',
-              "bg-primary border-primary": row.status == 'disetujui',
-              "bg-danger border-danger": row.status == 'ditolak',
+              "bg-warning text-warning-foreground border-warning": row.status == 'pengajuan',
+              "bg-success text-success-foreground border-success": row.status == 'disetujui',
+              "bg-danger text-danger-foreground border-danger": row.status == 'ditolak',
             })
             }>{row.pj_detail.nama}</TooltipContent>
           </Tooltip>
@@ -255,7 +255,7 @@ const SuratInternal: NextPageWithLayout = () => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2">
               <CardTitle>Surat Internal</CardTitle>
-              <CardDescription>Daftar surat internal yang telah dibuat.</CardDescription>
+              <CardDescription>Daftar surat internal RSIA Aisyiyah Pekajangan.</CardDescription>
             </div>
             <Button variant="default" size="icon" className="w-7 h-7" onClick={() => route.push('/surat/internal/create')}><IconPlus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" /></Button>
           </div>

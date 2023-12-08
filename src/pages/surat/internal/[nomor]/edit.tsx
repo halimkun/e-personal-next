@@ -186,7 +186,7 @@ const EditSuratInternal: NextPageWithLayout = () => {
             <div className="flex flex-col md:flex-row gap-4">
               <div className="w-[60%] space-y-1">
                 <Label className="" htmlFor="tanggal">Tannggal</Label>
-                <Input type="datetime-local" name="tanggal" placeholder="tanggal" id="tanggal" value={data?.data?.tanggal} />
+                <Input type="datetime-local" name="tanggal" placeholder="tanggal" id="tanggal" defaultValue={data?.data?.tanggal} />
               </div>
               <div className="w-full space-y-1">
                 <Label className="" htmlFor="PJ">Penanggung Jawab</Label>
