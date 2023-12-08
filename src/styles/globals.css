@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 
 @layer base {
   :root {
@@ -33,19 +33,62 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+
+    /* FullCalendar */
+    /*
+    --fc-small-font-size: .85em;
+    --fc-page-bg-color: #fff;
+    --fc-neutral-bg-color: hsla(0,0%,82%,.3);
+    --fc-neutral-text-color: grey;
+    --fc-border-color: #934242;
+    --fc-button-text-color: #fff;
+    --fc-button-bg-color: #2c3e50;
+    --fc-button-border-color: #2c3e50;
+    --fc-event-bg-color: #3788d8;
+    --fc-event-border-color: #3788d8;
+    --fc-event-text-color: #fff;
+    --fc-event-selected-overlay-color: rgba(0,0,0,.25);
+    --fc-more-link-bg-color: #d0d0d0;
+    --fc-more-link-text-color: inherit;
+    --fc-event-resizer-thickness: 8px;
+    --fc-event-resizer-dot-total-width: 8px;
+    --fc-event-resizer-dot-border-width: 1px;
+    --fc-non-business-color: hsla(0,0%,84%,.3);
+    --fc-bg-event-color: #8fdf82;
+    --fc-bg-event-opacity: 0.3;
+    --fc-highlight-color: rgba(188,232,241,.3);
+    --fc-now-indicator-color: red;
+    */
+    --fc-button-active-bg-color: hsl(221.2 83.2% 53.3%);
+    --fc-button-active-border-color: hsl(221, 78%, 49%);
+    --fc-button-hover-bg-color: hsl(221, 66%, 35%);
+    --fc-button-hover-border-color: hsl(221, 66%, 35%);
+
+    --fc-list-event-dot-width: 10px;
+    --fc-list-event-hover-bg-color: 210 40% 96.1%;
+    --fc-daygrid-event-dot-width: 6px;
   }
- 
+
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.4 91.3% 54.9%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --background: 0 0% 4% /* neutral-950 */;
+    --foreground: 0 0% 99% /* neutral-50 */;
+    --card: 0 0% 4% /* neutral-950 */;
+    --card-foreground: 0 0% 99% /* neutral-50 */;
+    --popover: 0 0% 4% /* neutral-950 */;
+    --popover-foreground: 0 0% 99% /* neutral-50 */;
+    --primary: 21 91% 49% /* orange-600 */;
+    --primary-foreground: 34 100% 97% /* orange-50 */;
+    --secondary: 143 65% 25% /* green-800 */;
+    --secondary-foreground: 139 77% 97% /* green-50 */;
+    --muted: 0 0% 15% /* neutral-800 */;
+    --muted-foreground: 0 0% 64% /* neutral-400 */;
+    --accent: 336 75% 36% /* pink-800 */;
+    --accent-foreground: 328 74% 98% /* pink-50 */;
+    --destructive: 0 63% 31% /* red-900 */;
+    --destructive-foreground: 0 0% 99% /* neutral-50 */;
+    --border: 0 0% 15% /* neutral-800 */;
+    --input: 0 0% 15% /* neutral-800 */;
+    --ring: 21 91% 49% /* orange-600 */;
 
     --warning: 37.4 91.3% 54.9%;
     --warning-foreground: 222.2 47.4% 11.2%;
@@ -54,24 +97,83 @@
     --success: 157.3 91.3% 44.9%;
     --success-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    /* secondary */
+    --fc-list-event-hover-bg-color: 210 40% 96.1%;
   }
 }
 
- 
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
+.fc .fc-toolbar-title {
+  font-size: 1.25rem !important;
+  margin: 0;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* .fc .fc-button {
+  @apply inline-flex items-center justify-center border border-transparent rounded-md shadow-sm px-4 py-2 bg-primary text-sm font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-[0.875rem];
+} */
+
+.fc-day-today {
+  background-color: #edf5f7 !important;
+}
+
+.dark .fc-day-today {
+  background-color: #2d3748 !important;
+}
+
+.dark .fc-list {
+  @apply border border-border;
+}
+
+.dark .fc-list-day-cushion {
+  @apply border-b border-border bg-secondary;
+}
+
+.dark .fc-list-event:hover,
+.dark .fc-list-event:hover .fc-list-event-time,
+.dark .fc-list-event:hover .fc-list-event-title {
+  @apply bg-secondary;
+}
+
+.dark .fc-list-event-dot:hover,
+.dark .fc-list-event-graphic:hover {
+  @apply bg-secondary;
+}
+
+.fc-theme-standard td {
+  @apply border border-border;
+}
+
+.fc-day-other {
+  @apply text-gray-400;
+}
+
+.fc .fc-button .fc-icon {
+  font-size: 1.2rem !important;
+}
+
+a.fc-col-header-cell-cushion {
+  @apply text-secondary-foreground font-semibold my-1;
+}
+
+.fc .fc-daygrid-day-top {
+  flex-direction: inherit !important;
+  padding: 5px !important;
+  font-size: .85em !important;
+  color: #6b7280 !important;
+}
+
+/* .fc .fc-button-primary:disabled {
+  @apply inline-flex items-center justify-center border border-transparent rounded-md shadow-sm px-4 py-2 bg-primary text-sm font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+} */
