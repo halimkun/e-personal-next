@@ -21,7 +21,7 @@ const AppLayout = ({ children }: any) => {
         {children}
       </div>
 
-      <Toaster position='bottom-center' toastOptions={
+      <Toaster position='bottom-right' toastOptions={
         {
           style: {
             borderRadius: '10px',

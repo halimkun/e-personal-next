@@ -4,22 +4,86 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/router";
 import { Combobox } from "../inputs/combo-box";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/components/ui/use-toast";
-import { useSession } from "next-auth/react";
-import { cn } from "@/lib/utils";
+import { getSession, useSession } from "next-auth/react";
+import { toast } from "react-hot-toast";
+import { parse } from "path";
 
 export default function FormAddSuratEksternal(penanggungJawab: any) {
   const router = useRouter();
   const { data } = useSession();
 
-  const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
   const [selectedPj, setSelectedPj] = useState("")
   const [withKaryawan, setWithKaryawan] = useState(false)
+  const [lastNomorSurat, setLastNomorSurat] = useState("");
+  const [newNomorSurat, setNewNomorSurat] = useState("");
+  const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
+
+
+  useEffect(() => {
+    const r = async () => {
+      const rs = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/last-nomor', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${data?.rsiap?.access_token}`
+        }
+      });
+
+      const result = await rs.json();
+      if (result.success) {
+        setLastNomorSurat(result.data.no_surat)
+      }
+    }
+
+    r()
+  }, [])
+
+  useEffect(() => {
+    parseNomorSurat()
+  }, [lastNomorSurat])
+  
+  const parseNomorSurat = () => {
+    if (!lastNomorSurat) return
+
+    const splitNomorSurat = lastNomorSurat.split("/")
+    const nomorSurat = parseInt(splitNomorSurat[0]) + 1
+    const ns = nomorSurat < 100 ? `00${nomorSurat}` : nomorSurat
+    
+    const nomor = `${ns}/B/S-RSIA/${new Date().getDate()}${new Date().getMonth() + 1}${new Date().getFullYear().toString().slice(-2)}`
+    setNewNomorSurat(nomor)
+  }
+
+  const onFormAddSuratEksternalSubmit = async (event: React.SyntheticEvent) => {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget as any)
+    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/create', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${data?.rsiap?.access_token}`
+      },
+      body: formData
+    })
+
+    const result = await response.json()
+    if (result.success) {
+      toast.success('Surat eksternal berhasil ditambahkan.')
+      await new Promise(r => setTimeout(r, 2000))
+      router.push('/surat/eksternal')
+    } else {
+      if (typeof result.message === 'object') {
+        Object.entries(result.message).forEach(([key, value]) => {
+          toast.error(`${key}: ${value}`)
+        })
+      } else {
+        toast.error(result.message)
+      }
+    }
+  }
 
   const KaryawanColumns = [
     {
@@ -71,36 +135,40 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
     }
   ]
 
-  const onFormAddSuratEksternalSubmit = async (event: React.SyntheticEvent) => {
-    event.preventDefault()
-    window.alert("Feature not implemented yet")
-  }
-
   return (
     <form action="#!" method="post" onSubmit={onFormAddSuratEksternalSubmit}>
       <div className="grid gap-3 py-4">
+        <div className="w-full space-y-1">
+          <Label className="text-primary" htmlFor="no_surat">Nomor Surat</Label>
+          <Input type="text" name="no_surat" placeholder="nomor surat" id="no_surat" value={newNomorSurat} onChange={(e) => setLastNomorSurat(e.target.value)} />
+          <p className="text-xs text-danger no_surat-error"></p>
+        </div>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-[60%] space-y-1">
             <Label className="text-primary" htmlFor="tanggal">Tannggal</Label>
             <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
+            <p className="text-xs text-danger tanggal-error"></p>
           </div>
           <div className="w-full space-y-1">
             <Label className="text-primary" htmlFor="PJ">Penanggung Jawab</Label>
             <Input type="hidden" name="pj" value={selectedPj} />
             <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab" />
-          </div>
-          <div className="w-full space-y-1">
-            <Label className="text-primary" htmlFor="tempat">Tempat</Label>
-            <Input type="text" name="tempat" placeholder="Tempat Kegiatan" id="tempat" />
+            <p className="text-xs text-danger pj-error"></p>
           </div>
         </div>
         <div className="w-full space-y-1">
+          <Label className="text-primary" htmlFor="alamat">Alamat</Label>
+          <Input type="text" name="alamat" placeholder="alamat yang dituju" id="alamat" />
+          <p className="text-xs text-danger alamat-error"></p>
+        </div>
+        <div className="w-full space-y-1">
           <Label className="text-primary" htmlFor="perihal">Perihal</Label>
-          <Input type="text" name="perihal" placeholder="Perihal Surat . . ." id="perihal" />
+          <Input type="text" name="perihal" placeholder="Perihal Surat" id="perihal" />
+          <p className="text-xs text-danger perihal-error"></p>
         </div>
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <Button type="button" variant={'outline'} onClick={() => {
           setWithKaryawan(!withKaryawan)
         }}>
@@ -118,7 +186,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
           dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
           fetcher={{ method: "GET" }}
         />
-      </div>
+      </div> */}
 
       <div className="mt-10 flex justify-end">
         <Button type="submit">Simpan</Button>
