@@ -4,6 +4,7 @@ import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCer
 import { IconMailShare } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/router";
+import { IconFileStack } from "@tabler/icons-react";
 
 const AppMenu = () => {
   const router = useRouter();
@@ -47,6 +48,17 @@ const AppMenu = () => {
             <Link href="/surat/eksternal">
               <IconMailShare className="w-5 h-5 mr-2" />
               External
+            </Link>
+          </Button>
+        </li>
+        <li>
+          <Button variant="ghost" className={cn(
+            'w-full justify-start',
+            pathname.startsWith('/berkas/spo') && 'bg-primary text-primary-foreground'
+          )} asChild>
+            <Link href="/berkas/spo">
+              <IconFileStack className="w-5 h-5 mr-2" />
+              SPO
             </Link>
           </Button>
         </li>

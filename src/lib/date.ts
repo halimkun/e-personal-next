@@ -12,7 +12,6 @@ export function getTime(date: Date | string) {
   return new Date(date).toLocaleString("id-ID", {
     hour: "numeric",
     minute: "numeric",
-    second: "numeric",
   })
 }
 
