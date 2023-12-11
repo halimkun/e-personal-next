@@ -80,7 +80,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
     const perihal = (event.target as any).perihal.value
     const karyawan = selectedKaryawan
 
-    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/create', {
+    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/internal/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -146,11 +146,11 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
         <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
         <LaravelPagination
           columns={KaryawanColumns}
-          dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
+          dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
           fetcher={{ method: "GET" }}
         />
       </div>
-
+rsiap-api
       <div className="mt-4 flex justify-end">
         <Button type="submit">Simpan</Button>
       </div>

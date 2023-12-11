@@ -35,7 +35,7 @@ const SuratInternal: NextPageWithLayout = () => {
     const fetchMetrics = async () => {
       const session = await getSession()
       setSS(session)
-      const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/metrics', {
+      const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/internal/metrics', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -262,13 +262,13 @@ const SuratInternal: NextPageWithLayout = () => {
         <CardContent>
           <LaravelPagination
             columns={suratInternalColumns}
-            // onRowClick={(row: any) => {
+            // onRowClick={(row: any) => {rsiap-api
             //   toast({
             //     title: 'Coming soon!',
             //     description: row.no_surat,
             //   })
             // }}
-            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal"}
+            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/internal"}
             fetcher={{ method: "GET" }}
           />
         </CardContent>

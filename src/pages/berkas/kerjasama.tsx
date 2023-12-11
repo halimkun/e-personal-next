@@ -38,7 +38,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
   useEffect(() => {
     const fetchLastNomor = async () => {
       const session = await getSession();
-      const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/last-nomor`, {
+      const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/pks/last-nomor`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -62,7 +62,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     const session = await getSession();
     const updateData = new FormData(e.target);
 
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/${pks.id}`, {
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/pks/${pks.id}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -83,7 +83,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
 
   const onDelete = async (id: string) => {
     const session = await getSession();
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/${id}`, {
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/pks/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -187,7 +187,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
               setPks(row)
               setIsRowClick(true)
             }}
-            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks"}
+            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/pks"}
             fetcher={{ method: "GET" }}
           />
         </CardContent>
@@ -211,7 +211,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
               <div>{pks.judul}</div>
             </div>
             <div className="grid gap-2 grid-cols-2">
-              <div className="space-y-1">
+              <div className="space-y-1">rsiap-api
                 <div className="font-bold text-primary text-xs">No. PKS Internal : </div>
                 <Badge variant='secondary'>{pks.no_pks_internal}</Badge>
               </div>

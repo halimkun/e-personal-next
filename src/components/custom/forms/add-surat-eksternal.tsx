@@ -26,7 +26,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
 
   useEffect(() => {
     const r = async () => {
-      const rs = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/last-nomor', {
+      const rs = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/eksternal/last-nomor', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${data?.rsiap?.access_token}`
@@ -61,7 +61,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget as any)
-    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/create', {
+    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/eksternal/create', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${data?.rsiap?.access_token}`
@@ -183,7 +183,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
         <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
         <LaravelPagination
           columns={KaryawanColumns}
-          dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
+          dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
           fetcher={{ method: "GET" }}
         />
       </div> */}

@@ -18,7 +18,7 @@ const authOption: NextAuthOptions = {
       async authorize(credentials, req) {
         // request to API
         const { username, password } = credentials as { username: string, password: string };
-        const response: any = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/auth/login', {
+        const response: any = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

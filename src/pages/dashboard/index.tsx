@@ -28,7 +28,7 @@ const DashboardPage: NextPageWithLayout = () => {
       return data.data;
     }
 
-    fetcher('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/get/calendar').then(data => {
+    fetcher('https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/internal/get/calendar').then(data => {
       setEvents(data)
     }).catch(err => console.log(err))
   }, [])

@@ -78,7 +78,7 @@ const SuratInternal: NextPageWithLayout = () => {
   const onEdit = async (e: any) => {
     e.preventDefault()
     const formData = new FormData(e.target) 
-    const response = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/update?nomor=${surat.no_surat}`, {
+    const response = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/eksternal/update?nomor=${surat.no_surat}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${data?.rsiap?.access_token}`
@@ -98,7 +98,7 @@ const SuratInternal: NextPageWithLayout = () => {
 
   const onDelete = async (no_surat: string) => {
     // destroy/no_surat
-    const response = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/destroy?nomor=${no_surat}`, {
+    const response = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/eksternal/destroy?nomor=${no_surat}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${data?.rsiap?.access_token}`
@@ -190,7 +190,7 @@ const SuratInternal: NextPageWithLayout = () => {
                 setSurat(row)
                 setIsOpenModalMenu(true)
               }}
-              dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal"}
+              dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api/api/surat/eksternal"}
               fetcher={{ method: "GET" }}
             />
           </CardContent>
@@ -239,7 +239,7 @@ const SuratInternal: NextPageWithLayout = () => {
           <div className="flex justify-between w-full">
             <div className="flex justify-end gap-2 w-full mt-6">
               <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => {
-                fetchPegawai('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama')
+                fetchPegawai('https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama')
                 setIsOpenModalMenu(false)
                 setIsOpenDialogEdit(true)
               }}>

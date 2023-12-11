@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/auth/login', {
+      const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

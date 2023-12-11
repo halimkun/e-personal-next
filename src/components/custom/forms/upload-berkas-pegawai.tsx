@@ -18,7 +18,7 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
   useEffect(() => {
     const fetchKategori = async () => {
       const session = await getSession()
-      const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/berkas/kategori`, {
+      const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai/berkas/kategori`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -42,7 +42,7 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
   const fetchBerkas = async (kategori: string) => {
     setBerkas([])
     const session = await getSession()
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/berkas/nama-berkas?kategori=${kategori}`, {
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai/berkas/nama-berkas?kategori=${kategori}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -68,7 +68,7 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
     const formData = new FormData(e.target)
     formData.append('nik', nik)
 
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/upload/berkas`, {
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai/upload/berkas`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`

@@ -28,7 +28,7 @@ const BerkasKaryawan = () => {
     const session = await getSession()
     if (!confirm) return
 
-    await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/delete/berkas', {
+    await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai/delete/berkas', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ const BerkasKaryawan = () => {
     }
   }
 
-  const { data: berkas, error } = useSWR('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/get/berkas', fetcher)
+  const { data: berkas, error } = useSWR('https://sim.rsiaaisyiyah.com/rsiap-api/api/pegawai/get/berkas', fetcher)
 
   if (error) return (
     <div className="flex flex-col items-start justify-center h-full gap-4">
