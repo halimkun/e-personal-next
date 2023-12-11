@@ -19,8 +19,6 @@ import { useRouter } from "next/router";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 
-
-
 const BerkasKerjasama: NextPageWithLayout = () => {
   const router = useRouter();
 
@@ -55,6 +53,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     fetchLastNomor()
   }, [])
 
+<<<<<<< HEAD
 
   const onUpdate = async (e: any) => {
     e.preventDefault();
@@ -81,6 +80,8 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     }
   }
 
+=======
+>>>>>>> df16a41b8ef5c56dc112f1f8950d2d675cf612a7
   const onDelete = async (id: string) => {
     const session = await getSession();
     const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/pks/${id}`, {
