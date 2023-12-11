@@ -19,8 +19,6 @@ import { useRouter } from "next/router";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 
-
-
 const BerkasKerjasama: NextPageWithLayout = () => {
   const router = useRouter();
 
@@ -54,32 +52,6 @@ const BerkasKerjasama: NextPageWithLayout = () => {
 
     fetchLastNomor()
   }, [])
-
-
-  const onUpdate = async (e: any) => {
-    e.preventDefault();
-
-    const session = await getSession();
-    const updateData = new FormData(e.target);
-
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/${pks.id}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`
-      },
-      body: updateData
-    });
-
-    const result = await res.json();
-
-    if (result.success) {
-      toast.success('Data berhasil diperbarui!');
-      setIsOpen(false)
-      router.reload()
-    } else {
-      console.log(result);
-    }
-  }
 
   const onDelete = async (id: string) => {
     const session = await getSession();

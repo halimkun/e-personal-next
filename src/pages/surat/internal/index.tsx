@@ -5,7 +5,6 @@ import { getSession } from 'next-auth/react';
 import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../../_app';
 
-import CountUp from 'react-countup';
 import AppLayout from '@/components/layouts/app';
 import LaravelPagination from '@/components/custom/tables/laravel-pagination';
 import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
@@ -18,7 +17,7 @@ import { IconPlus, IconDotsVertical, IconTag } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 
 const SuratInternal: NextPageWithLayout = () => {
@@ -195,11 +194,7 @@ const SuratInternal: NextPageWithLayout = () => {
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'disetujui').map((metric: any) => (
               <div className='w-full flex justify-end font-bold text-2xl text-success' key={metric.status}>
-                <CountUp
-                  start={0}
-                  end={metric.total}
-                  duration={5}
-                />
+                {metric.total}
               </div>
             ))}
           </CardContent>
@@ -216,11 +211,7 @@ const SuratInternal: NextPageWithLayout = () => {
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'pengajuan').map((metric: any) => (
               <div className='w-full flex justify-end font-bold text-2xl text-warning' key={metric.status}>
-                <CountUp
-                  start={0}
-                  end={metric.total}
-                  duration={5}
-                />
+                {metric.total}
               </div>
             ))}
           </CardContent>
@@ -237,11 +228,7 @@ const SuratInternal: NextPageWithLayout = () => {
           <CardContent>
             {metrics.filter((metric: any) => metric.status == 'ditolak').map((metric: any) => (
               <div className='w-full flex justify-end font-bold text-2xl text-danger' key={metric.status}>
-                <CountUp
-                  start={0}
-                  end={metric.total}
-                  duration={5}
-                />
+                {metric.total}
               </div>
             ))}
           </CardContent>
