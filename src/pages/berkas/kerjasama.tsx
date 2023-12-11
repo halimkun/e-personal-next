@@ -53,35 +53,6 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     fetchLastNomor()
   }, [])
 
-<<<<<<< HEAD
-
-  const onUpdate = async (e: any) => {
-    e.preventDefault();
-
-    const session = await getSession();
-    const updateData = new FormData(e.target);
-
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/pks/${pks.id}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`
-      },
-      body: updateData
-    });
-
-    const result = await res.json();
-
-    if (result.success) {
-      toast.success('Data berhasil diperbarui!');
-      setIsOpen(false)
-      router.reload()
-    } else {
-      console.log(result);
-    }
-  }
-
-=======
->>>>>>> df16a41b8ef5c56dc112f1f8950d2d675cf612a7
   const onDelete = async (id: string) => {
     const session = await getSession();
     const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/pks/${id}`, {
