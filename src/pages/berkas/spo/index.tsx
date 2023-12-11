@@ -26,7 +26,7 @@ const SpoPage = () => {
   useEffect(() => {
     const getLastNomor = async () => {
       const session = await getSession()
-      const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/spo/last-nomor', {
+      const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/spo/last-nomor', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -44,7 +44,7 @@ const SpoPage = () => {
 
   const onDelete = async () => {
     const session = await getSession()
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/spo/delete?nomor=${spo.nomor}`, {
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/spo/delete?nomor=${spo.nomor}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -137,7 +137,7 @@ const SpoPage = () => {
               setSpo(row)
               setIsMenuOpen(true)
             }}
-            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/spo"}
+            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/spo"}
             fetcher={{ method: "GET" }}
           />
         </CardContent>

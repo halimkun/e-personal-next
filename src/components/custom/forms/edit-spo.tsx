@@ -24,7 +24,7 @@ const FormEditSpo = (props: FormEditSpoProps) => {
     const session = await getSession()
     const data = new FormData(e.target)
 
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/spo/update`, {
+    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api/api/berkas/spo/update`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`
