@@ -25,6 +25,8 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
   const [selected, setSelected] = useState<string | undefined>(undefined)
   const [tglTerbit, setTglTerbit] = useState<any>(new Date().toISOString().split('T')[0])
 
+  const [unit, setUnit] = useState<any>('')
+
   useEffect(() => {
     setLn(lastNomor[jenisSpo])
     parseNomor()
@@ -42,7 +44,7 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
       if (result.success) {
         const items = result.data.map((item: any) => {
           return {
-            label: item.nama,
+            label: item.nama == "-" || item.dep_id == "-" ? "- ( Isi Manual )" : item.nama,
             value: item.dep_id
           }
         })
@@ -55,6 +57,7 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
 
   useEffect(() => {
     setIsTypeManual(selected == "-")
+    setUnit(selected == "-" ? '' : selected)
   }, [selected])
 
   function parseNomor() {
@@ -111,7 +114,7 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
           <div className="w-full">
             <div className="space-y-1.5">
               <Label className="text-primary font-semibold" htmlFor="unit">Unit Kerja</Label>
-              <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selected} />
+              <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={unit} />
               <Combobox items={departemen} setSelectedItem={setSelected} selectedItem={selected} placeholder="Pilih Unit" />
             </div>
           </div>
@@ -125,7 +128,7 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
         {isTypeManual ? (
           <div className="space-y-1.5">
             <Label className="text-primary font-semibold" htmlFor="tunit">Tuliskan Unit</Label>
-            <Input type="text" id="tunit" placeholder="tuliskan unit manual" onChange={(e) => setSelected(e.target.value)} name="unit_manual" disabled={!isTypeManual} />
+            <Input type="text" id="tunit" placeholder="tuliskan unit manual" onChange={(e) => setUnit(e.target.value)} name="unit_manual" disabled={!isTypeManual} />
           </div>
         ) : (<></>)}
         <div className="mb-4 space-y-1.5 relative">

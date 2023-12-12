@@ -7,8 +7,6 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { getSession } from "next-auth/react"
-import { Toggle } from "@/components/ui/toggle"
-import { IconSelect, IconTxt } from "@tabler/icons-react"
 import { Combobox } from "../inputs/combo-box"
 
 interface FormEditSpoProps {
