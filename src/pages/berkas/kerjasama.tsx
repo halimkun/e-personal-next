@@ -1,22 +1,22 @@
-import { ReactElement, useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
+import { ReactElement, useEffect, useState } from "react";
 
 import AppLayout from "@/components/layouts/app";
 import FormAddPks from "@/components/custom/forms/add-pks";
-import FormEditPks from "@/components/custom/forms/edit-pks";
+import DialogEditPks from "@/components/custom/modals/dialog-edit-pks";
 import LaravelPagination from "@/components/custom/tables/laravel-pagination";
+import DialogPreviewBerkas from "@/components/custom/modals/dialog-preview-berkas";
 
-import { getDate, getFullDate } from "@/lib/date";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getDate, getFullDate } from "@/lib/date";
 import { IconEdit, IconFileSearch, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { getSession } from "next-auth/react";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/router";
-import { IconExclamationCircle } from "@tabler/icons-react";
 
 
 const BerkasKerjasama: NextPageWithLayout = () => {
@@ -36,7 +36,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
   useEffect(() => {
     const fetchLastNomor = async () => {
       const session = await getSession();
-      const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/last-nomor`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks/last-nomor`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -55,7 +55,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
 
   const onDelete = async (id: string) => {
     const session = await getSession();
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -159,7 +159,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
               setPks(row)
               setIsRowClick(true)
             }}
-            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks"}
+            dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks`}
             fetcher={{ method: "GET" }}
           />
         </CardContent>
@@ -231,35 +231,18 @@ const BerkasKerjasama: NextPageWithLayout = () => {
       </Dialog>
 
       {/* Dialog Preview Berkas */}
-      <Dialog open={isPreview} onOpenChange={setIsPreview}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Preview Berkas</DialogTitle>
-          </DialogHeader>
-          <iframe src={"https://sim.rsiaaisyiyah.com/webapps/rsia_pks/" + pks.berkas} className="w-full h-[calc(100vh-110px)]"></iframe>
-        </DialogContent>
-      </Dialog>
-
+      <DialogPreviewBerkas
+        berkasUrl={`${process.env.NEXT_PUBLIC_BASE_BERKAS_URL}/rsia_pks/${pks.berkas}`}
+        setIsPreview={setIsPreview}
+        isPreview={isPreview}
+      />
 
       {/* Dialog Edit PKS */}
-      <Dialog open={isModalEditOpen} onOpenChange={setIsModalEditOpen}>
-        <DialogContent className="max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Forms Edit PKS</DialogTitle>
-            <DialogDescription>
-              Anda bisa mengedit data perjanjian kerjasama ini melalui form dibawah ini.
-              {/* alert */}
-              <div className="px-3 py-2 rounded-xl border-2 border-warning mt-1.5">
-                <div className="font-bold flex items-center justify-start text-warning gap-2">
-                  <IconExclamationCircle className="h-4 w-4 text-warning" /> Perhatian!
-                </div>
-                Harap berhati-hati dalam mengedit <span className="font-bold">Nomor Surat</span> agar tidak terjadi duplikasi data.
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-          <FormEditPks pks={pks} />
-        </DialogContent>
-      </Dialog>
+      <DialogEditPks
+        isModalEditOpen={isModalEditOpen}
+        setIsModalEditOpen={setIsModalEditOpen}
+        pks={pks}
+      />
     </div>
   );
 }
