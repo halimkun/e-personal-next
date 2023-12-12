@@ -34,7 +34,6 @@ const SuratInternal: NextPageWithLayout = () => {
     const fetchMetrics = async () => {
       const session = await getSession()
       setSS(session)
-      // const uri =  
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/metrics`, {
         method: 'GET',
         headers: {
@@ -250,7 +249,7 @@ const SuratInternal: NextPageWithLayout = () => {
         <CardContent>
           <LaravelPagination
             columns={suratInternalColumns}
-            // onRowClick={(row: any) => {
+            // onRowClick={(row: any) => {rsiap-api
             //   toast({
             //     title: 'Coming soon!',
             //     description: row.no_surat,
