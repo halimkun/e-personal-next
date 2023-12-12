@@ -94,7 +94,7 @@ const SuratInternal: NextPageWithLayout = () => {
               "bg-success text-success-foreground border-success": row.status == 'disetujui',
               "bg-danger text-danger-foreground border-danger": row.status == 'ditolak',
             })
-            }>{row.pj_detail.nama}</TooltipContent>
+            }>{row.pj_detail ? row.pj_detail.nama : row.pj}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )

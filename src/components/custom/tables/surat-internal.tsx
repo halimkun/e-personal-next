@@ -45,7 +45,7 @@ const TabelSuratInternal = ({ data }: SuratInternalProps) => {
                       {d.pj}
                     </Badge>
                   </TooltipTrigger>
-                  <TooltipContent>{d.pj_detail.nama}</TooltipContent>
+                  <TooltipContent>{d.pj_detail ? d.pj_detail.nama : d.pj}</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </TableCell>

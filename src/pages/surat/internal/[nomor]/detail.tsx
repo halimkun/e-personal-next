@@ -76,7 +76,7 @@ const DetailSuratInternal: NextPageWithLayout = () => {
             <tr>
               <th className="text-left">Penanggung Jawab</th>
               <th>:</th>
-              <td className="p-2">{detail.pj_detail.nama}</td>
+              <td className="p-2">{detail.pj_detail ? detail.pj_detail.nama : detail.pj}</td>
             </tr>
             <tr>
               <th className="text-left">Tempat</th>

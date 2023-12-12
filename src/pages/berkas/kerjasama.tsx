@@ -202,7 +202,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
             </div>
             <div className="space-y-1">
               <div className="font-bold text-primary text-xs">Penanggung Jawab : </div>
-              <div>{pks.pj_detail?.nama}</div>
+              <div>{pks.pj_detail ? pks.pj_detail.nama : pks.pj}</div>
             </div>
           </div>
 
