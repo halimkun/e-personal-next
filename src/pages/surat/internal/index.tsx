@@ -249,7 +249,7 @@ const SuratInternal: NextPageWithLayout = () => {
         <CardContent>
           <LaravelPagination
             columns={suratInternalColumns}
-            // onRowClick={(row: any) => {rsiap-api
+            // onRowClick={(row: any) => {
             //   toast({
             //     title: 'Coming soon!',
             //     description: row.no_surat,

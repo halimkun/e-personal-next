@@ -183,7 +183,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
               <div>{pks.judul}</div>
             </div>
             <div className="grid gap-2 grid-cols-2">
-              <div className="space-y-1">rsiap-api
+              <div className="space-y-1">
                 <div className="font-bold text-primary text-xs">No. PKS Internal : </div>
                 <Badge variant='secondary'>{pks.no_pks_internal}</Badge>
               </div>
