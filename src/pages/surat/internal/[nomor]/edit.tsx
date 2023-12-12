@@ -62,7 +62,7 @@ const EditSuratInternal: NextPageWithLayout = () => {
       })
     }
   }
-  const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`, detailsFetcher)
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/detail`, detailsFetcher)
 
   if (error) return (
     <div className="flex flex-col items-start justify-center h-full gap-4">
@@ -87,10 +87,7 @@ const EditSuratInternal: NextPageWithLayout = () => {
       penerima: selectedKaryawan
     }
 
-    // ready to send data
-    // https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/update post
-
-    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/update', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -213,7 +210,7 @@ const EditSuratInternal: NextPageWithLayout = () => {
               <CardContent>
                 <LaravelPagination
                   columns={KaryawanColumns}
-                  dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
+                  dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
                   fetcher={{ method: "GET" }}
                 />
               </CardContent>

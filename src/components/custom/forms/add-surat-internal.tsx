@@ -7,7 +7,7 @@ import { Combobox } from "../inputs/combo-box";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
@@ -80,7 +80,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
     const perihal = (event.target as any).perihal.value
     const karyawan = selectedKaryawan
 
-    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/create', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
         <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
         <LaravelPagination
           columns={KaryawanColumns}
-          dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
+          dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
           fetcher={{ method: "GET" }}
         />
       </div>

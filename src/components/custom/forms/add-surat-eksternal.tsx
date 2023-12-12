@@ -26,7 +26,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
 
   useEffect(() => {
     const r = async () => {
-      const rs = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/last-nomor', {
+      const rs = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal/last-nomor`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${data?.rsiap?.access_token}`
@@ -61,7 +61,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget as any)
-    const response = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/eksternal/create', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal/create`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${data?.rsiap?.access_token}`
@@ -167,26 +167,6 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
           <p className="text-xs text-danger perihal-error"></p>
         </div>
       </div>
-
-      {/* <div className="mt-4">
-        <Button type="button" variant={'outline'} onClick={() => {
-          setWithKaryawan(!withKaryawan)
-        }}>
-          {withKaryawan ? 'Hide karyawan' : 'Show Karyawan'}
-        </Button>
-      </div>
-
-      <div className={cn(
-        'mt-4', withKaryawan ? 'block border-y-2 py-4' : 'hidden'
-      )}>
-        <CardTitle>Pilih Karyawan</CardTitle>
-        <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
-        <LaravelPagination
-          columns={KaryawanColumns}
-          dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=0&select=nik,nama,bidang,jbtn"}
-          fetcher={{ method: "GET" }}
-        />
-      </div> */}
 
       <div className="mt-10 flex justify-end">
         <Button type="submit">Simpan</Button>

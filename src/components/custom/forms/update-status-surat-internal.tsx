@@ -31,7 +31,7 @@ const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_s
       {/* simpan button */}
       <div className="mt-4 flex justify-end space-x-2">
         <Button onClick={async () => {
-          const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/update/status`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/update/status`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

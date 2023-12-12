@@ -7,7 +7,7 @@ export default function withAuth(middleware: NextMiddleware, requireAuth: string
 
     if (requireAuth.some(path => pathname.startsWith(path.replace('*', '')))) {
       const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-      // TODO : validate token to API server https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/auth/me
+      // TODO : validate token to API server https://sim.rsiaaisyiyah.com/rsiap-api/api/auth/me
 
       if (!token) {
         const url = new URL('/auth/login', req.url);

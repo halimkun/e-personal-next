@@ -31,7 +31,7 @@ const DetailSuratInternal: NextPageWithLayout = () => {
     }
   }
 
-  const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/detail`, fetcher)
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/detail`, fetcher)
 
   if (error) return (
     <div className="flex flex-col items-start justify-center h-full gap-4">

@@ -25,7 +25,7 @@ const FormEditPks = (props: Props) => {
     const session = await getSession();
     const d = new FormData(e.target);
 
-    const res = await fetch(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/pks/${props.pks?.id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks/${props.pks?.id}`, {
       method: 'POST',
       body: d,
       headers: {

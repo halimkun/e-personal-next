@@ -11,10 +11,12 @@ import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 import useSWR from "swr";
+import DialogPreviewBerkas from "@/components/custom/modals/dialog-preview-berkas";
 
 
 const BerkasKaryawan = () => {
   const router = useRouter()
+  const [isPreview, setIsPreview] = useState<boolean>(false)
   const [data, setData] = useState<any>({
     nama: "",
     nik: "",
@@ -28,7 +30,7 @@ const BerkasKaryawan = () => {
     const session = await getSession()
     if (!confirm) return
 
-    await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/delete/berkas', {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pegawai/delete/berkas`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +72,7 @@ const BerkasKaryawan = () => {
         if (!res.ok) {
           throw Error(res.status + ' ' + res.statusText)
         }
-  
+
         const response = res.json()
         response.then((data) => {
           setData(data.data)
@@ -80,7 +82,7 @@ const BerkasKaryawan = () => {
     }
   }
 
-  const { data: berkas, error } = useSWR('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai/get/berkas', fetcher)
+  const { data: berkas, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai/get/berkas`, fetcher)
 
   if (error) return (
     <div className="flex flex-col items-start justify-center h-full gap-4">
@@ -158,17 +160,15 @@ const BerkasKaryawan = () => {
                     </div>
                     <div className="flex gap-2 justify-end items-center">
                       <Button variant='destructive' size="icon" className="h-8 w-8" onClick={() => handleDelete(item.master_berkas_pegawai.kode, item.berkas)}><IconTrash className="h-5 w-5" /></Button>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button size="icon" className="h-8 w-8"><IconFileSearch className="h-5 w-5" /></Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md md:max-w-2xl lg:max-w-3xl">
-                          <DialogHeader>
-                            <DialogTitle>Preview Berkas</DialogTitle>
-                          </DialogHeader>
-                          <iframe src={"https://sim.rsiaaisyiyah.com/webapps/penggajian/" + item.berkas} className="w-full h-[calc(100vh-110px)]"></iframe>
-                        </DialogContent>
-                      </Dialog>
+                      <Button size="icon" className="h-8 w-8" onClick={() => setIsPreview(true)}>
+                        <IconFileSearch className="h-5 w-5" />
+                      </Button>
+
+                      <DialogPreviewBerkas
+                        berkasUrl={`${process.env.NEXT_PUBLIC_BASE_BERKAS_URL}/penggajian/${item.berkas}`}
+                        isPreview={isPreview}
+                        setIsPreview={setIsPreview}
+                      />
                     </div>
                   </div>
                 )

@@ -48,7 +48,7 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
     const session = await getSession()
     const data = new FormData(e.target)
 
-    const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/berkas/spo/create', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/create`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`

@@ -34,7 +34,8 @@ const SuratInternal: NextPageWithLayout = () => {
     const fetchMetrics = async () => {
       const session = await getSession()
       setSS(session)
-      const res = await fetch('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/metrics', {
+      // const uri =  
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/metrics`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -255,7 +256,7 @@ const SuratInternal: NextPageWithLayout = () => {
             //     description: row.no_surat,
             //   })
             // }}
-            dataSrc={"https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal"}
+            dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/surat/internal`}
             fetcher={{ method: "GET" }}
           />
         </CardContent>

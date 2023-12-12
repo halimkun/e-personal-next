@@ -19,7 +19,7 @@ const SelectPenanggungJawab = ({ ...props }: any) => {
     });
   }
 
-  const { data, error } = useSWR(`https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama`, fetcher);
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=1&with=bidang_detail&select=nik,nama`, fetcher);
 
   if (error) return <div>Error {error.message}</div>
   if (!data) return (

@@ -28,14 +28,14 @@ const DashboardPage: NextPageWithLayout = () => {
       return data.data;
     }
 
-    fetcher('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/surat/internal/get/calendar').then(data => {
+    fetcher(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/get/calendar`).then(data => {
       setEvents(data)
     }).catch(err => console.log(err))
   }, [])
 
   return (
     <>
-      <div className='flex gap-3'>
+      <div className='flex flex-col lg:flex-row items-start gap-3'>
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">

@@ -42,7 +42,7 @@ const SuratInternal: NextPageWithLayout = () => {
     })
   }
 
-  const { data, error } = useSWR('https://sim.rsiaaisyiyah.com/rsiap-api-dev/api/pegawai?datatables=1&with=bidang_detail&select=nik,nama', fetchPegawai);
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=1&with=bidang_detail&select=nik,nama`, fetchPegawai);
 
   if (error) return <div>Error {error.message}</div>
   if (!data) return (
