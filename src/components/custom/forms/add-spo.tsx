@@ -53,6 +53,9 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
     getDepartemen()
   }, [])
 
+  useEffect(() => {
+    setIsTypeManual(selected == "-")
+  }, [selected])
 
   function parseNomor() {
     const lastn = lastNomor[jenisSpo]
@@ -107,24 +110,9 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
         <div className="flex gap-3">
           <div className="w-full">
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label className="text-primary font-semibold" htmlFor="unit">Unit Kerja</Label>
-                <Toggle size='sm' className="h-5 w-5 p-0.5 mt-[0.29rem]" onPressedChange={(value) => {
-                  setIsTypeManual(value)
-                  if (value) {
-                    setSelected('')
-                  }
-                }}>
-                  {isTypeManual ? (<IconTxt className="h-4 w-4" />) : (<IconSelect className="h-4 w-4" />)}
-                </Toggle>
-              </div>
-
+              <Label className="text-primary font-semibold" htmlFor="unit">Unit Kerja</Label>
               <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selected} />
-              {isTypeManual ? (
-                <Input type="text" id="unit" name="unit_manual" placeholder="unit kerja" onChange={(e) => setSelected(e.target.value)} />
-              ) : (
-                <Combobox items={departemen} setSelectedItem={setSelected} selectedItem={selected} placeholder="Pilih Unit" />
-              )}
+              <Combobox items={departemen} setSelectedItem={setSelected} selectedItem={selected} placeholder="Pilih Unit" />
             </div>
           </div>
           <div className="w-full">
@@ -134,6 +122,12 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
             </div>
           </div>
         </div>
+        {isTypeManual ? (
+          <div className="space-y-1.5">
+            <Label className="text-primary font-semibold" htmlFor="tunit">Tuliskan Unit</Label>
+            <Input type="text" id="tunit" placeholder="tuliskan unit manual" onChange={(e) => setSelected(e.target.value)} name="unit_manual" disabled={!isTypeManual} />
+          </div>
+        ) : (<></>)}
         <div className="mb-4 space-y-1.5 relative">
           <Input type="hidden" id="jenis" name="jenis" value={jenisSpo} />
           <Label className="text-primary font-semibold" htmlFor="tipe-surat">Tipe Surat</Label>
