@@ -25,7 +25,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 const SuratInternal: NextPageWithLayout = () => {
   const route = useRouter()
   const { data } = useSession();
-  
+
   const [selectedPj, setSelectedPj] = useState("")
   const [tanggal, setTanggal] = useState<string | undefined>(new Date().toISOString().slice(0, 16))
 
@@ -77,7 +77,7 @@ const SuratInternal: NextPageWithLayout = () => {
 
   const onEdit = async (e: any) => {
     e.preventDefault()
-    const formData = new FormData(e.target) 
+    const formData = new FormData(e.target)
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal/update?nomor=${surat.no_surat}`, {
       method: 'POST',
       headers: {
@@ -126,7 +126,7 @@ const SuratInternal: NextPageWithLayout = () => {
     {
       name: 'PJ',
       selector: 'pj',
-      data: (row: any) => (
+      data: (row: any) => row.pj_detail ? (
         <TooltipProvider delayDuration={50}>
           <Tooltip>
             <TooltipTrigger>
@@ -134,9 +134,15 @@ const SuratInternal: NextPageWithLayout = () => {
                 {row.pj}
               </Badge>
             </TooltipTrigger>
-            <TooltipContent className='font-bold shadow text-secondary-foreground bg-secondary'>{row.pj_detail.nama}</TooltipContent>
+            <TooltipContent className='font-bold shadow text-secondary-foreground bg-secondary'>
+              {row.pj_detail.nama}
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+      ) : (
+        <Badge variant={"outline"} className="group-hover:bg-primary group-hover:text-primary-foreground">
+          {row.pj}
+        </Badge>
       )
     },
     {
@@ -216,7 +222,13 @@ const SuratInternal: NextPageWithLayout = () => {
                 <th>Penanggung Jawab</th>
                 <td>
                   <div className="flex items-center justify-start gap-4">
-                    {surat.pj_detail.nama} <Badge>{surat.pj}</Badge>
+                    {surat.pj_detail ? (
+                      <>
+                        {surat.pj_detail.nama} <Badge variant="outline" className="text-primary">{surat.pj}</Badge>
+                      </>
+                    ) : (
+                      <>{surat.pj}</>
+                    )}
                   </div>
                 </td>
               </tr>

@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
+import { Combobox } from "../inputs/combo-box";
+import { Toggle } from "@/components/ui/toggle";
+import { IconSelect, IconTxt } from "@tabler/icons-react";
 
 interface FormAddSpoProps {
   lastNomor: any
@@ -17,12 +20,39 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
   const [nn, setNn] = useState<any>('')
   const [jenisSpo, setJenisSpo] = useState<any>('medis')
   const [ln, setLn] = useState<any>(lastNomor[jenisSpo])
+  const [departemen, setDepartemen] = useState<any[]>([])
+  const [isTypeManual, setIsTypeManual] = useState(false)
+  const [selected, setSelected] = useState<string | undefined>(undefined)
   const [tglTerbit, setTglTerbit] = useState<any>(new Date().toISOString().split('T')[0])
 
   useEffect(() => {
     setLn(lastNomor[jenisSpo])
     parseNomor()
   }, [jenisSpo, tglTerbit, lastNomor])
+
+  useEffect(() => {
+    const getDepartemen = async () => {
+      const session = await getSession()
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/departemen`, {
+        headers: {
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`
+        }
+      })
+      const result = await res.json()
+      if (result.success) {
+        const items = result.data.map((item: any) => {
+          return {
+            label: item.nama,
+            value: item.dep_id
+          }
+        })
+
+        setDepartemen(items)
+      }
+    }
+    getDepartemen()
+  }, [])
+
 
   function parseNomor() {
     const lastn = lastNomor[jenisSpo]
@@ -44,9 +74,11 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
-    
+
     const session = await getSession()
     const data = new FormData(e.target)
+
+    data.delete('unit_manual')
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/create`, {
       method: 'POST',
@@ -75,8 +107,24 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
         <div className="flex gap-3">
           <div className="w-full">
             <div className="space-y-1.5">
-              <Label className="text-primary font-semibold" htmlFor="unit">Unit</Label>
-              <Input type="text" id="unit" name="unit" placeholder="unit kerja" />
+              <div className="flex items-center justify-between">
+                <Label className="text-primary font-semibold" htmlFor="unit">Unit Kerja</Label>
+                <Toggle size='sm' className="h-5 w-5 p-0.5 mt-[0.29rem]" onPressedChange={(value) => {
+                  setIsTypeManual(value)
+                  if (value) {
+                    setSelected('')
+                  }
+                }}>
+                  {isTypeManual ? (<IconTxt className="h-4 w-4" />) : (<IconSelect className="h-4 w-4" />)}
+                </Toggle>
+              </div>
+
+              <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selected} />
+              {isTypeManual ? (
+                <Input type="text" id="unit" name="unit_manual" placeholder="unit kerja" onChange={(e) => setSelected(e.target.value)} />
+              ) : (
+                <Combobox items={departemen} setSelectedItem={setSelected} selectedItem={selected} placeholder="Pilih Unit" />
+              )}
             </div>
           </div>
           <div className="w-full">

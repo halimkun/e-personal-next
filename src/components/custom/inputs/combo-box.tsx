@@ -43,7 +43,7 @@ export function Combobox({ items, setSelectedItem, selectedItem, placeholder }: 
             placeholder={placeholder ?? "Search item"}
             className="h-9"
           />
-          <ScrollArea className="max-h-72 w-full overflow-auto rounded-md border">
+          <ScrollArea className="max-h-64 w-full overflow-auto rounded-md border">
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
               {/* if items empty dont map */}

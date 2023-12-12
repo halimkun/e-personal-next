@@ -75,11 +75,7 @@ const SpoPage = () => {
     {
       name: 'Unit',
       selector: 'unit',
-      data: (row: any) => (
-        <div className="">
-          {row.unit}
-        </div>
-      )
+      data: (row: any) => row.departemen ? row.departemen.nama : row.unit
     },
     {
       name: 'Judul',
@@ -168,7 +164,7 @@ const SpoPage = () => {
                   <tr>
                     <th>Unit</th>
                     <th>:</th>
-                    <td>{spo.unit}</td>
+                    <td>{spo.departemen ? spo.departemen.nama : spo.unit}</td>
                   </tr>
                   <tr>
                     <th>Tanggal Terbit</th>
@@ -209,7 +205,6 @@ const SpoPage = () => {
             <DialogTitle>Edit SPO <Badge variant={'outline'}>{spo.nomor}</Badge></DialogTitle>
             <DialogDescription>
               Anda bisa mengedit data perjanjian kerjasama ini melalui form dibawah ini.
-              {/* alert */}
               <div className="px-3 py-2 rounded-xl border-2 border-warning mt-1.5">
                 <div className="font-bold flex items-center justify-start text-warning gap-2">
                   <IconExclamationCircle className="h-4 w-4 text-warning" /> Perhatian!
