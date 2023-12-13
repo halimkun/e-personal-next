@@ -6,7 +6,7 @@ const authOption: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: "V8Xhbodz5VIzHnjHL9+nUHhXYOmeCahpOYwyYSNrtQ==",
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       type: 'credentials',
@@ -18,7 +18,7 @@ const authOption: NextAuthOptions = {
       async authorize(credentials, req) {
         // request to API
         const { username, password } = credentials as { username: string, password: string };
-        const response: any = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        const response: any = await fetch(`${process.env.API_URL}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
