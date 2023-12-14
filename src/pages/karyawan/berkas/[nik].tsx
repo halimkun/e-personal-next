@@ -16,6 +16,7 @@ import DialogPreviewBerkas from "@/components/custom/modals/dialog-preview-berka
 
 const BerkasKaryawan = () => {
   const router = useRouter()
+  const [selectedBerkas, setSelectedBerkas] = useState<any>('')
   const [isPreview, setIsPreview] = useState<boolean>(false)
   const [data, setData] = useState<any>({
     nama: "",
@@ -160,12 +161,15 @@ const BerkasKaryawan = () => {
                     </div>
                     <div className="flex gap-2 justify-end items-center">
                       <Button variant='destructive' size="icon" className="h-8 w-8" onClick={() => handleDelete(item.master_berkas_pegawai.kode, item.berkas)}><IconTrash className="h-5 w-5" /></Button>
-                      <Button size="icon" className="h-8 w-8" onClick={() => setIsPreview(true)}>
+                      <Button size="icon" className="h-8 w-8" onClick={() => {
+                        setSelectedBerkas(item.berkas)
+                        setIsPreview(true)
+                      }}>
                         <IconFileSearch className="h-5 w-5" />
                       </Button>
 
                       <DialogPreviewBerkas
-                        berkasUrl={`${process.env.NEXT_PUBLIC_BASE_BERKAS_URL}/penggajian/${item.berkas}`}
+                        berkasUrl={`${process.env.NEXT_PUBLIC_BASE_BERKAS_URL}/penggajian/${selectedBerkas}`}
                         isPreview={isPreview}
                         setIsPreview={setIsPreview}
                       />

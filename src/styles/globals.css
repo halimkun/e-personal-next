@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 
+/* @import '/node_modules/react-big-calendar/lib/sass/styles.scss'; */
+/* @import '/node_modules/react-big-calendar/lib/addons/dragAndDrop/styles.css'; */
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -35,8 +38,8 @@
     --radius: 0.5rem;
 
     /* FullCalendar */
-    /*
-    --fc-small-font-size: .85em;
+    
+    /* --fc-small-font-size: .85em;
     --fc-page-bg-color: #fff;
     --fc-neutral-bg-color: hsla(0,0%,82%,.3);
     --fc-neutral-text-color: grey;
@@ -58,7 +61,7 @@
     --fc-bg-event-opacity: 0.3;
     --fc-highlight-color: rgba(188,232,241,.3);
     --fc-now-indicator-color: red;
-    */
+   
     --fc-button-active-bg-color: hsl(221.2 83.2% 53.3%);
     --fc-button-active-border-color: hsl(221, 78%, 49%);
     --fc-button-hover-bg-color: hsl(221, 66%, 35%);
@@ -66,7 +69,7 @@
 
     --fc-list-event-dot-width: 10px;
     --fc-list-event-hover-bg-color: 210 40% 96.1%;
-    --fc-daygrid-event-dot-width: 6px;
+    --fc-daygrid-event-dot-width: 6px; */
   }
 
   .dark {
@@ -98,7 +101,7 @@
     --success-foreground: 222.2 47.4% 11.2%;
 
     /* secondary */
-    --fc-list-event-hover-bg-color: 210 40% 96.1%;
+    /* --fc-list-event-hover-bg-color: 210 40% 96.1%; */
   }
 }
 
@@ -113,67 +116,18 @@
   }
 }
 
-.fc .fc-toolbar-title {
-  font-size: 1.25rem !important;
-  margin: 0;
-  font-weight: 500;
-  margin-top: 0.5rem;
+.rbc-event {
+  background-color: hsl(var(--primary)) !important;
+  border-color: var(--border) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  @apply font-semibold;
 }
 
-/* .fc .fc-button {
-  @apply inline-flex items-center justify-center border border-transparent rounded-md shadow-sm px-4 py-2 bg-primary text-sm font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-[0.875rem];
-} */
-
-.fc-day-today {
-  background-color: #edf5f7 !important;
+.rbc-overlay-header {
+  @apply bg-background text-foreground font-semibold;
+  padding: 0.5rem 1rem !important;
 }
 
-.dark .fc-day-today {
-  background-color: #2d3748 !important;
+.rbc-overlay {
+  @apply max-w-lg;
 }
-
-.dark .fc-list {
-  @apply border border-border;
-}
-
-.dark .fc-list-day-cushion {
-  @apply border-b border-border bg-secondary;
-}
-
-.dark .fc-list-event:hover,
-.dark .fc-list-event:hover .fc-list-event-time,
-.dark .fc-list-event:hover .fc-list-event-title {
-  @apply bg-secondary;
-}
-
-.dark .fc-list-event-dot:hover,
-.dark .fc-list-event-graphic:hover {
-  @apply bg-secondary;
-}
-
-.fc-theme-standard td {
-  @apply border border-border;
-}
-
-.fc-day-other {
-  @apply text-gray-400;
-}
-
-.fc .fc-button .fc-icon {
-  font-size: 1.2rem !important;
-}
-
-a.fc-col-header-cell-cushion {
-  @apply text-secondary-foreground font-semibold my-1;
-}
-
-.fc .fc-daygrid-day-top {
-  flex-direction: inherit !important;
-  padding: 5px !important;
-  font-size: .85em !important;
-  color: #6b7280 !important;
-}
-
-/* .fc .fc-button-primary:disabled {
-  @apply inline-flex items-center justify-center border border-transparent rounded-md shadow-sm px-4 py-2 bg-primary text-sm font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
-} */

@@ -7,6 +7,7 @@ module.exports = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
     './src/pages/**/*.{ts,tsx}',
+    './node_modules/@zach.codes/react-calendar/dist/**/*.js',
 	],
   theme: {
     container: {
