@@ -1,6 +1,6 @@
 "use client"
 
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { IconDirection, IconCheck } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
@@ -34,7 +34,7 @@ export function Combobox({ items, setSelectedItem, selectedItem, placeholder }: 
           )}
         >
           {val ? items.find((item) => item.value === val)?.label : (placeholder ?? "Search item") ?? "Search item"}
-          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <IconDirection className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
@@ -57,7 +57,7 @@ export function Combobox({ items, setSelectedItem, selectedItem, placeholder }: 
                   }}
                 >
                   {item.label}
-                  <CheckIcon
+                  <IconCheck
                     className={cn(
                       "ml-auto h-4 w-4", item.value === val ? "opacity-100" : "opacity-0"
                     )}
