@@ -17,6 +17,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "types/**/*.d.ts", "src/pages/dashboard/index.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "types/**/*.d.ts", "src/pages/dashboard/index.tsx", "src/pages/berkas/spo/pdf.ts", "src/pages/berkas/spo/render.tsx"],
   "exclude": ["node_modules"]
 }

@@ -55,7 +55,6 @@ const DashboardPage: NextPageWithLayout = () => {
     }
 
     fetcher(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/get/calendar`).then(data => {
-      // map like eventsList 
       const nd = data.map((e: any) => {
         return {
           title: e.title,
