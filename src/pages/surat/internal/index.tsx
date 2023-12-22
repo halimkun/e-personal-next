@@ -34,6 +34,7 @@ const SuratInternal: NextPageWithLayout = () => {
     const fetchMetrics = async () => {
       const session = await getSession()
       setSS(session)
+      console.log(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/metrics`);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/metrics`, {
         method: 'GET',
         headers: {

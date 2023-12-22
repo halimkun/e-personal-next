@@ -8,11 +8,15 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { IconEdit, IconExclamationCircle, IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconDownload, IconEdit, IconExclamationCircle, IconFileSearch, IconFileSymlink, IconPlus, IconTrash } from "@tabler/icons-react"
 import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import FormAddSpo from "@/components/custom/forms/add-spo"
 import FormEditSpo from "@/components/custom/forms/edit-spo"
+import SeparatorWithText from "@/components/custom/separator-with-text"
+import { Document, PDFDownloadLink } from "@react-pdf/renderer"
+import PDFFile from "./pdf"
+import { IconDetails } from "@tabler/icons-react"
 
 
 const SpoPage = () => {
@@ -22,6 +26,30 @@ const SpoPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isFormAddOpen, setIsFormAddOpen] = useState(false)
   const [isFormEditOpen, setIsFormEditOpen] = useState(false)
+
+  const [spoDetail, setSpoDetail] = useState<any>(null)
+
+  useEffect(() => {
+    const getSpoDetail = async () => {
+      const session = await getSession()
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/show?nomor=${spo.nomor}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`
+        }
+      })
+
+      const data = await res.json()
+      if (data.success && data.data.detail) {
+        setSpoDetail(data.data)
+      } else {
+        setSpoDetail(null)
+      }
+    }
+
+    getSpoDetail()
+
+  }, [spo.nomor])
 
   useEffect(() => {
     const getLastNomor = async () => {
@@ -95,6 +123,17 @@ const SpoPage = () => {
           <div className="md:whitespace-nowrap">{getDate(row.tgl_terbit)}</div>
         </div>
       )
+    }, {
+      name: "#",
+      selector: 'Action',
+      data: (row: any) => (
+        <Button variant={'default'} size="icon" className="h-6 w-6"
+          disabled={!row.detail}
+          onClick={() => router.push(`/berkas/spo/render?nomor=${row.nomor}`)}
+        >
+          <IconFileSymlink className="h-4 w-4" />
+        </Button>
+      )
     }
   ]
 
@@ -143,57 +182,85 @@ const SpoPage = () => {
       <Dialog open={isMenuOpen} onOpenChange={setIsMenuOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Menu SPO <Badge variant={'outline'}>{spo.nomor}</Badge></DialogTitle>
+            <DialogTitle>Menu Standar Prosedur Operasional</DialogTitle>
             <DialogDescription>
+              <Badge variant={'outline'}>{spo.nomor}</Badge>
               Anda dapat memilih menu dibawah ini untuk melakukan aksi pada SPO terpilih.
             </DialogDescription>
-
-            <div className="mb-4 space-y-2">
-              <table className="table w-full">
-                <tbody>
-                  <tr>
-                    <th>Nomor</th>
-                    <th>:</th>
-                    <td>{spo.nomor}</td>
-                  </tr>
-                  <tr>
-                    <th>Judul</th>
-                    <th>:</th>
-                    <td>{spo.judul}</td>
-                  </tr>
-                  <tr>
-                    <th>Unit</th>
-                    <th>:</th>
-                    <td>{spo.departemen ? spo.departemen.nama : spo.unit}</td>
-                  </tr>
-                  <tr>
-                    <th>Tanggal Terbit</th>
-                    <th>:</th>
-                    <td>{getFullDate(spo.tgl_terbit)}</td>
-                  </tr>
-                  <tr>
-                    <th>Jenis</th>
-                    <th>:</th>
-                    <td>{spo.jenis}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div className="flex justify-between w-full">
-              <div className="flex justify-end gap-2 w-full">
-                <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => {
-                  setIsMenuOpen(false)
-                  setIsFormEditOpen(true)
-                }}>
-                  <IconEdit className="h-4 w-4" /> Edit
-                </Button>
-                <Button variant="destructive" size="sm" className="flex items-center gap-2" onClick={() => window.confirm('Apakah anda yakin ingin menghapus data ini?') && onDelete()}>
-                  <IconTrash className="h-4 w-4" /> Hapus
-                </Button>
-              </div>
-            </div>
           </DialogHeader>
+
+          <div className="mb-4 space-y-2 text-left">
+            <table className="table w-full">
+              <tbody>
+                <tr>
+                  <th>Nomor</th>
+                  <th>:</th>
+                  <td>{spo.nomor}</td>
+                </tr>
+                <tr>
+                  <th>Judul</th>
+                  <th>:</th>
+                  <td>{spo.judul}</td>
+                </tr>
+                <tr>
+                  <th>Unit</th>
+                  <th>:</th>
+                  <td>{spo.departemen ? spo.departemen.nama : spo.unit}</td>
+                </tr>
+                <tr>
+                  <th>Tanggal Terbit</th>
+                  <th>:</th>
+                  <td>{getFullDate(spo.tgl_terbit)}</td>
+                </tr>
+                <tr>
+                  <th>Jenis</th>
+                  <th>:</th>
+                  <td>{spo.jenis}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex justify-between w-full">
+            <div className="flex justify-end gap-2 w-full">
+              <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => {
+                setIsMenuOpen(false)
+                setIsFormEditOpen(true)
+              }}>
+                <IconEdit className="h-4 w-4" /> Edit
+              </Button>
+              <Button variant="destructive" size="sm" className="flex items-center gap-2" onClick={() => window.confirm('Apakah anda yakin ingin menghapus data ini?') && onDelete()}>
+                <IconTrash className="h-4 w-4" /> Hapus
+              </Button>
+            </div>
+          </div>
+
+          <SeparatorWithText text="spo detail" />
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => router.push(`/berkas/spo/${spo.nomor.replace(/\//g, '--')}`)}>
+              <IconEdit className="h-4 w-4" /> Edit SPO
+            </Button>
+            <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => toast.success('under development')}>
+              <IconFileSearch className="h-4 w-4" /> Lihat SPO
+            </Button>
+            {spoDetail && (
+              <PDFDownloadLink document={spoDetail ? <PDFFile detail={spoDetail} key={spoDetail?.nomor} /> : <Document></Document>} fileName={`SPO-${spo.nomor}.pdf`}>
+                {({ blob, url, loading, error }) => {
+                  if (error) return 'Terjadi kesalahan saat membuat dokumen'
+
+                  return loading ? (
+                    <Button variant="outline" size="sm" className="flex items-center gap-2" disabled>
+                      <IconDownload className="h-4 w-4" /> Loading...
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" className="flex items-center gap-2">
+                      <IconDownload className="h-4 w-4" /> Download
+                    </Button>
+                  )
+                }}
+              </PDFDownloadLink>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
 
