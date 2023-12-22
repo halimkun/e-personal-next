@@ -181,10 +181,22 @@ const BerkasKaryawan = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="flex flex-col gap-2">
-          <p className="text-lg">Berkas Karyawan</p>
-          <p className="text-sm">Berkas karyawan dengan nik <Badge variant='outline'>{router.query.nik}</Badge> tidak ditemukan.</p>
-        </div>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="space-y-1.5">
+                <CardTitle>Berkas Karyawan</CardTitle>
+                <CardDescription>Berkas Karyawan <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+              </div>
+              <UploadBerkasKaryawan nik={router.query.nik} />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              <p className="text-sm">Berkas karyawan dengan nik <Badge variant='outline'>{router.query.nik}</Badge> tidak ditemukan.</p>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )
