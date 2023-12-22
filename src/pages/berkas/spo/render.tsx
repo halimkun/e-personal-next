@@ -12,33 +12,33 @@ const RenderPage = () => {
   const { nomor } = router.query
   const [spoDetail, setSpoDetail] = useState<any>(null)
 
-  useEffect(() => {
-    if (spoDetail) {
-      ReactDOM.render(
-        <PDFnya detail={spoDetail} />, 
-        document.getElementById('renderPDF')
-      )
-    }
-  }, [spoDetail])
+  // useEffect(() => {
+  //   if (spoDetail) {
+  //     ReactDOM.render(
+  //       <PDFnya detail={spoDetail} />, 
+  //       document.getElementById('renderPDF')
+  //     )
+  //   }
+  // }, [spoDetail])
 
-  useEffect(() => {
-    const getSpoDetail = async () => {
-      const session = await getSession()
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/show?nomor=${nomor}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${session?.rsiap?.access_token}`
-        }
-      })
+  // useEffect(() => {
+  //   const getSpoDetail = async () => {
+  //     const session = await getSession()
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/show?nomor=${nomor}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Authorization': `Bearer ${session?.rsiap?.access_token}`
+  //       }
+  //     })
 
-      const data = await res.json()
-      if (data.success) {
-        setSpoDetail(data.data)
-      }
-    }
+  //     const data = await res.json()
+  //     if (data.success) {
+  //       setSpoDetail(data.data)
+  //     }
+  //   }
 
-    getSpoDetail()
-  }, [nomor])
+  //   getSpoDetail()
+  // }, [nomor])
 
   return (
     <div className="h-full flex items-center">
