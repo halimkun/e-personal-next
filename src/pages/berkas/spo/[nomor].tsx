@@ -13,16 +13,6 @@ import { Badge } from "@/components/ui/badge"
 import Loading1 from "@/components/custom/icon-loading"
 import toast from "react-hot-toast"
 
-
-
-const detail = {
-  nomor: '',
-  pengertian: '',
-  tujuan: '',
-  kebijakan: '',
-  prosedur: '',
-}
-
 const Editor = dynamic(
   () => import('@/components/custom/editor'),
   { ssr: false }
@@ -39,44 +29,75 @@ const SpoDetailPage = () => {
   const [kebijakan, setKebijakan] = useState('')
   const [prosedur, setProsedur] = useState('')
 
-  const [detailData, setDetailData] = useState(detail)
+  const [detailData, setDetailData] = useState<any>({
+    nomor: '',
+    pengertian: '',
+    tujuan: '',
+    kebijakan: '',
+    prosedur: '',
+  })
 
   useEffect(() => {
     const getSpo = async () => {
-      const session = await getSession()
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/show?nomor=${nomor}`, {
-        'method': 'GET',
-        'headers': {
-          'Authorization': `Bearer ${session?.rsiap?.access_token}`
-        }
-      })
-      const data = await res.json()
-
-      if (data.success) {
-        // decode all html entities
-        const decodedPengertian = decodeHtml(data.data.detail?.pengertian ?? '')
-        const decodedTujuan = decodeHtml(data.data.detail?.tujuan ?? '')
-        const decodedKebijakan = decodeHtml(data.data.detail?.kebijakan ?? '')
-        const decodedProsedur = decodeHtml(data.data.detail?.prosedur ?? '')
-
-        setPengertian(decodedPengertian)
-        setTujuan(decodedTujuan)
-        setKebijakan(decodedKebijakan)
-        setProsedur(decodedProsedur)
-
-        setDetailData({
-          ...detailData,
-          nomor: data.data.nomor,
-          pengertian: decodedPengertian,
-          tujuan: decodedTujuan,
-          kebijakan: decodedKebijakan,
-          prosedur: decodedProsedur
+      try {
+        const session = await getSession()
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/show?nomor=${nomor}`, {
+          'method': 'GET',
+          'headers': {
+            'Authorization': `Bearer ${session?.rsiap?.access_token}`
+          }
         })
+        const data = await res.json()
+
+        if (data.success) {
+          const decodeHtml = (html: string) => {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+          }
+
+          const updatedDetailData = {
+            nomor: data.data.nomor,
+            pengertian: decodeHtml(data.data.detail?.pengertian),
+            tujuan: decodeHtml(data.data.detail?.tujuan),
+            kebijakan: decodeHtml(data.data.detail?.kebijakan),
+            prosedur: decodeHtml(data.data.detail?.prosedur),
+          };
+
+          setDetailData(updatedDetailData);
+        }
+      } catch (error) {
+        console.log(error)
       }
     }
 
     getSpo()
   }, [nomor])
+
+  async function onSubmit(e: any) {
+    e.preventDefault()
+    try {
+      const session = await getSession()
+
+      const data = new FormData(e.target)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/detail/store`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`
+        },
+        body: data
+      })
+
+      const result = await res.json()
+      if (result.success) {
+        toast.success('Data Spo berhasil disimpan')
+        await new Promise(r => setTimeout(r, 1000))
+        router.push(`/berkas/spo/${n}`)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     setDetailData({
@@ -88,32 +109,6 @@ const SpoDetailPage = () => {
     } as any)
   }, [pengertian, tujuan, kebijakan, prosedur])
 
-  async function onSubmit(e: any) {
-    e.preventDefault()
-    const session = await getSession()
-
-    const data = new FormData(e.target)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/detail/store`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`
-      },
-      body: data
-    })
-
-    const result = await res.json()
-    if (result.success) {
-      toast.success('Data Spo berhasil disimpan')
-      await new Promise(r => setTimeout(r, 1000))
-      router.push(`/berkas/spo/${n}`)
-    }
-  }
-
-  function decodeHtml(html: string) {
-    var txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-  }
 
   if (router.isFallback) {
     return <div>Loading...</div>
@@ -141,40 +136,18 @@ const SpoDetailPage = () => {
                   <Label className="text-primary">Nomor SPO</Label>
                   <Input name="nomor" value={nomor} readOnly />
                 </div>
-
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <Label className="text-primary">Pengertian</Label>
-                    <Input type="hidden" name="pengertian" value={pengertian} />
-                    <Editor
-                      value={pengertian}
-                      onChange={(data: any) => setPengertian(data)}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-primary">Tujuan</Label>
-                    <Input type="hidden" name="tujuan" value={tujuan} />
-                    <Editor
-                      value={tujuan}
-                      onChange={(data: any) => setTujuan(data)}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-primary">Kegiatan</Label>
-                    <Input type="hidden" name="kebijakan" value={kebijakan} />
-                    <Editor
-                      value={kebijakan}
-                      onChange={(data: any) => setKebijakan(data)}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-primary">Prosedur</Label>
-                    <Input type="hidden" name="prosedur" value={prosedur} />
-                    <Editor
-                      value={prosedur}
-                      onChange={(data: any) => setProsedur(data)}
-                    />
-                  </div>
+                  {['pengertian', 'tujuan', 'kebijakan', 'prosedur'].map((field) => (
+                    <div className="space-y-1" key={field}>
+                      <Label className="text-primary">{field.charAt(0).toUpperCase() + field.slice(1)}</Label>
+                      <Input type="hidden" name={field} value={detailData[field]} />
+                      <Editor
+                        value={detailData[field]}
+                        onChange={(data: any) => setDetailData((prevData: any) => ({ ...prevData, [field]: data }))}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -193,14 +166,6 @@ const SpoDetailPage = () => {
     )
   }
 }
-
-// export async function getServerSideProps(ctx: any) {
-//   const session = await getSession(ctx)
-
-//   return {
-//     props: {}
-//   }
-// }
 
 SpoDetailPage.getLayout = function getLayout(page: ReactElement) {
   return (
