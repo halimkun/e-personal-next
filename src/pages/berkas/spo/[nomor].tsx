@@ -139,7 +139,7 @@ const SpoDetailPage = () => {
               <div className="space-y-3">
                 <div className="space-y-1">
                   <Label className="text-primary">Nomor SPO</Label>
-                  <Input name="nomor" value={detailData.nomor} readOnly />
+                  <Input name="nomor" value={nomor} readOnly />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
