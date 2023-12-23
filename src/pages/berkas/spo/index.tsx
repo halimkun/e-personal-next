@@ -6,18 +6,17 @@ import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { getDate, getFullDate } from "@/lib/date"
+import { getDate } from "@/lib/date"
 import { ReactElement, useEffect, useState } from "react"
-import { Document, PDFDownloadLink } from "@react-pdf/renderer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { IconDownload, IconEdit, IconExclamationCircle, IconFileSearch, IconFileSymlink, IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconFileSymlink, IconPlus } from "@tabler/icons-react"
 
-import PDFFile from "@/templates/pdf/spo"
 import FormAddSpo from "@/components/custom/forms/add-spo"
-import FormEditSpo from "@/components/custom/forms/edit-spo"
-import SeparatorWithText from "@/components/custom/separator-with-text"
+import dynamic from "next/dynamic"
 
+const DialogEditSpo = dynamic(() => import('@/components/custom/modals/dialog-edit-spo'), { ssr: false })
+const DialogMenuSpo = dynamic(() => import('@/components/custom/modals/dialog-menu-spo'), { ssr: false })
 
 const SpoPage = () => {
   const router = useRouter()
@@ -178,112 +177,23 @@ const SpoPage = () => {
         </CardContent>
       </Card>
 
-      {/* Modal Alert Menu */}
-      <Dialog open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Menu Standar Prosedur Operasional</DialogTitle>
-            <DialogDescription>
-              <Badge variant={'outline'}>{spo.nomor}</Badge>
-              Anda dapat memilih menu dibawah ini untuk melakukan aksi pada SPO terpilih.
-            </DialogDescription>
-          </DialogHeader>
+      {/* Dialog Menu */}
+      <DialogMenuSpo
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        spo={spo}
+        onDelete={onDelete}
+        setIsFormEditOpen={setIsFormEditOpen}
+        spoDetail={spoDetail}
+        key={spo.nomor}
+      />
 
-          <div className="mb-4 space-y-2 text-left">
-            <table className="table w-full">
-              <tbody>
-                <tr>
-                  <th>Nomor</th>
-                  <th>:</th>
-                  <td>{spo.nomor}</td>
-                </tr>
-                <tr>
-                  <th>Judul</th>
-                  <th>:</th>
-                  <td>{spo.judul}</td>
-                </tr>
-                <tr>
-                  <th>Unit</th>
-                  <th>:</th>
-                  <td>{spo.departemen ? spo.departemen.nama : spo.unit}</td>
-                </tr>
-                <tr>
-                  <th>Tanggal Terbit</th>
-                  <th>:</th>
-                  <td>{getFullDate(spo.tgl_terbit)}</td>
-                </tr>
-                <tr>
-                  <th>Jenis</th>
-                  <th>:</th>
-                  <td>{spo.jenis}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex justify-between w-full">
-            <div className="flex justify-end gap-2 w-full">
-              <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => {
-                setIsMenuOpen(false)
-                setIsFormEditOpen(true)
-              }}>
-                <IconEdit className="h-4 w-4" /> Edit
-              </Button>
-              <Button variant="destructive" size="sm" className="flex items-center gap-2" onClick={() => window.confirm('Apakah anda yakin ingin menghapus data ini?') && onDelete()}>
-                <IconTrash className="h-4 w-4" /> Hapus
-              </Button>
-            </div>
-          </div>
-
-          <SeparatorWithText text="spo detail" />
-          <div className="flex flex-wrap gap-3">
-            <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => router.push(`/berkas/spo/${spo.nomor.replace(/\//g, '--')}`)}>
-              <IconEdit className="h-4 w-4" /> Edit SPO
-            </Button>
-            <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => toast.success('under development')}>
-              <IconFileSearch className="h-4 w-4" /> Lihat SPO
-            </Button>
-            {spoDetail && (
-              <PDFDownloadLink document={spoDetail ? <PDFFile detail={spoDetail} key={spoDetail?.nomor} /> : <Document></Document>} fileName={`SPO-${spo.nomor}.pdf`}>
-                {({ blob, url, loading, error }) => {
-                  if (error) return 'Terjadi kesalahan saat membuat dokumen'
-
-                  return loading ? (
-                    <Button variant="outline" size="sm" className="flex items-center gap-2" disabled>
-                      <IconDownload className="h-4 w-4" /> Loading...
-                    </Button>
-                  ) : (
-                    <Button variant="outline" size="sm" className="flex items-center gap-2">
-                      <IconDownload className="h-4 w-4" /> Download
-                    </Button>
-                  )
-                }}
-              </PDFDownloadLink>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-
-      {/* Modal edit */}
-      <Dialog open={isFormEditOpen} onOpenChange={setIsFormEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit SPO <Badge variant={'outline'}>{spo.nomor}</Badge></DialogTitle>
-            <DialogDescription>
-              Anda bisa mengedit data perjanjian kerjasama ini melalui form dibawah ini.
-              <div className="px-3 py-2 rounded-xl border-2 border-warning mt-1.5">
-                <div className="font-bold flex items-center justify-start text-warning gap-2">
-                  <IconExclamationCircle className="h-4 w-4 text-warning" /> Perhatian!
-                </div>
-                Harap berhati-hati dalam mengedit <span className="font-bold">Nomor SPO</span> agar tidak terjadi duplikasi data.
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-
-          <FormEditSpo data={spo} />
-        </DialogContent>
-      </Dialog>
+      {/* DIalog Edit */}
+      <DialogEditSpo
+        isFormEditOpen={isFormEditOpen}
+        setIsFormEditOpen={setIsFormEditOpen}
+        spo={spo}
+      />
     </>
   )
 }
