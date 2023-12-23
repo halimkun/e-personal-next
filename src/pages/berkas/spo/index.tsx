@@ -11,12 +11,13 @@ import { Button } from "@/components/ui/button"
 import { IconDownload, IconEdit, IconExclamationCircle, IconFileSearch, IconFileSymlink, IconPlus, IconTrash } from "@tabler/icons-react"
 import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
+import { Document, PDFDownloadLink } from "@react-pdf/renderer"
+import { IconDetails } from "@tabler/icons-react"
+
 import FormAddSpo from "@/components/custom/forms/add-spo"
 import FormEditSpo from "@/components/custom/forms/edit-spo"
 import SeparatorWithText from "@/components/custom/separator-with-text"
-import { Document, PDFDownloadLink } from "@react-pdf/renderer"
-import PDFFile from "./pdf"
-import { IconDetails } from "@tabler/icons-react"
+import PDFFile from "@/templates/pdf/spo"
 
 
 const SpoPage = () => {
