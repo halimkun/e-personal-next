@@ -104,7 +104,19 @@ const SpoPage = () => {
     {
       name: 'Unit',
       selector: 'unit',
-      data: (row: any) => row.departemen ? row.departemen.nama : row.unit
+      data: (row: any) => {
+        const u = row.unit.split(',')
+        const badge = u.length > 1 ? u.slice(0, 1) : u
+        // loop u and make badge if badge more than 2 then make badge with +n
+        return (
+          <div className="flex flex-row items-start gap-1.5">
+            {badge.map((item: any, i: number) => (
+              <Badge variant="outline" className="max-w-[138px] group-hover:border-primary" key={i}>{item}</Badge>
+            ))}
+            {u.length > 1 && <Badge variant="outline" className="whitespace-nowrap group-hover:border-primary">+{u.length - 1}</Badge>}
+          </div>
+        )
+      }
     },
     {
       name: 'Judul',

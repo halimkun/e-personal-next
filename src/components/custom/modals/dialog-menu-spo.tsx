@@ -46,27 +46,34 @@ const DialogMenuSpo = (props: DialogMenuSpoProps) => {
             <tbody>
               <tr>
                 <th>Nomor</th>
-                <th>:</th>
+                <th className="px-2">:</th>
                 <td>{spo.nomor}</td>
               </tr>
               <tr>
                 <th>Judul</th>
-                <th>:</th>
+                <th className="px-2">:</th>
                 <td>{spo.judul}</td>
               </tr>
               <tr>
                 <th>Unit</th>
-                <th>:</th>
-                <td>{spo.departemen ? spo.departemen.nama : spo.unit}</td>
+                <th className="px-2">:</th>
+                <td>
+                  {/* flex can be entered */}
+                  <div className="flex flex-wrap gap-1">
+                    {spo.unit ? spo.unit.split(',').map((unit: string, index: number) => (
+                      <Badge variant="outline" key={index}>{unit}</Badge>
+                    )) : '-'}
+                  </div>
+                </td>
               </tr>
               <tr>
-                <th>Tanggal Terbit</th>
-                <th>:</th>
+                <th className="whitespace-nowrap">Tanggal Terbit</th>
+                <th className="px-2">:</th>
                 <td>{getFullDate(spo.tgl_terbit)}</td>
               </tr>
               <tr>
                 <th>Jenis</th>
-                <th>:</th>
+                <th className="px-2">:</th>
                 <td>{spo.jenis}</td>
               </tr>
             </tbody>

@@ -78,7 +78,7 @@ const PDFFile = ({ detail }) => (
                   fontStyle: 'bold',
                 }}>RSIA AISYIYAH PEKAJANGAN</Text>
                 <Image
-                  src="https://react-pdf.org/images/luke.jpg"
+                  src="/static/logo.png"
                   style={{
                     width: "85px",
                     height: "auto",
@@ -168,16 +168,34 @@ const PDFFile = ({ detail }) => (
                       width: "100%",
                       display: "flex",
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      position: 'relative',
                     }}>
+                      <Text style={{
+                        fontWeight: "bold",
+                        textAlign: 'center',
+                        fontSize: 10,
+                        fontStyle: 'bold',
+                      }}>Ditetapkan {"\n"} Direktur RSIA Aisyiyah Pekajangan</Text>
                       <Image
-                        src="https://react-pdf.org/images/luke.jpg"
+                        src="/static/ttd-dr-him.jpeg"
                         style={{
-                          width: "85px",
+                          width: "100px",
                           height: "auto",
                           borderRadius: "500px"
                         }}
                       />
+                      <Text style={{
+                        fontWeight: "bold",
+                        textAlign: 'center',
+                        fontSize: 12,
+                        fontStyle: 'bold',
+                        textDecoration: 'underline',
+                        position: 'absolute',
+                        bottom: 0,
+                        right: 0,
+                        left: 0,
+                      }}>dr. Himawan Budityastomo, Sp.OG</Text>
                     </View>
                   </View>
                 </View>

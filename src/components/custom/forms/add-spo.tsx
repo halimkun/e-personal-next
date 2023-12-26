@@ -8,8 +8,9 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "../inputs/combo-box";
-import { Toggle } from "@/components/ui/toggle";
-import { IconSelect, IconTxt } from "@tabler/icons-react";
+import { MultiSelect } from "../inputs/multi-select";
+import { Toggle } from "@radix-ui/react-toggle";
+import { IconCursorText } from "@tabler/icons-react";
 
 interface FormAddSpoProps {
   lastNomor: any
@@ -21,9 +22,10 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
   const [jenisSpo, setJenisSpo] = useState<any>('medis')
   const [ln, setLn] = useState<any>(lastNomor[jenisSpo])
   const [departemen, setDepartemen] = useState<any[]>([])
-  const [isTypeManual, setIsTypeManual] = useState(false)
+  const [isTypeManual, setIsTypeManual] = useState<any>()
   const [selected, setSelected] = useState<string | undefined>(undefined)
   const [tglTerbit, setTglTerbit] = useState<any>(new Date().toISOString().split('T')[0])
+  const [selectedDep, setSelectedDep] = useState<string[]>([]);
 
   const [unit, setUnit] = useState<any>('')
 
@@ -44,7 +46,7 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
       if (result.success) {
         const items = result.data.map((item: any) => {
           return {
-            label: item.nama == "-" || item.dep_id == "-" ? "- ( Isi Manual )" : item.nama,
+            label: item.nama,
             value: item.dep_id
           }
         })
@@ -56,9 +58,15 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
   }, [])
 
   useEffect(() => {
-    setIsTypeManual(selected == "-")
-    setUnit(selected == "-" ? '' : selected)
-  }, [selected])
+    if (selectedDep.length > 0) {
+      const isManual = selectedDep.find((item: any) => item === '-')
+      if (isManual) {
+        setIsTypeManual(true)
+      } else {
+        setIsTypeManual(false)
+      }
+    }
+  }, [selectedDep])
 
   function parseNomor() {
     const lastn = lastNomor[jenisSpo]
@@ -83,6 +91,13 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
 
     const session = await getSession()
     const data = new FormData(e.target)
+
+    if (isTypeManual) {
+      // value is anak,casmix
+      data.set('unit', unit)
+    } else {
+      data.set('unit', selectedDep.join(','))
+    }
 
     data.delete('unit_manual')
 
@@ -111,13 +126,13 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
           <Input type="text" id="judul" name="judul" placeholder="masukan judul spo" />
         </div>
         <div className="flex gap-3">
-          <div className="w-full">
+          {/* <div className="w-full">
             <div className="space-y-1.5">
               <Label className="text-primary font-semibold" htmlFor="unit">Unit Kerja</Label>
               <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={unit} />
               <Combobox items={departemen} setSelectedItem={setSelected} selectedItem={selected} placeholder="Pilih Unit" />
             </div>
-          </div>
+          </div> */}
           <div className="w-full">
             <div className="space-y-1.5">
               <Label className="text-primary font-semibold" htmlFor="tgl_terbit">Tanggal Terbit</Label>
@@ -125,9 +140,28 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
             </div>
           </div>
         </div>
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between mt-3">
+            <Label className="text-primary font-semibold" htmlFor="unit">Unit Kerja</Label>
+            <div className="flex items-center space-x-2">
+              <Toggle aria-label="Toggle italic" onPressedChange={() => setIsTypeManual(!isTypeManual)}>
+                <span className="font-medium text-sm">{isTypeManual ? 'Pilih' : 'Manual'}</span>
+              </Toggle>
+            </div>
+          </div>
+          <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selectedDep} />
+          {!isTypeManual ? (
+            <MultiSelect
+              options={departemen}
+              selected={selectedDep}
+              onChange={setSelectedDep}
+              className="w-[560px]"
+            />
+          ) : (<></>)}
+        </div>
         {isTypeManual ? (
           <div className="space-y-1.5">
-            <Label className="text-primary font-semibold" htmlFor="tunit">Tuliskan Unit</Label>
+            {/* <Label className="text-primary font-semibold" htmlFor="tunit">Tuliskan Unit</Label> */}
             <Input type="text" id="tunit" placeholder="tuliskan unit manual" onChange={(e) => setUnit(e.target.value)} name="unit_manual" disabled={!isTypeManual} />
           </div>
         ) : (<></>)}
