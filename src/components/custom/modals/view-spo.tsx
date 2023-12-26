@@ -1,4 +1,7 @@
-import { Badge } from "@/components/ui/badge"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { createRoot } from 'react-dom/client'
+
 import {
   Dialog,
   DialogContent,
@@ -6,10 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
+
+import PDFFile from '@/templates/pdf/spo'
+import { PDFViewer } from '@react-pdf/renderer';
 import { getSession } from "next-auth/react"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 
 
 interface ModalViewSpoProps {
@@ -18,8 +21,15 @@ interface ModalViewSpoProps {
   spo: any
 }
 
+const PDFnya = (data: any) => (
+  <PDFViewer showToolbar={false} className='w-full h-full'>
+    <PDFFile detail={data.detail} />
+  </PDFViewer>
+)
+
 const ModalViewSpo = (props: ModalViewSpoProps) => {
   const { show, onHide, spo } = props
+
   const router = useRouter()
   const [detailSpo, setDetailSpo] = useState<any>([])
 
@@ -33,77 +43,42 @@ const ModalViewSpo = (props: ModalViewSpoProps) => {
         }
       })
 
-      const data = await res.json()
+      const data = await res.json() 
       if (data.success) {
         setDetailSpo(data.data)
       }
     }
 
-    getDetailSpo()
+    if (spo.nomor !== undefined || spo.nomor !== null) {
+      getDetailSpo()
+    }
   }, [spo])
 
-  const decodeHtml = (htmlString: string) => {
-    if (typeof window === 'undefined') {
-      console.warn("decodeHtml is running in a server environment. It may not work as expected.");
-      return htmlString;
-    }
+  // useEffect(() => {
+  //   if (detailSpo.nomor !== undefined || detailSpo.nomor !== null) {
+  //     createRoot(document.getElementById('renderPDF') as HTMLElement).render(
+  //       <PDFnya detail={detailSpo} />
+  //     )
 
-    
-    var txt = document.createElement("textarea");
-    txt.innerHTML = htmlString;
-    return txt.value;
-  }
+  //     ReactDOM.render(
+  //       <PDFnya detail={detailSpo} />, 
+  //       document.getElementById('renderPDF')
+  //     )
+  //   }
+  // }, [detailSpo])
+
   return (
     <Dialog open={show} onOpenChange={onHide}>
       <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{detailSpo.judul}</DialogTitle>
-          <DialogDescription>
-
-            <div className="w-full flex justify-between items-center">
-              <div className="flex gap-2">
-                <Badge variant={'default'}>{detailSpo.nomor}</Badge>
-                <div className="w-fit text-xs px-3 py-0.5 bg-primary/10 rounded-full text-primary border-2 border-primary font-bold">
-                  {detailSpo.jenis}
-                </div>
-                <div className="w-fit text-xs px-3 py-0.5 bg-primary/10 rounded-full text-primary border-2 border-primary font-bold">
-                  {detailSpo.tgl_terbit}
-                </div>
-              </div>
-              
-              <div className="w-fit text-xs px-3 py-0.5 rounded-full bg-primary/10 text-primary hover:bg-primary/30 border-2 border-primary font-bold cursor-pointer transition-all duration-150" onClick={() => router.push(`/berkas/spo/render?nomor=${detailSpo.nomor}`)}>lihat</div>
+        <div className="w-full max-h-[85vh] bg-white" id="renderPDF">
+          {detailSpo.detail != undefined || detailSpo.detail != null ? (
+            <PDFnya detail={detailSpo} />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <span className="text-xl font-medium text-gray-400">Tidak ada data SPO yang ditampilkan</span>
             </div>
-          </DialogDescription>
-        </DialogHeader>
-
-        <ScrollArea className="max-h-[80vh] pr-5">
-          <div className="space-y-3 detail-spo">
-            <div className="space-y-1">
-              <h3 className="font-bold">Pengertian</h3>
-              <div className="text-justify" dangerouslySetInnerHTML={{
-                __html: decodeHtml(detailSpo.detail?.pengertian)
-              }}></div>
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold">Tujuan</h3>
-              <div className="text-justify" dangerouslySetInnerHTML={{
-                __html: decodeHtml(detailSpo.detail?.tujuan)
-              }}></div>
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold">Kebijakan</h3>
-              <div dangerouslySetInnerHTML={{
-                __html: decodeHtml(detailSpo.detail?.kebijakan)
-              }}></div>
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold">Prosedur</h3>
-              <div dangerouslySetInnerHTML={{
-                __html: decodeHtml(detailSpo.detail?.prosedur)
-              }}></div>
-            </div>
-          </div>
-        </ScrollArea>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   )

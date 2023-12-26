@@ -17,6 +17,7 @@ import dynamic from "next/dynamic"
 
 const DialogEditSpo = dynamic(() => import('@/components/custom/modals/dialog-edit-spo'), { ssr: false })
 const DialogMenuSpo = dynamic(() => import('@/components/custom/modals/dialog-menu-spo'), { ssr: false })
+const DialogViewSpo = dynamic(() => import('@/components/custom/modals/view-spo'), { ssr: false })
 
 const SpoPage = () => {
   const router = useRouter()
@@ -25,6 +26,7 @@ const SpoPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isFormAddOpen, setIsFormAddOpen] = useState(false)
   const [isFormEditOpen, setIsFormEditOpen] = useState(false)
+  const [isViewSpoOpen, setIsViewSpoOpen] = useState(false)
 
   const [spoDetail, setSpoDetail] = useState<any>(null)
 
@@ -128,7 +130,10 @@ const SpoPage = () => {
       data: (row: any) => (
         <Button variant={'default'} size="icon" className="h-6 w-6"
           disabled={!row.detail}
-          onClick={() => router.push(`/berkas/spo/render?nomor=${row.nomor}`)}
+          onClick={() => {
+            setSpo(row)
+            setIsViewSpoOpen(true)
+          }}
         >
           <IconFileSymlink className="h-4 w-4" />
         </Button>
@@ -186,12 +191,20 @@ const SpoPage = () => {
         setIsFormEditOpen={setIsFormEditOpen}
         spoDetail={spoDetail}
         key={spo.nomor}
+        setIsViewSpoOpen={setIsViewSpoOpen}
       />
 
-      {/* DIalog Edit */}
+      {/* Dialog Edit */}
       <DialogEditSpo
         isFormEditOpen={isFormEditOpen}
         setIsFormEditOpen={setIsFormEditOpen}
+        spo={spo}
+      />
+
+      {/* Dialog View SPO */}
+      <DialogViewSpo 
+        show={isViewSpoOpen}
+        onHide={() => setIsViewSpoOpen(false)}
         spo={spo}
       />
     </>

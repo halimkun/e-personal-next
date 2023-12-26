@@ -16,18 +16,19 @@ import { useRouter } from "next/router"
 
 import PDFFile from "@/templates/pdf/spo"
 
-interface DialogMenuSpoProps {  
+interface DialogMenuSpoProps {
   isMenuOpen: boolean
   setIsMenuOpen: (value: boolean) => void
   spo: any
   onDelete: () => void
   spoDetail: any
   setIsFormEditOpen: (value: boolean) => void
+  setIsViewSpoOpen: (value: boolean) => void
 }
 
 const DialogMenuSpo = (props: DialogMenuSpoProps) => {
   const router = useRouter()
-  const { isMenuOpen, setIsMenuOpen, spo, onDelete, spoDetail, setIsFormEditOpen } = props
+  const { isMenuOpen, setIsMenuOpen, spo, onDelete, spoDetail, setIsFormEditOpen, setIsViewSpoOpen } = props
 
   return (
     <Dialog open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -91,7 +92,10 @@ const DialogMenuSpo = (props: DialogMenuSpoProps) => {
           <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => router.push(`/berkas/spo/${spo.nomor.replace(/\//g, '--')}`)}>
             <IconEdit className="h-4 w-4" /> Edit SPO
           </Button>
-          <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => toast.success('under development')}>
+          <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => {
+            setIsMenuOpen(false)
+            setIsViewSpoOpen(true)
+          }}>
             <IconFileSearch className="h-4 w-4" /> Lihat SPO
           </Button>
           {spoDetail && (
