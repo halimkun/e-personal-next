@@ -36,7 +36,7 @@ const DialogMenuSpo = (props: DialogMenuSpoProps) => {
         <DialogHeader>
           <DialogTitle>Menu Standar Prosedur Operasional</DialogTitle>
           <DialogDescription>
-            <Badge variant={'outline'}>{spo.nomor}</Badge>
+            <Badge variant={'outline'} className="mr-2">{spo.nomor}</Badge>
             Anda dapat memilih menu dibawah ini untuk melakukan aksi pada SPO terpilih.
           </DialogDescription>
         </DialogHeader>

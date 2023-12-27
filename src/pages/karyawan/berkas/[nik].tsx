@@ -6,7 +6,7 @@ import { ReactElement, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import UploadBerkasKaryawan from "@/components/custom/modals/upload-berkas-karyawan";
-import { IconFileSearch, IconLoader, IconTrash } from "@tabler/icons-react";
+import { IconArrowLeft, IconFileSearch, IconLoader, IconTrash } from "@tabler/icons-react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
@@ -101,14 +101,20 @@ const BerkasKaryawan = () => {
       {data.berkas.length > 0 ? (
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="space-y-1.5">
-                <CardTitle>Berkas Karyawan</CardTitle>
-                <CardDescription>Berkas Karyawan <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size='icon' onClick={() => router.back()}>
+                <IconArrowLeft className="rotate-0 scale-100 transition-all" />
+              </Button>
+              <div className="flex w-full items-center justify-between">
+                <div className="space-y-1">
+                  <CardTitle>Berkas Karyawan</CardTitle>
+                  <CardDescription>Berkas Karyawan <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+                </div>
+                <UploadBerkasKaryawan nik={router.query.nik} />
               </div>
-              <UploadBerkasKaryawan nik={router.query.nik} />
             </div>
           </CardHeader>
+
           <CardContent className="space-y-3">
             <div className="mb-5 flex items-center gap-7">
               <table>
@@ -183,12 +189,17 @@ const BerkasKaryawan = () => {
       ) : (
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="space-y-1.5">
-                <CardTitle>Berkas Karyawan</CardTitle>
-                <CardDescription>Berkas Karyawan <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size='icon' onClick={() => router.back()}>
+                <IconArrowLeft className="rotate-0 scale-100 transition-all" />
+              </Button>
+              <div className="flex w-full items-center justify-between">
+                <div className="space-y-1">
+                  <CardTitle>Berkas Karyawan</CardTitle>
+                  <CardDescription>Berkas Karyawan <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+                </div>
+                <UploadBerkasKaryawan nik={router.query.nik} />
               </div>
-              <UploadBerkasKaryawan nik={router.query.nik} />
             </div>
           </CardHeader>
           <CardContent>

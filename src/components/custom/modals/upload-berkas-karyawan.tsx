@@ -11,7 +11,7 @@ const UploadBerkasKaryawan = ({nik}: any) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="h-8 px-2"><IconCirclePlus className="mr-1"/> Tambah</Button>
+        <Button className="h-8 px-2 text-foreground"><IconCirclePlus className="mr-1"/> Tambah</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md lg:max-w-xl">
         <DialogHeader>

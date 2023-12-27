@@ -17,10 +17,10 @@ const AppMenu = () => {
         <li>
           <Button variant="ghost" className={cn(
             'w-full justify-start',
-            pathname.startsWith('/dashboard') && 'bg-primary text-primary-foreground'
+            pathname.startsWith('/dashboard') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/dashboard">
-              <IconLayoutDashboard className="w-5 h-5 mr-2" />
+              <IconLayoutDashboard className="w-5 h-5 mr-2 stroke-secondary-foreground" />
               Dashboard
             </Link>
           </Button>
@@ -32,10 +32,10 @@ const AppMenu = () => {
         <li>
           <Button variant="ghost" className={cn(
             'w-full justify-start',
-            pathname.startsWith('/surat/internal') && 'bg-primary text-primary-foreground'
+            pathname.startsWith('/surat/internal') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/surat/internal">
-              <IconMailStar className="w-5 h-5 mr-2" />
+              <IconMailStar className="w-5 h-5 mr-2 stroke-secondary-foreground" />
               Internal
             </Link>
           </Button>
@@ -43,10 +43,10 @@ const AppMenu = () => {
         <li>
           <Button variant="ghost" className={cn(
             'w-full justify-start',
-            pathname.startsWith('/surat/eksternal') && 'bg-primary text-primary-foreground'
+            pathname.startsWith('/surat/eksternal') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/surat/eksternal">
-              <IconMailShare className="w-5 h-5 mr-2" />
+              <IconMailShare className="w-5 h-5 mr-2 stroke-secondary-foreground" />
               External
             </Link>
           </Button>
@@ -54,10 +54,10 @@ const AppMenu = () => {
         <li>
           <Button variant="ghost" className={cn(
             'w-full justify-start',
-            pathname.startsWith('/berkas/spo') && 'bg-primary text-primary-foreground'
+            pathname.startsWith('/berkas/spo') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/berkas/spo">
-              <IconFileStack className="w-5 h-5 mr-2" />
+              <IconFileStack className="w-5 h-5 mr-2 stroke-secondary-foreground" />
               SPO
             </Link>
           </Button>
@@ -65,10 +65,10 @@ const AppMenu = () => {
         <li>
           <Button variant="ghost" className={cn(
             'w-full justify-start',
-            pathname.startsWith('/berkas/kerjasama') && 'bg-primary text-primary-foreground'
+            pathname.startsWith('/berkas/kerjasama') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/berkas/kerjasama">
-              <IconFileCertificate className="w-5 h-5 mr-2" />
+              <IconFileCertificate className="w-5 h-5 mr-2 stroke-secondary-foreground" />
               Kerjasama
             </Link>
           </Button>
@@ -80,10 +80,10 @@ const AppMenu = () => {
         <li>
           <Button variant="ghost" className={cn(
             'w-full justify-start',
-            pathname.startsWith('/karyawan') && 'bg-primary text-primary-foreground'
+            pathname.startsWith('/karyawan') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/karyawan">
-              <IconUserStar className="w-5 h-5 mr-2" />
+              <IconUserStar className="w-5 h-5 mr-2 stroke-secondary-foreground" />
               Karyawan
             </Link>
           </Button>

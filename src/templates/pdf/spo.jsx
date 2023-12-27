@@ -54,7 +54,7 @@ const PDFFile = ({ detail }) => (
         paddingTop: 35,
         paddingBottom: 65,
         paddingHorizontal: 35
-      }}>
+      }} wrap>
         <View style={{
           ...styles.table,
           marginBottom: '10px'
