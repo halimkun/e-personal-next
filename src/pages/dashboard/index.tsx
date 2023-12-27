@@ -192,7 +192,7 @@ const DashboardPage: NextPageWithLayout = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
-                <CardTitle>Daftar Agenda Bulanan</CardTitle>
+                <CardTitle className='text-primary'>Daftar Agenda Bulanan</CardTitle>
                 <CardDescription>{new Date(start).toLocaleDateString('id-ID', {
                   year: 'numeric',
                   month: 'long',
@@ -213,7 +213,7 @@ const DashboardPage: NextPageWithLayout = () => {
                 return (
                   <div
                     key={i}
-                    className="flex items-start gap-3 mb-2 border border-transparent px-3 py-2 hover:border-border hover:bg-white hover:shadow-md rounded-lg duration-200 transition-all ease-in-out cursor-pointer"
+                    className="flex items-start gap-3 mb-2 border border-transparent px-3 py-2 hover:border-border hover:bg-white dark:hover:bg-white/10 hover:shadow-md rounded-lg duration-200 transition-all ease-in-out cursor-pointer"
                     onClick={() => {
                       sEvt(e)
                       setDetail(true)
