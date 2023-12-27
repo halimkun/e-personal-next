@@ -56,15 +56,17 @@ const SpoDetailPage = () => {
             return txt.value;
           }
 
-          const updatedDetailData = {
-            nomor: data.data.nomor,
-            pengertian: decodeHtml(data.data.detail?.pengertian),
-            tujuan: decodeHtml(data.data.detail?.tujuan),
-            kebijakan: decodeHtml(data.data.detail?.kebijakan),
-            prosedur: decodeHtml(data.data.detail?.prosedur),
-          };
+          if (data.data.detail) {
+            const updatedDetailData = {
+              nomor: data.data.nomor,
+              pengertian: decodeHtml(data.data.detail?.pengertian),
+              tujuan: decodeHtml(data.data.detail?.tujuan),
+              kebijakan: decodeHtml(data.data.detail?.kebijakan),
+              prosedur: decodeHtml(data.data.detail?.prosedur),
+            };
 
-          setDetailData(updatedDetailData);
+            setDetailData(updatedDetailData);
+          }
         }
       } catch (error) {
         console.log(error)
@@ -136,7 +138,7 @@ const SpoDetailPage = () => {
                   <Label className="text-primary">Nomor SPO</Label>
                   <Input name="nomor" value={nomor} readOnly />
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {['pengertian', 'tujuan', 'kebijakan', 'prosedur'].map((field) => (
                     <div className="space-y-1" key={field}>
