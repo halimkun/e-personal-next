@@ -18,6 +18,14 @@
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --warning: 41.2 83.2% 53.3%;
+    --warning-foreground: 222.2 47.4% 11.2%;
+    --danger: 0 84.2% 60.2%;
+    --danger-foreground: 210 40% 98%;
+    --success: 161.3 83% 48.4%;
+    --success-foreground: 222.2 47.4% 11.2%;
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
@@ -28,13 +36,6 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
-
-    --warning: 41.2 83.2% 53.3%;
-    --warning-foreground: 222.2 47.4% 11.2%;
-    --danger: 0 84.2% 60.2%;
-    --danger-foreground: 210 40% 98%;
-    --success: 161.3 83% 48.4%;
-    --success-foreground: 222.2 47.4% 11.2%;
   }
 
   .dark {
@@ -96,24 +97,24 @@ ol {
 }
 
 .rbc-month-view {
-  @apply border border-border dark:border-neutral-700 text-foreground dark:text-neutral-300;
+  @apply border border-border dark:border-gray-700 text-foreground dark:text-gray-300;
 }
 
 .rbc-off-range-bg {
-  @apply bg-background dark:bg-neutral-800;
+  @apply bg-background dark:bg-gray-800;
 }
 
 .rbc-day-bg+.rbc-day-bg,
 .rbc-header+.rbc-header {
-  @apply border-l border-border dark:border-neutral-700;
+  @apply border-l border-border dark:border-gray-700;
 }
 
 .rbc-header {
-  @apply border-b border-border dark:border-neutral-700;
+  @apply border-b border-border dark:border-gray-700;
 }
 
 .rbc-month-row+.rbc-month-row {
-  @apply border-t border-border dark:border-neutral-700;
+  @apply border-t border-border dark:border-gray-700;
 }
 
 .rbc-today {

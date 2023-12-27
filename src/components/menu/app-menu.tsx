@@ -20,7 +20,7 @@ const AppMenu = () => {
             pathname.startsWith('/dashboard') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/dashboard">
-              <IconLayoutDashboard className="w-5 h-5 mr-2 stroke-secondary-foreground" />
+              <IconLayoutDashboard className="w-5 h-5 mr-2" />
               Dashboard
             </Link>
           </Button>
@@ -35,7 +35,7 @@ const AppMenu = () => {
             pathname.startsWith('/surat/internal') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/surat/internal">
-              <IconMailStar className="w-5 h-5 mr-2 stroke-secondary-foreground" />
+              <IconMailStar className="w-5 h-5 mr-2" />
               Internal
             </Link>
           </Button>
@@ -46,7 +46,7 @@ const AppMenu = () => {
             pathname.startsWith('/surat/eksternal') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/surat/eksternal">
-              <IconMailShare className="w-5 h-5 mr-2 stroke-secondary-foreground" />
+              <IconMailShare className="w-5 h-5 mr-2" />
               External
             </Link>
           </Button>
@@ -57,7 +57,7 @@ const AppMenu = () => {
             pathname.startsWith('/berkas/spo') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/berkas/spo">
-              <IconFileStack className="w-5 h-5 mr-2 stroke-secondary-foreground" />
+              <IconFileStack className="w-5 h-5 mr-2" />
               SPO
             </Link>
           </Button>
@@ -68,7 +68,7 @@ const AppMenu = () => {
             pathname.startsWith('/berkas/kerjasama') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/berkas/kerjasama">
-              <IconFileCertificate className="w-5 h-5 mr-2 stroke-secondary-foreground" />
+              <IconFileCertificate className="w-5 h-5 mr-2" />
               Kerjasama
             </Link>
           </Button>
@@ -83,7 +83,7 @@ const AppMenu = () => {
             pathname.startsWith('/karyawan') && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
           )} asChild>
             <Link href="/karyawan">
-              <IconUserStar className="w-5 h-5 mr-2 stroke-secondary-foreground" />
+              <IconUserStar className="w-5 h-5 mr-2" />
               Karyawan
             </Link>
           </Button>
