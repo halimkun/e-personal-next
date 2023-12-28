@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import AppLayout from "@/components/layouts/app"
-import LaravelPagination from "@/components/custom/tables/laravel-pagination"
+import LaravelPagination from "@/components/custom-ui/laravel-pagination"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"

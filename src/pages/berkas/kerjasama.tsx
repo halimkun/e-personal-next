@@ -4,7 +4,7 @@ import { ReactElement, useEffect, useState } from "react";
 import AppLayout from "@/components/layouts/app";
 import FormAddPks from "@/components/custom/forms/add-pks";
 import DialogEditPks from "@/components/custom/modals/dialog-edit-pks";
-import LaravelPagination from "@/components/custom/tables/laravel-pagination";
+import LaravelPagination from "@/components/custom-ui/laravel-pagination";
 import DialogPreviewBerkas from "@/components/custom/modals/dialog-preview-berkas";
 
 import { toast } from "react-hot-toast";
@@ -81,19 +81,16 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     {
       name: 'Judul / Nama PKS',
       selector: 'judul_or_nama',
-      data: (row: any) => <div>{row.judul}</div>
-    },
-    {
-      name: 'No. PKS Eksternal',
-      selector: 'no_pks_eksternal',
-      style: [
-        'text-right'
-      ],
-      data: (row: any) => row.no_pks_eksternal ? (
-        <div className="text-right">
-          <Badge variant='outline' className="whitespace-nowrap group-hover:border-primary">{row.no_pks_eksternal}</Badge>
-        </div>
-      ) : (<></>)
+      data: (row: any) => (
+        <>
+          <div>{row.judul}</div>
+          {row.no_pks_eksternal && (
+            <div className="text-left mt-1">
+              <Badge variant='outline' className="whitespace-nowrap group-hover:border-primary">{row.no_pks_eksternal}</Badge>
+            </div>
+          )}
+        </>
+      )
     },
     {
       name: 'Tanggal',

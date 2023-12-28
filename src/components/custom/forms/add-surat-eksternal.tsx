@@ -1,4 +1,4 @@
-import LaravelPagination from "../tables/laravel-pagination";
+import LaravelPagination from "../../custom-ui/laravel-pagination";
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"

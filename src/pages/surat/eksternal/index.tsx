@@ -1,5 +1,5 @@
 import AppLayout from '@/components/layouts/app';
-import LaravelPagination from '@/components/custom/tables/laravel-pagination';
+import LaravelPagination from '@/components/custom-ui/laravel-pagination';
 import toast from 'react-hot-toast';
 
 import { useEffect, useState } from 'react';

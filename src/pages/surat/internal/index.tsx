@@ -6,7 +6,7 @@ import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../../_app';
 
 import AppLayout from '@/components/layouts/app';
-import LaravelPagination from '@/components/custom/tables/laravel-pagination';
+import LaravelPagination from '@/components/custom-ui/laravel-pagination';
 import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
 
 import { cn } from '@/lib/utils';

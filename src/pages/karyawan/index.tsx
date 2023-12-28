@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { NextPageWithLayout } from '../_app';
-import LaravelPagination from '@/components/custom/tables/laravel-pagination';
+import LaravelPagination from '@/components/custom-ui/laravel-pagination';
 import AppLayout from '@/components/layouts/app';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';

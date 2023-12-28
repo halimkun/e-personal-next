@@ -1,6 +1,6 @@
 import toast from "react-hot-toast"
 import AppLayout from "@/components/layouts/app"
-import LaravelPagination from "@/components/custom/tables/laravel-pagination"
+import LaravelPagination from "@/components/custom-ui/laravel-pagination"
 
 import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
@@ -159,8 +159,8 @@ const SpoPage = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2">
-              <CardTitle>Berkas Perjanjian</CardTitle>
-              <CardDescription>Daftar Berkas Perjanjian Kerjasama</CardDescription>
+              <CardTitle>Berkas Standar Prosedur Operasional</CardTitle>
+              <CardDescription>Data Berkas Standar Prosedur Operasional</CardDescription>
             </div>
             <Dialog open={isFormAddOpen} onOpenChange={setIsFormAddOpen}>
               <DialogTrigger asChild>
