@@ -16,7 +16,7 @@ import { OffCanvasMenu } from "./off-canvas-menu";
             <OffCanvasMenu />
 
             <MenubarMenu>
-              <Link className="font-bold text-xl" href="/dashboard">E-Personal</Link>
+              <Link className="font-bold text-lg text-primary tracking-wide" href="/dashboard">e-personal</Link>
             </MenubarMenu>
           </div>
 
