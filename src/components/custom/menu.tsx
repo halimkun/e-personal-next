@@ -10,7 +10,7 @@ import { OffCanvasMenu } from "./off-canvas-menu";
   
   export function Menu() {
     return (
-      <Menubar className="sticky top-0 rounded-none border-b-border px-4 py-7 lg:px-6 w-full bg-background z-[11]">
+      <Menubar className="sticky top-0 rounded-none border-0 border-b-[1px] border-border px-4 py-7 lg:px-6 w-full bg-background z-[11]">
         <div className="w-full flex items-center justify-between">
           <div className="left-menu flex items-center align-center gap-4">
             <OffCanvasMenu />

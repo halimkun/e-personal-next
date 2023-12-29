@@ -29,7 +29,7 @@ export function Combobox({ items, setSelectedItem, selectedItem, placeholder }: 
           variant="outline"
           role="combobox"
           className={cn(
-            "w-full justify-between",
+            "w-full min-w-[250px] max-w-full justify-between",
             !val && "text-muted-foreground"
           )}
         >
@@ -37,7 +37,7 @@ export function Combobox({ items, setSelectedItem, selectedItem, placeholder }: 
           <IconDirection className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      <PopoverContent className="w-full min-w-[250px] max-w-full p-0">
         <Command className="w-full">
           <CommandInput
             placeholder={placeholder ?? "Search item"}
