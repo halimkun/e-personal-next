@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 
@@ -21,6 +21,10 @@ export function Combobox({ items, setSelectedItem, selectedItem, placeholder }: 
   placeholder?: string
 }) {
   const [val, setVal] = useState(selectedItem ?? "")
+
+  useEffect(() => {
+    setVal(selectedItem ?? "")
+  }, [selectedItem])
 
   return (
     <Popover modal={true}>
