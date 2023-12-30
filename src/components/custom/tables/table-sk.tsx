@@ -1,7 +1,4 @@
-import React, { useEffect } from 'react'
-import useSWR from 'swr'
-import Loading1 from '../icon-loading'
-import { getSession } from 'next-auth/react'
+import React from 'react'
 import LaravelPagingx from '@/components/custom-ui/laravel-paging'
 import { Badge } from '@/components/ui/badge'
 
@@ -9,9 +6,11 @@ interface tableProps {
   data: any
   filterData: any
   setFilterData: any
+  isValidating?: boolean
+  onRowClick?: (row: any) => void;
 }
 
-const TableSk = ({ data, filterData, setFilterData }: tableProps) => {
+const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: tableProps) => {
   const columns = [
     {
       name: 'Nomor',
@@ -52,7 +51,16 @@ const TableSk = ({ data, filterData, setFilterData }: tableProps) => {
     },
   ]
 
-  return (<LaravelPagingx data={data.data} columnsData={columns} filterData={filterData} setFilterData={setFilterData} />)
+  return (
+    <LaravelPagingx
+      data={data.data}
+      columnsData={columns}
+      filterData={filterData}
+      setFilterData={setFilterData}
+      isValidating={isValidating}
+      onRowClick={onRowClick}
+    />
+  )
 }
 
 export default TableSk

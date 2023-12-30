@@ -14,29 +14,28 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import TableSk from "@/components/custom/tables/table-sk"
 import { Button } from "@/components/ui/button"
-import { IconDeviceSdCard, IconPlus, IconX } from "@tabler/icons-react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { DatePickerDemo } from "@/components/custom/inputs/date-picker"
-import { Combobox } from "@/components/custom/inputs/combo-box"
+import { IconPlus } from "@tabler/icons-react"
 import { getSession } from "next-auth/react"
-import toast from "react-hot-toast"
 import useSWR from "swr"
 import Loading1 from "@/components/custom/icon-loading"
+import FormAddSK from "@/components/custom/forms/add-sk"
+import { Badge } from "@/components/ui/badge"
 
 
 const SKPage = () => {
-  const [date, setDate] = React.useState<Date | null>(null)
-  const [isOpenFormAdd, setIsOpenFormAdd] = React.useState(false)
-  const [jenis, setJenis] = React.useState<string | undefined>(undefined)
-
   const delayDebounceFn = React.useRef<any>(null)
   const [filterData, setFilterData] = React.useState({})
   const [filterQuery, setFilterQuery] = React.useState('')
+  const [selectedData, setSelectedData] = React.useState<any>(null)
+
+  const [date, setDate] = React.useState<Date | null>(null)
+  const [isOpenMenu, setIsOpenMenu] = React.useState(false)
+  const [isFormEditOpen, setIsFormEditOpen] = React.useState(false)
+  const [isOpenFormAdd, setIsOpenFormAdd] = React.useState(false)
+  const [jenis, setJenis] = React.useState<string | undefined>(undefined)
 
   const fetcher = async (url: any) => {
     const session = await getSession()
@@ -56,7 +55,11 @@ const SKPage = () => {
     return jsonData
   }
 
-  const { data, error, mutate, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/berkas/sk`, fetcher)
+  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/berkas/sk`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  })
 
   useEffect(() => {
     let fq = ''
@@ -80,43 +83,6 @@ const SKPage = () => {
 
     return () => clearTimeout(delayDebounceFn.current);
   }, [filterQuery]);
-
-  const onSubmit = async (e: any) => {
-    e.preventDefault()
-    const session = await getSession()
-    // data : jenis, judul, pj, tgl_terbit
-    const data = {
-      jenis: jenis,
-      judul: e.target.judul.value,
-      pj: e.target.pj.value,
-      tgl_terbit: e.target.tgl_terbit.value
-    }
-
-    // post data to api
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/sk/store`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
-
-    const result = await res.json()
-
-    if (result.success) {
-      toast.success('Data berhasil disimpan!');
-
-      // reload table swr
-      mutate()
-
-      // reset form and close modal
-      e.target.reset()
-      setIsOpenFormAdd(false)
-    } else {
-      toast.error('Data gagal disimpan!');
-    }
-  }
 
   if (isLoading) return <Loading1 height={50} width={50} />
   if (error) return <div>{error.message}</div>
@@ -142,10 +108,61 @@ const SKPage = () => {
             filterData={filterData}
             setFilterData={setFilterData}
             key={data.data?.current_page}
+            isValidating={isValidating}
+            onRowClick={(item: any) => {
+              setSelectedData(item)
+              setIsOpenMenu(true)
+            }}
           />
         </CardContent>
       </Card>
 
+      <Dialog open={isOpenMenu} onOpenChange={setIsOpenMenu}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Menu SK Direktur</DialogTitle>
+          </DialogHeader>
+
+          <Button variant={'outline'} size={'sm'} onClick={() => {
+            setIsFormEditOpen(true)
+            setIsOpenMenu(false)
+          }} >
+            Edit SK
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Edit */}
+      <Dialog open={isFormEditOpen} onOpenChange={setIsFormEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Surat Keputusan Direktur</DialogTitle>
+            <DialogDescription>
+              {selectedData ? (
+                <Badge variant={selectedData.status === '1' ? 'default' : 'destructive'} className="mr-2">
+                  {`${selectedData.nomor.toString().padStart(3, '0')}/${selectedData.jenis}/${selectedData.prefix}/${new Date(selectedData.tgl_terbit).toLocaleDateString('id-ID', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit'
+                  }).split('/').join('')}`}
+                </Badge>
+              ) : <></>}
+              You can edit this data. but be careful editing number can cause duplicate data in the database and possibly cause errors.
+            </DialogDescription>
+          </DialogHeader>
+          <FormAddSK
+            data={selectedData}
+            date={date}
+            setDate={setDate}
+            jenis={jenis}
+            setJenis={setJenis}
+            setIsOpenFormAdd={setIsFormEditOpen}
+            mutate={mutate}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Form Add */}
       <Dialog open={isOpenFormAdd} onOpenChange={setIsOpenFormAdd}>
         <DialogContent>
           <DialogHeader>
@@ -153,52 +170,14 @@ const SKPage = () => {
             <DialogDescription>
             </DialogDescription>
           </DialogHeader>
-          <form method="post" onSubmit={onSubmit}>
-            <div className="space-y-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="judul">Judul SK</Label>
-                <Input id="judul" name="judul" placeholder="judul sk yang akan dibuat" />
-              </div>
-              <div className="flex gap-3">
-                <div className="w-full space-y-1.5">
-                  <Label htmlFor="pj">Penanggung Jawab</Label>
-                  <Input id="pj" name="pj" placeholder="pilih pj" className="w-full" />
-                </div>
-                <div className="w-full space-y-1.5">
-                  <Label htmlFor="tgl_terbit">Tanggal Terbit</Label>
-                  <Input type="hidden" id="tgl_terbit" name="tgl_terbit" placeholder="pilih tanggal terbit" value={
-                    new Date(date || Date.now()).toLocaleDateString('id-ID', {
-                      year: 'numeric',
-                      month: 'numeric',
-                      day: 'numeric'
-                    }).split('/').reverse().join('-')
-                  } />
-                  <DatePickerDemo
-                    date={date}
-                    setDate={setDate}
-                    placeholder="pilih tanggal terbit"
-                  />
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="judul">Judul SK</Label>
-                <Combobox
-                  items={[
-                    { value: 'A', label: 'SK Dokumen' },
-                    { value: 'B', label: 'SK Pengangkatan Jabatan' },
-                  ]}
-                  setSelectedItem={(item: any) => setJenis(item)}
-                  selectedItem={jenis}
-                  placeholder="Jenis SK"
-                />
-              </div>
-            </div>
-
-            <div className="mt-5 flex justify-end gap-3">
-              <Button size={'sm'} variant="outline"><IconX className="mr-2 h-4 w-4" />Cancel</Button>
-              <Button size={'sm'} type="submit" className="text-secondary-foreground"><IconDeviceSdCard className="mr-2 h-4 w-4" />Save</Button>
-            </div>
-          </form>
+          <FormAddSK
+            date={date}
+            setDate={setDate}
+            jenis={jenis}
+            setJenis={setJenis}
+            setIsOpenFormAdd={setIsOpenFormAdd}
+            mutate={mutate}
+          />
         </DialogContent>
       </Dialog>
     </div>
