@@ -174,7 +174,7 @@ const FormAddSK = ({
       </div>
 
       <div className="mt-5 flex justify-end gap-3">
-        <Button size={'sm'} type="submit" className="text-secondary-foreground"><IconDeviceSdCard className="mr-2 h-4 w-4" />Save</Button>
+        <Button size={'sm'} type="submit" className="text-primary-foreground font-bold"><IconDeviceSdCard className="mr-2 h-4 w-4" />Save</Button>
       </div>
     </form>
   )
