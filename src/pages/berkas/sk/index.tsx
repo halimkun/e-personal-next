@@ -76,23 +76,17 @@ const SKPage = () => {
   }, [filterQuery]);
 
   const handleDelete = async (data: any) => {
-    const postData = {
-      nomor: data.nomor,
-      jenis: data.jenis,
-      tgl_terbit: data.tgl_terbit,
-    }
-
     const session = await getSession()
     const confirm = window.confirm('Apakah anda yakin ingin menghapus data ini?')
 
     if (confirm) {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/sk/delete`, {
         method: 'POST',
+        body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session?.rsiap?.access_token}`,
         },
-        body: JSON.stringify(postData),
       })
 
       if (!response.ok) {
@@ -108,7 +102,6 @@ const SKPage = () => {
 
       mutate()
     }
-
   }
 
   if (isLoading) return <Loading1 height={50} width={50} />
