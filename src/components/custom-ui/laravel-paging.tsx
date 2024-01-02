@@ -31,8 +31,8 @@ const LaravelPagingx = ({
 }: tableProps) => {
   return (
     <>
-      <div className="mb-4 w-full flex items-center justify-end gap-4">
-        <div>
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4">
+        <div className="w-full">
           <Combobox
             items={[
               { value: '', label: 'Semua Data' },
@@ -46,7 +46,7 @@ const LaravelPagingx = ({
             placeholder="Jenis SK"
           />
         </div>
-        <div>
+        <div className="w-full">
           <Input
             type="search"
             placeholder="Search..."
@@ -58,7 +58,7 @@ const LaravelPagingx = ({
         </div>
       </div>
 
-      <Table>
+      <Table className="mt-4">
         <TableHeader>
           <TableRow>
             {columnsData.map((column: any) => (

@@ -10,6 +10,7 @@ import { getSession } from "next-auth/react"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card"
+import toast from "react-hot-toast"
 
 const DialogEditSk = dynamic(() => import('@/components/custom/modals/dialog-edit-sk'), { ssr: false })
 const DialogMenuSk = dynamic(() => import('@/components/custom/modals/dialog-menu-sk'), { ssr: false })
@@ -74,6 +75,42 @@ const SKPage = () => {
     return () => clearTimeout(delayDebounceFn.current);
   }, [filterQuery]);
 
+  const handleDelete = async (data: any) => {
+    const postData = {
+      nomor: data.nomor,
+      jenis: data.jenis,
+      tgl_terbit: data.tgl_terbit,
+    }
+
+    const session = await getSession()
+    const confirm = window.confirm('Apakah anda yakin ingin menghapus data ini?')
+
+    if (confirm) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/sk/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+        },
+        body: JSON.stringify(postData),
+      })
+
+      if (!response.ok) {
+        throw new Error(response.status + ' ' + response.statusText)
+      }
+
+      const jsonData = await response.json()
+      if (jsonData.success) {
+        toast.success('Data berhasil dihapus!')
+      } else {
+        toast.error(jsonData.message)
+      }
+
+      mutate()
+    }
+
+  }
+
   if (isLoading) return <Loading1 height={50} width={50} />
   if (error) return <div>{error.message}</div>
   if (!data) return <div>No data</div>
@@ -81,7 +118,7 @@ const SKPage = () => {
   return (
     <>
       <div className="space-y-2">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <div className="space-y-1">
             <CardTitle>Surat Keputusan Direktur</CardTitle>
             <CardDescription>Data Surat Keputusan Direktur</CardDescription>
@@ -105,9 +142,11 @@ const SKPage = () => {
 
       {/* Modal Menu */}
       <DialogMenuSk
+        data={selectedData}
         isOpenMenu={isOpenMenu}
         setIsOpenMenu={setIsOpenMenu}
         setIsFormEditOpen={setIsFormEditOpen}
+        handleDelete={handleDelete}
       />
 
       {/* Modal Edit */}

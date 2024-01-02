@@ -4,19 +4,20 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { IconEdit, IconTrash } from "@tabler/icons-react"
 
 type Props = {
+  data: any
   isOpenMenu: boolean
   setIsOpenMenu: (value: boolean) => void
   setIsFormEditOpen: (value: boolean) => void
+  handleDelete: (value: any) => void
 }
 
 const DialogMenuSk = (props: Props) => {
-  const { isOpenMenu, setIsOpenMenu, setIsFormEditOpen } = props
+  const { data, isOpenMenu, setIsOpenMenu, setIsFormEditOpen, handleDelete } = props
   return (
     <Dialog open={isOpenMenu} onOpenChange={setIsOpenMenu}>
       <DialogContent>
@@ -34,6 +35,7 @@ const DialogMenuSk = (props: Props) => {
             <IconEdit className="w-5 h-5 mr-2" /> <span className="font-bold">Edit SK</span>
           </Button>
           <Button variant={'destructive'} size={'sm'} className="ml-2" onClick={() => {
+            handleDelete(data)
             setIsOpenMenu(false)
           }}>
             <IconTrash className="w-5 h-5" />
