@@ -75,8 +75,7 @@ const FormAddSK = ({
   const onUpdate = async (e: any) => {
     e.preventDefault()
     const session = await getSession()
-    
-    // data : judul, pj, tgl_terbit, jenis, old_jenis, old_nomor, old_tgl_terbit
+
     const data = {
       nomor: e.target.nomor.value,
       judul: e.target.judul.value,
@@ -125,10 +124,16 @@ const FormAddSK = ({
         </>
       ) : <></>}
       <div className="space-y-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="nomor">Nomor Dokumen</Label>
-          <Input id="nomor" name="nomor" placeholder={"nomor dokumen sebelumnya : " + data.nomor} defaultValue={data ? data.nomor : ''} className="w-full" />
-        </div>
+        {
+          data && (
+            <div className="space-y-1.5">
+              <Label htmlFor="nomor">Nomor Dokumen</Label>
+              <Input id="nomor" name="nomor" placeholder={
+                data ? 'nomor dokumen sebelumnya : ' + data.nomor : 'nomor dokumen'
+              } defaultValue={data ? data.nomor : ''} className="w-full" />
+            </div>
+          )
+        }
         <div className="space-y-1.5">
           <Label htmlFor="judul">Judul SK</Label>
           <Input id="judul" name="judul" placeholder="judul sk yang akan dibuat" defaultValue={data ? data.judul : ''} className="w-full" />
