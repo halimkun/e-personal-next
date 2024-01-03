@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate } from '@tabler/icons-react';
+import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate, IconMailDown } from '@tabler/icons-react';
 import { IconMailShare } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/router";
@@ -33,6 +33,11 @@ const AppMenu = () => {
           "name": "External",
           "path": "/surat/eksternal",
           "icon": <IconMailShare className="w-5 h-5 mr-2" />,
+        },
+        {
+          "name": "Surat Masuk",
+          "path": "/surat/masuk",
+          "icon": <IconMailDown className="w-5 h-5 mr-2" />,
         }
       ],
     },
