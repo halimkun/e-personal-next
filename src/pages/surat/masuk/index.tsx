@@ -10,11 +10,18 @@ import { getSession } from "next-auth/react"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card"
-import toast from "react-hot-toast"
+import dynamic from "next/dynamic"
+
+const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
+const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
+const DialogAddSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-add-surat-masuk'), { ssr: false })
 
 const SuratMasukPage: NextPageWithLayout = () => {
   const delayDebounceFn = React.useRef<any>(null)
+  const [selectedItem, setSelectedItem] = React.useState<any>({})
   const [isOpenFormAdd, setIsOpenFormAdd] = React.useState(false)
+  const [isOpenPreview, setIsOpenPreview] = React.useState(false)
+  const [isOpenMenu, setIsOpenMenu] = React.useState(false)
   const [filterData, setFilterData] = React.useState({})
   const [filterQuery, setFilterQuery] = React.useState('')
 
@@ -74,8 +81,8 @@ const SuratMasukPage: NextPageWithLayout = () => {
       <div className="space-y-2">
         <div className="flex justify-between items-center mb-4">
           <div className="space-y-1">
-            <CardTitle>Surat Keputusan Direktur</CardTitle>
-            <CardDescription>Data Surat Keputusan Direktur</CardDescription>
+            <CardTitle>Surat Masuk</CardTitle>
+            <CardDescription>Data Surat Masuk | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
           </div>
           <Button size={'icon'} className="w-7 h-7" onClick={() => setIsOpenFormAdd(true)}>
             <IconPlus className="w-5 h-5" />
@@ -88,11 +95,36 @@ const SuratMasukPage: NextPageWithLayout = () => {
           setFilterData={setFilterData}
           isValidating={isValidating}
           lastColumnAction={true}
+          setIsOpenPreview={setIsOpenPreview}
+          setSelectedItem={setSelectedItem}
           onRowClick={(row: any) => {
-            toast.success(row.pengirim)
+            setSelectedItem(row)
+            setIsOpenMenu(true)
           }}
         />
       </div>
+      
+      {/* Add Surat masuk */}
+      <DialogAddSuratMasuk
+        isOpenFormAdd={isOpenFormAdd}
+        setIsOpenFormAdd={setIsOpenFormAdd}
+        mutate={mutate}
+      />
+
+       {/* Preview */}
+      <DialogPreviewSuratMasuk
+        isOpenPreview={isOpenPreview}
+        setIsOpenPreview={setIsOpenPreview}
+        selectedItem={selectedItem}
+      />
+
+      {/* Menu Surat */}
+      <DialogMenuSuratMasuk
+        mutate={mutate}
+        isOpenMenu={isOpenMenu}
+        setIsOpenMenu={setIsOpenMenu}
+        selectedItem={selectedItem}
+      />
     </>
   )
 }

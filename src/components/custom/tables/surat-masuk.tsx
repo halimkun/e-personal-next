@@ -11,6 +11,8 @@ interface tableSuratMasukProps {
   filterData: any
   setFilterData: any
   isValidating?: boolean | undefined
+  setIsOpenPreview?: (value: boolean) => void
+  setSelectedItem?: (value: any) => void
   onRowClick?: (row: any) => void;
   lastColumnAction?: boolean | undefined
 }
@@ -33,8 +35,16 @@ function getIconFromKetSurat(ket_surat: string) {
   }
 }
 
-const TableSuratMasuk = ({ data, filterData, setFilterData, isValidating, onRowClick, lastColumnAction }: tableSuratMasukProps) => {
-  
+const TableSuratMasuk = ({ data,
+  filterData,
+  setFilterData,
+  isValidating,
+  setIsOpenPreview = () => { },
+  setSelectedItem = () => { },
+  onRowClick = () => { },
+  lastColumnAction
+}: tableSuratMasukProps) => {
+
   const columns = [
     {
       name: 'No SIMRS',
@@ -69,12 +79,12 @@ const TableSuratMasuk = ({ data, filterData, setFilterData, isValidating, onRowC
     {
       name: 'Tanggal Surat',
       selector: 'tgl_surat',
-      data: (row: any) => <p className="text-sm whitespace-nowrap">{new Date(row.tgl_surat).toLocaleDateString('id-ID', {
+      data: (row: any) => row.tgl_surat && row.tgl_surat != '0000-00-00' ? <p className="text-sm whitespace-nowrap">{new Date(row.tgl_surat).toLocaleDateString('id-ID', {
         weekday: 'short',
         year: 'numeric',
         month: 'short',
         day: 'numeric',
-      })}</p>,
+      })}</p> : '-',
     },
     {
       name: <IconHash className="w-5 h-5" />,
@@ -85,8 +95,9 @@ const TableSuratMasuk = ({ data, filterData, setFilterData, isValidating, onRowC
             size="icon"
             className="h-6 w-6"
             disabled={!row.berkas || row.berkas == '-' || row.berkas == '' || row.berkas == ' '}
-            onClick={() => {
-              toast.success(row.pengirim)
+            onClick={(e) => {
+              setSelectedItem(row)
+              setIsOpenPreview(true)
             }}
           >
             <IconFileSearch className="w-4 h-4" />
@@ -95,7 +106,7 @@ const TableSuratMasuk = ({ data, filterData, setFilterData, isValidating, onRowC
       ),
     }
   ]
-  
+
   return (
     <>
       <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4">
@@ -135,7 +146,8 @@ const TableSuratMasuk = ({ data, filterData, setFilterData, isValidating, onRowC
         setFilterData={setFilterData}
         isValidating={isValidating}
         onRowClick={(item: any) => {
-          toast.success(item.perihal)
+          setSelectedItem(item)
+          onRowClick(item)
         }}
         lastColumnAction={true}
       />
