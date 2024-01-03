@@ -1,6 +1,8 @@
 import React from 'react'
 import LaravelPagingx from '@/components/custom-ui/laravel-paging'
 import { Badge } from '@/components/ui/badge'
+import { Combobox } from '../inputs/combo-box'
+import { Input } from '@/components/ui/input'
 
 interface tableProps {
   data: any
@@ -10,7 +12,7 @@ interface tableProps {
   onRowClick?: (row: any) => void;
 }
 
-const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: tableProps) => {
+const TableSk = ({ data,  filterData, setFilterData, isValidating, onRowClick }: tableProps) => {
   const columns = [
     {
       name: 'Nomor',
@@ -52,14 +54,44 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
   ]
 
   return (
-    <LaravelPagingx
-      data={data.data}
-      columnsData={columns}
-      filterData={filterData}
-      setFilterData={setFilterData}
-      isValidating={isValidating}
-      onRowClick={onRowClick}
-    />
+    <>
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4">
+        <div className="w-full">
+          <Combobox
+            items={[
+              { value: '', label: 'Semua Data' },
+              { value: 'A', label: 'SK Dokumen' },
+              { value: 'B', label: 'SK Pengangkatan Jabatan' },
+            ]}
+            setSelectedItem={(item: any) => {
+              setFilterData({ ...filterData, jenis: item })
+            }}
+            selectedItem={filterData.jenis}
+            placeholder="Jenis SK"
+          />
+        </div>
+        <div className="w-full">
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full min-w-[250px]"
+            defaultValue={filterData.keyword}
+            onChange={(e) => {
+              setFilterData({ ...filterData, keyword: e.target.value })
+            }}
+          />
+        </div>
+      </div>
+
+      <LaravelPagingx
+        data={data.data}
+        columnsData={columns}
+        filterData={filterData}
+        setFilterData={setFilterData}
+        isValidating={isValidating}
+        onRowClick={onRowClick}
+      />
+    </>
   )
 }
 

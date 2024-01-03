@@ -7,9 +7,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Input } from "../ui/input";
-import { Combobox } from "../custom/inputs/combo-box";
-import toast from "react-hot-toast";
 import { Skeleton } from "../ui/skeleton";
 
 interface tableProps {
@@ -19,6 +16,7 @@ interface tableProps {
   setFilterData: any
   isValidating?: boolean | undefined
   onRowClick?: (row: any) => void;
+  lastColumnAction?: boolean | undefined
 }
 
 const LaravelPagingx = ({
@@ -27,37 +25,11 @@ const LaravelPagingx = ({
   filterData,
   setFilterData,
   isValidating,
-  onRowClick
+  onRowClick,
+  lastColumnAction = false
 }: tableProps) => {
   return (
     <>
-      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4">
-        <div className="w-full">
-          <Combobox
-            items={[
-              { value: '', label: 'Semua Data' },
-              { value: 'A', label: 'SK Dokumen' },
-              { value: 'B', label: 'SK Pengangkatan Jabatan' },
-            ]}
-            setSelectedItem={(item: any) => {
-              setFilterData({ ...filterData, jenis: item })
-            }}
-            selectedItem={filterData.jenis}
-            placeholder="Jenis SK"
-          />
-        </div>
-        <div className="w-full">
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="w-full min-w-[250px]"
-            onChange={(e) => {
-              setFilterData({ ...filterData, keyword: e.target.value })
-            }}
-          />
-        </div>
-      </div>
-
       <Table className="mt-4">
         <TableHeader>
           <TableRow>
@@ -81,10 +53,16 @@ const LaravelPagingx = ({
           ) : (
             data.data.map((d: any) => (
               <TableRow key={d?.no_surat} className="group" onClick={
-                onRowClick ? (() => onRowClick?.(d)) : (() => toast.success('No action'))
+                !lastColumnAction ? (
+                  onRowClick ? (() => onRowClick?.(d)) : (() => { })
+                ) : (() => { })
               }>
                 {columnsData.map((column: any, index: number) => (
-                  <TableCell key={column.selector}>
+                  <TableCell key={column.selector} onClick={
+                    lastColumnAction ? (
+                      index === columnsData.length - 1 ? (() => { }) : (onRowClick ? (() => onRowClick?.(d)) : (() => { }))
+                    ) : (() => { })
+                  }>
                     {column.data(d)}
                   </TableCell>
                 ))}
@@ -95,7 +73,6 @@ const LaravelPagingx = ({
       </Table>
 
       <div className="flex justify-between items-center w-full mt-6">
-        {/* left info */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">
             Showing {data?.from} to {data?.to} of {data?.total} entries <br />
