@@ -19,10 +19,10 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
 
   const [selectedPj, setSelectedPj] = useState("")
   const [withKaryawan, setWithKaryawan] = useState(false)
+  const [tanggal, setTanggal] = useState("")
   const [lastNomorSurat, setLastNomorSurat] = useState("");
   const [newNomorSurat, setNewNomorSurat] = useState("");
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
-
 
   useEffect(() => {
     const r = async () => {
@@ -34,8 +34,11 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
       });
 
       const result = await rs.json();
+      console.log(result)
       if (result.success) {
         setLastNomorSurat(result.data.no_surat)
+      } else {
+        setLastNomorSurat("")
       }
     }
 
@@ -44,16 +47,18 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
 
   useEffect(() => {
     parseNomorSurat()
-  }, [lastNomorSurat])
-  
-  const parseNomorSurat = () => {
-    if (!lastNomorSurat) return
+  }, [lastNomorSurat, tanggal])
 
+  const parseNomorSurat = () => {
     const splitNomorSurat = lastNomorSurat.split("/")
-    const nomorSurat = parseInt(splitNomorSurat[0]) + 1
+    const nomorSurat = isNaN(parseInt(splitNomorSurat[0])) ? 1 : parseInt(splitNomorSurat[0]) + 1
     const ns = nomorSurat < 100 ? `00${nomorSurat}` : nomorSurat
+   
+    const tgl = tanggal ? new Date(tanggal).toLocaleDateString('id-ID', { day: '2-digit' }) : new Date().toLocaleDateString('id-ID', { day: '2-digit' })
+    const bulan = new Date().toLocaleDateString('id-ID', { month: '2-digit' })
+    const tahun = new Date().toLocaleDateString('id-ID', { year: '2-digit' })
     
-    const nomor = `${ns}/B/S-RSIA/${new Date().getDate()}${new Date().getMonth() + 1}${new Date().getFullYear().toString().slice(-2)}`
+    const nomor = `${ns}/B/S-RSIA/${tgl}${bulan}${tahun}`
     setNewNomorSurat(nomor)
   }
 
@@ -140,13 +145,13 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
       <div className="grid gap-3 py-4">
         <div className="w-full space-y-1">
           <Label className="text-primary" htmlFor="no_surat">Nomor Surat</Label>
-          <Input type="text" name="no_surat" placeholder="nomor surat" id="no_surat" value={newNomorSurat} onChange={(e) => setLastNomorSurat(e.target.value)} />
+          <Input type="text" name="no_surat" placeholder="nomor surat" id="no_surat" value={newNomorSurat} onChange={(e) => setLastNomorSurat(e.target.value)} readOnly/>
           <p className="text-xs text-danger no_surat-error"></p>
         </div>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-[60%] space-y-1">
             <Label className="text-primary" htmlFor="tanggal">Tannggal</Label>
-            <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
+            <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" onChange={(e) => setTanggal(e.target.value)} />
             <p className="text-xs text-danger tanggal-error"></p>
           </div>
           <div className="w-full space-y-1">
