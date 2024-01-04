@@ -24,6 +24,7 @@ const EditSuratInternal: NextPageWithLayout = () => {
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
   const [tempat, setTempat] = useState("")
   const [perihal, setPerihal] = useState("")
+  const [noSurat, setNoSurat] = useState(nomor)
 
   const detailsFetcher = async (url: string) => {
     const session = await getSession()
@@ -78,8 +79,13 @@ const EditSuratInternal: NextPageWithLayout = () => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const session = await getSession()
+
+
+    const noSurat = formData.get('no_surat')
+
     const data = {
-      nomor: nomor,
+      old_nomor: formData.get('old_nomor'),
+      no_surat: formData.get('no_surat'),
       perihal: formData.get('perihal'),
       tempat: formData.get('tempat'),
       pj: penanggungJawab,
@@ -97,7 +103,7 @@ const EditSuratInternal: NextPageWithLayout = () => {
     }).then(response => response.json())
 
     if (response.success) {
-      route.push(`/surat/internal/${nomor?.replace(/\//g, '_')}/detail`)
+      route.push(`/surat/internal/${noSurat?.toString().replace(/\//g, '_')}/detail`)
       toast({
         title: "Berhasil",
         description: response.message,
@@ -179,6 +185,11 @@ const EditSuratInternal: NextPageWithLayout = () => {
       </CardHeader>
       <CardContent>
         <form action="#!" method="post" onSubmit={onSubmit}>
+          <Input type="hidden" name="old_nomor" value={nomor} />
+          <div className="w-full space-y-1">
+              <Label className="" htmlFor="no_surat">Nomor Surat</Label>
+              <Input type="text" name="no_surat" placeholder="no_surat" id="no_surat" value={noSurat} onChange={(e) => setNoSurat(e.target.value)} />
+            </div>
           <div className="grid gap-3 py-4">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="w-[60%] space-y-1">
