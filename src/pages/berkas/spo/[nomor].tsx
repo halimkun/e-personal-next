@@ -93,8 +93,8 @@ const SpoDetailPage = () => {
       const result = await res.json()
       if (result.success) {
         toast.success('Data Spo berhasil disimpan')
-        await new Promise(r => setTimeout(r, 1000))
-        router.push(`/berkas/spo/${n}`)
+        await new Promise(r => setTimeout(r, 500))
+        router.push(`/berkas/spo`)
       }
     } catch (error) {
       console.log(error)

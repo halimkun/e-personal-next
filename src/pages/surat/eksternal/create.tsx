@@ -75,9 +75,6 @@ const SuratEksternal: NextPageWithLayout = () => {
           <CardTitle className="text-primary">Catatan</CardTitle>
           <CardDescription>Harap mengisi data dengan benar dan teliti.</CardDescription>
         </CardHeader>
-        <CardContent>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos minima eveniet officia vel odit tempore similique aperiam incidunt, assumenda quas modi sunt ad vitae nulla quo porro commodi iure voluptatem.
-        </CardContent>
       </Card>
     </div>
   )

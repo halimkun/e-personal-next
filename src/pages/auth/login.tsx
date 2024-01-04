@@ -26,9 +26,7 @@ const LoginPage: NextPageWithLayout = () => {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo; Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Odio, sequi aut ipsam dolor debitis consequuntur!
-              Fugit maxime fugiat repudiandae rerum.
+              &ldquo; Sehat dan bahagia bersama kami | RSIA Aisyiyah Pekajangan &rdquo;
             </p>
           </blockquote>
         </div>
