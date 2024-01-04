@@ -21,11 +21,14 @@ const DialogAddSuratMasuk = (props: DialogAddSuratMasukProps) => {
     setIsOpenFormAdd,
     mutate
   } = props
+
   return (
     <Dialog open={isOpenFormAdd} onOpenChange={() => setIsOpenFormAdd(false)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Surat Masuk</DialogTitle>
+          <DialogTitle>
+            {data && Object.keys(data).length > 0 ? 'Edit' : 'Tambah'} Surat Masuk
+          </DialogTitle>
         </DialogHeader>
         <FormAddSuratMasuk 
           data={data}

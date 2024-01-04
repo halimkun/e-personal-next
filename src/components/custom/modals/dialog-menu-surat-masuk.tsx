@@ -8,12 +8,13 @@ import { useRouter } from "next/router";
 interface DialogMenuSuratMasukProps {
   isOpenMenu: boolean
   setIsOpenMenu: (value: boolean) => void
+  setIsOpenFormAdd: (value: boolean) => void
   selectedItem: any
   mutate: () => void
 }
 
 const DialogMenuSuratMasuk = (props: DialogMenuSuratMasukProps) => {
-  const { isOpenMenu, setIsOpenMenu, selectedItem, mutate } = props
+  const { isOpenMenu, setIsOpenMenu, setIsOpenFormAdd, selectedItem, mutate } = props
   const router = useRouter()
 
   async function handleDelete() {
@@ -39,8 +40,9 @@ const DialogMenuSuratMasuk = (props: DialogMenuSuratMasukProps) => {
       } else {
         toast.error(jsonData.message)
       }
-      
-      router.reload()
+
+      // router.reload()
+      mutate()
     }
   }
 
@@ -54,7 +56,12 @@ const DialogMenuSuratMasuk = (props: DialogMenuSuratMasukProps) => {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-row justify-end items-center gap-2 mt-6">
-          <Button variant="default" size={'sm'} className="flex items-center gap-2"><IconEdit className="w-5 h-5" /> Edit</Button>
+          <Button variant="default" size={'sm'} className="flex items-center gap-2" onClick={() => {
+            setIsOpenFormAdd(true)
+            setIsOpenMenu(false)
+          }}>
+            <IconEdit className="w-5 h-5" /> Edit
+          </Button>
           <Button variant="destructive" size={'sm'} className="flex items-center gap-2" onClick={handleDelete}>
             <IconTrash className="w-5 h-5" /> Delete
           </Button>

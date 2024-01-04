@@ -84,7 +84,10 @@ const SuratMasukPage: NextPageWithLayout = () => {
             <CardTitle>Surat Masuk</CardTitle>
             <CardDescription>Data Surat Masuk | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
           </div>
-          <Button size={'icon'} className="w-7 h-7" onClick={() => setIsOpenFormAdd(true)}>
+          <Button size={'icon'} className="w-7 h-7" onClick={() => {
+            setIsOpenFormAdd(true)
+            setSelectedItem({})
+          }}>
             <IconPlus className="w-5 h-5" />
           </Button>
         </div>
@@ -94,9 +97,9 @@ const SuratMasukPage: NextPageWithLayout = () => {
           filterData={filterData}
           setFilterData={setFilterData}
           isValidating={isValidating}
-          lastColumnAction={true}
           setIsOpenPreview={setIsOpenPreview}
           setSelectedItem={setSelectedItem}
+          lastColumnAction={true}
           onRowClick={(row: any) => {
             setSelectedItem(row)
             setIsOpenMenu(true)
@@ -106,6 +109,7 @@ const SuratMasukPage: NextPageWithLayout = () => {
       
       {/* Add Surat masuk */}
       <DialogAddSuratMasuk
+        data={selectedItem}
         isOpenFormAdd={isOpenFormAdd}
         setIsOpenFormAdd={setIsOpenFormAdd}
         mutate={mutate}
@@ -124,6 +128,7 @@ const SuratMasukPage: NextPageWithLayout = () => {
         isOpenMenu={isOpenMenu}
         setIsOpenMenu={setIsOpenMenu}
         selectedItem={selectedItem}
+        setIsOpenFormAdd={setIsOpenFormAdd}
       />
     </>
   )

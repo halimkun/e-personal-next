@@ -21,17 +21,17 @@ function getIconFromKetSurat(ket_surat: string) {
   switch (ket_surat) {
     case 'wa':
     case 'whatsapp':
-      return <IconBrandWhatsapp className="w-5 h-5 text-green-500 dark:text-green-400" />
+      return <IconBrandWhatsapp className="w-5 h-5 dark:stroke-green-500 stroke-green-500" />
     case 'fisik':
-      return <IconFileText className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
+      return <IconFileText className="w-5 h-5 dark:stroke-yellow-500 stroke-yellow-500" />
     case 'email':
-      return <IconMail className="w-5 h-5 text-red-500 dark:text-red-400" />
+      return <IconMail className="w-5 h-5 dark:stroke-red-500 stroke-red-500" />
     case 'fax':
-      return <IconPrinter className="w-5 h-5 text-blue-500 dark:text-blue-400" />
+      return <IconPrinter className="w-5 h-5 dark:stroke-blue-500 stroke-blue-500" />
     case 'surat':
-      return <IconFileText className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
+      return <IconFileText className="w-5 h-5 dark:stroke-yellow-500 stroke-yellow-500" />
     default:
-      return <IconFile className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+      return <IconFile className="w-5 h-5 dark:stroke-gray-500 stroke-gray-500" />
   }
 }
 
@@ -57,11 +57,7 @@ const TableSuratMasuk = ({ data,
       enableHiding: false,
       data: (row: any) => (
         <div className="flex flex-row items-center gap-4">
-
-          {
-            row.ket ? getIconFromKetSurat(row.ket) : null
-          }
-
+          <div>{row.ket ? getIconFromKetSurat(row.ket) : null}</div>
           <div className="flex flex-col">
             <span className="font-semibold">{row.perihal}</span>
             <div>
