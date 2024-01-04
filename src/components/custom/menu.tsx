@@ -11,9 +11,10 @@ import { IconLogout } from "@tabler/icons-react";
 import { getSession } from "next-auth/react";
 import { signOut } from "next-auth/react"
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export function Menu() {
-
+  const router = useRouter();
   const handleSignOut = async () => {
     const sesstion = await getSession();
     const confirm = window.confirm('Are you sure you want to log out?');
@@ -35,7 +36,7 @@ export function Menu() {
         toast.success(data?.message);
 
         setTimeout(() => {
-          window.location.href = '/';
+          router.push('/auth/login');
         }, 2000);
       } else {
         toast.error(data?.message);
