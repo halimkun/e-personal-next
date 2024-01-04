@@ -5,6 +5,7 @@ import { IconCheck } from "@tabler/icons-react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 
 import { cn } from "@/lib/utils"
+import { IconCircleFilled } from "@tabler/icons-react"
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
@@ -34,7 +35,7 @@ const RadioGroupItem = React.forwardRef<
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <IconCheck className="h-3.5 w-3.5 fill-primary" />
+        <IconCircleFilled className="h-3 w-3 fill-primary dark:fill-primary dark:stroke-primary dark:text-primary" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
