@@ -10,13 +10,14 @@ import { Button } from "@/components/ui/button";
 import { IconLogout } from "@tabler/icons-react";
 import { getSession } from "next-auth/react";
 import { signOut } from "next-auth/react"
+import Image from "next/image";
 
 export function Menu() {
 
   const handleSignOut = async () => {
     const sesstion = await getSession();
     const confirm = window.confirm('Are you sure you want to log out?');
-    
+
     if (confirm) {
       // unauthenticate user from api
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
@@ -49,7 +50,10 @@ export function Menu() {
           <OffCanvasMenu />
 
           <MenubarMenu>
-            <Link className="font-bold text-lg text-primary tracking-wide" href="/dashboard">e-personal</Link>
+            <Link className="font-bold text-lg text-primary tracking-wide flex items-center gap-2 justify-center" href="/dashboard">
+              <Image src="/static/logo.png" width={32} height={32} alt="Logo RSIA Permata Hati" />
+              <span className="text-2xl">E - Personal</span>
+            </Link>
           </MenubarMenu>
         </div>
 
