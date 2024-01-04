@@ -2,31 +2,22 @@ import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../_app';
 import { UserAuthForm } from '@/components/custom/forms/user-auth';
 import AuthLayout from '@/components/layouts/auth';
+import Image from 'next/image';
 
 const LoginPage: NextPageWithLayout = () => {
   return (
     <div className="container relative h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="relative hidden h-full flex-col bg-muted p-10 dark:text-white dark:border-r lg:flex">
+      <div className="relative hidden h-full flex-col bg-muted p-10 dark:text-muted dark:border-r lg:flex">
         <div className="absolute inset-0 bg-secondary" />
-        <div className="relative z-20 flex items-center text-lg font-medium">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="mr-2 h-6 w-6"
-          >
-            <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-          </svg>
+        <div className="relative z-20 flex items-center text-lg font-medium gap-3">
+          <Image src="/static/logo.png" width={28} height={28} alt="Logo RSIA Permata Hati" />
           E - Personal
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo; Sehat dan bahagia bersama kami | RSIA Aisyiyah Pekajangan &rdquo;
+              &ldquo; Sehat dan bahagia bersama kami <br />
+              <span className="ml-3"><strong>RSIA Aisyiyah Pekajangan</strong> &rdquo;</span>
             </p>
           </blockquote>
         </div>
@@ -42,8 +33,8 @@ const LoginPage: NextPageWithLayout = () => {
             </p>
           </div>
           <UserAuthForm />
-          <p className="px-8 text-center text-sm text-muted-foreground">
-            Made by <strong>IT Team RSIA Aisyiyah Pekajangan</strong>
+          <p className="px-8 text-center text-sm text-muted-foreground/50">
+            IT Team RSIA Aisyiyah Pekajangan
           </p>
         </div>
       </div>
