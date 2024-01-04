@@ -1,4 +1,5 @@
 import { NextAuthOptions } from 'next-auth';
+
 import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -35,7 +36,8 @@ const authOption: NextAuthOptions = {
       },
     })
   ],
-  callbacks: {
+
+  callbacks: {    
     jwt({ token, account, profile, user }) {
       if (account?.provider == 'credentials') {
         token.accessToken = user.access_token;
