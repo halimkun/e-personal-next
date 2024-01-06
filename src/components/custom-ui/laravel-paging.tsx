@@ -74,7 +74,7 @@ const LaravelPagingx = ({
 
       <div className="flex justify-between items-center w-full mt-6">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">
+          <span className="text-xs text-gray-600">
             Showing {data?.from} to {data?.to} of {data?.total} entries <br />
             Page {data?.current_page} of {data?.last_page}
           </span>

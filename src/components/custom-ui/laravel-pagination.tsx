@@ -151,7 +151,7 @@ const LaravelPagination = (props: LaravelPaginationProps) => {
       <div className="flex justify-between items-center w-full mt-4">
         {/* left info */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">
+          <span className="text-xs text-gray-600">
             Showing {options?.from} to {options?.to} of {options?.total} entries <br />
             Page {options?.current_page} of {options?.last_page}
           </span>
