@@ -13,17 +13,19 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 interface FormAddPksProps {
   typeSelected?: 'internal' | 'eksternal',
+  tglAwal: string,
+  setTglAwal: any,
   lastNomor: {
     internal: string | null,
     eksternal: string | null
   }
 }
 
-const FormAddPks = ({ typeSelected, lastNomor }: FormAddPksProps) => {
+const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPksProps) => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false)
-  const [tanggalAwal, setTanggalAwal] = useState<string>(new Date().toISOString().slice(0, 10));
+  // const [tanggalAwal, setTanggalAwal] = useState<string>(new Date().toISOString().slice(0, 10));
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [selectedType, setSelectedType] = useState<'internal' | 'eksternal'>(typeSelected ?? 'internal');
   const [nomorPks, setNomorPks] = useState<string>('');
@@ -56,7 +58,7 @@ const FormAddPks = ({ typeSelected, lastNomor }: FormAddPksProps) => {
 
   useEffect(() => {
     parseNomor();
-  }, [selectedType, tanggalAwal, typeSelected])
+  }, [selectedType, tglAwal, typeSelected])
 
 
 
@@ -68,8 +70,8 @@ const FormAddPks = ({ typeSelected, lastNomor }: FormAddPksProps) => {
     const nomor = nmr.toString().padStart(3, '0');
     const type = selectedType === 'internal' ? 'A' : 'B';
 
-    // get tanggalAwal and convert to ddMMyy
-    const tanggal = tanggalAwal.split('-').map((item, index) => {
+    // get tglAwal and convert to ddMMyy
+    const tanggal = tglAwal.split('-').map((item, index) => {
       if (index === 0) return item.slice(2);
       return item;
     }).reverse().join('');
@@ -104,7 +106,7 @@ const FormAddPks = ({ typeSelected, lastNomor }: FormAddPksProps) => {
         <div className="mb-4 space-y-1.5">
           <Label className="text-primary font-semibold" htmlFor="tanggal_awal">Tanggal Awal</Label>
           {/* get date now yyyy-MM-dd */}
-          <Input type="date" id="tanggal_awal" name="tanggal_awal" placeholder="Tanggal Awal" value={tanggalAwal} onChange={(e) => setTanggalAwal(e.target.value)} />
+          <Input type="date" id="tanggal_awal" name="tanggal_awal" placeholder="Tanggal Awal" value={tglAwal} onChange={(e) => setTglAwal(e.target.value)} />
         </div>
         <div className="mb-4 space-y-1.5">
           <Label className="text-primary font-semibold" htmlFor="tanggal_akhir">Tanggal Ahir</Label>

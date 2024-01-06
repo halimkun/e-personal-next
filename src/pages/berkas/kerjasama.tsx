@@ -26,6 +26,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [tanggalAwal, setTanggalAwal] = useState<string>(new Date().toISOString().slice(0, 10));
   const [isRowClick, setIsRowClick] = useState(false);
 
   const [lastNomor, setLastNomor] = useState<any>({
@@ -36,7 +37,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
   useEffect(() => {
     const fetchLastNomor = async () => {
       const session = await getSession();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks/last-nomor`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks/last-nomor?tanggal_awal=${tanggalAwal}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${session?.rsiap?.access_token}`
@@ -51,7 +52,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     }
 
     fetchLastNomor()
-  }, [])
+  }, [tanggalAwal])
 
   const onDelete = async (id: string) => {
     const session = await getSession();
@@ -144,7 +145,11 @@ const BerkasKerjasama: NextPageWithLayout = () => {
                   <DialogDescription>Tambahkan data perjanjian kerjasama baru dengan mengisi form dibawah ini.</DialogDescription>
                 </DialogHeader>
                 {/* dialog content */}
-                <FormAddPks lastNomor={lastNomor} />
+                <FormAddPks 
+                  lastNomor={lastNomor}
+                  tglAwal={tanggalAwal}
+                  setTglAwal={setTanggalAwal}
+                />
               </DialogContent>
             </Dialog>
           </div>

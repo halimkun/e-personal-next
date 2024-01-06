@@ -70,9 +70,15 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
 
   function parseNomor() {
     const lastn = lastNomor[jenisSpo]
-    const lastns = lastn.split('/')
+    let n = 0
 
-    const n = parseInt(lastns[0]) + 1
+    if (lastn) {
+      const lastns = lastn.split('/')
+      n = parseInt(lastns[0]) + 1
+    } else {
+      n = 1
+    }
+
     const nmr = n.toString().padStart(3, '0');
 
     const jns = jenisSpo === 'medis' ? 'A' : jenisSpo === 'penunjang' ? 'B' : 'C'
