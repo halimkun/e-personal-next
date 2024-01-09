@@ -76,7 +76,7 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
 
   return (
     <>
-      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 bg-gray-100/50 border-2 rounded-xl p-4">
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 bg-gray-100/50 dark:bg-gray-900/50 border border-border rounded-xl p-4">
         <div className="w-full space-y-1">
           <Label htmlFor="tgl_terbit">Tanggal Terbit</Label>
           <Input type="date" className="w-full" name='tgl_terbit' onChange={(e) => { setFilterData({ ...filterData, tgl_terbit: e.target.value }) }} />

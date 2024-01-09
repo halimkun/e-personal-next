@@ -30,7 +30,7 @@ const TabelSuratInternal = ({
 
   return (
     <>
-      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 border">
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 dark:bg-gray-900/50 border border-border">
         <div className="w-full space-y-1">
           <Label>Tanggal Surat</Label>
           <Combobox items={[
