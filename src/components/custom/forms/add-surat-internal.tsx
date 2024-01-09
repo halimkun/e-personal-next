@@ -7,11 +7,20 @@ import { Combobox } from "../inputs/combo-box";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { IconArrowLeft } from "@tabler/icons-react";
+import { Textarea } from "@/components/ui/textarea";
+
 
 export default function FormAddSuratInternal(penanggungJawab: any) {
   const router = useRouter();
@@ -55,20 +64,22 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
       )
     },
     {
-      name: 'Bidang',
-      selector: 'bidang',
-      data: (row: any) => <div>{row.bidang}</div>
+      name: 'Detail',
+      selector: 'detail',
+      data: (row: any) => (
+        <div className="flex flex-col gap-1">
+          <div className="text-xs flex flex-row items-center justify-between">
+            <span className="text-gray-500">Bidang</span> <span>{row.bidang}</span>
+          </div>
+          <div className="text-xs flex flex-row items-center justify-between">
+            <span className="text-gray-500">Jabatan</span> <span>{row.jbtn}</span>
+          </div>
+          <div className="text-xs flex flex-row items-center justify-between">
+            <span className="text-gray-500">Departemen</span> <span>{row.dpt.nama}</span>
+          </div>
+        </div>
+      )
     },
-    {
-      name: 'Jabatan',
-      selector: 'jabatan',
-      data: (row: any) => <div>{row.jbtn}</div>
-    },
-    {
-      name: 'Departemen',
-      selector: 'departemen',
-      data: (row: any) => <div>{row.dpt.nama}</div>
-    }
   ]
 
   const onFormAddSuratInternalSubmit = async (event: React.SyntheticEvent) => {
@@ -108,50 +119,71 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
   }
 
   return (
-    <form action="#!" method="post" onSubmit={onFormAddSuratInternalSubmit}>
-      <div className="grid gap-3 py-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-[60%] space-y-1">
-            <Label className="text-primary" htmlFor="tanggal">Tannggal</Label>
-            <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
-          </div>
-          <div className="w-full space-y-1">
-            <Label className="text-primary" htmlFor="PJ">Penanggung Jawab</Label>
-            <Input type="hidden" name="pj" value={selectedPj} />
-            <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab" />
-          </div>
-        </div>
-        <div className="w-full space-y-1">
-          <Label className="text-primary" htmlFor="tempat">Tempat</Label>
-          <Input type="text" name="tempat" placeholder="Tempat Kegiatan" id="tempat" />
-        </div>
-        <div className="w-full space-y-1">
-          <Label className="text-primary" htmlFor="perihal">Perihal</Label>
-          <Input type="text" name="perihal" placeholder="Perihal Surat . . ." id="perihal" />
-        </div>
-      </div>
+    <form action="#!" method="post" onSubmit={onFormAddSuratInternalSubmit} className="w-full">
+      <div className="flex flex-col lg:flex-row items-start justify-start gap-3 w-full">
+        <Card className="w-[75%] lg:sticky lg:top-[68px]">
+          <CardHeader className="p-3">
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size='icon' onClick={() => router.push('/surat/internal')}>
+                <IconArrowLeft className="rotate-0 scale-100 transition-all" />
+              </Button>
+              <div className="flex flex-col gap-0.5">
+                <CardTitle className="text-primary">Buat Surat Internal Baru</CardTitle>
+                <CardDescription>Buat surat internal baru | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-3">
+            <div className="grid gap-3 py-4 w-full">
+              <div className="flex flex-col gap-4">
+                <div className="space-y-1">
+                  <Label className="text-primary" htmlFor="tanggal">Tannggal</Label>
+                  <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
+                </div>
+                <div className="w-full space-y-1">
+                  <Label className="text-primary" htmlFor="PJ">Penanggung Jawab</Label>
+                  <Input type="hidden" name="pj" value={selectedPj} />
+                  <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab" />
+                </div>
+              </div>
+              <div className="w-full space-y-1">
+                <Label className="text-primary" htmlFor="tempat">Tempat</Label>
+                <Input type="text" name="tempat" placeholder="Tempat Kegiatan" id="tempat" />
+              </div>
+              <div className="w-full space-y-1">
+                <Label className="text-primary" htmlFor="perihal">Perihal</Label>
+                {/* <Input type="text" name="perihal" placeholder="Perihal Surat . . ." id="perihal" /> */}
+                <Textarea name="perihal" placeholder="Perihal Surat . . ." id="perihal" />
+              </div>
+            </div>
 
-      <div className="mt-4">
-        <Button type="button" variant={withKaryawan ? 'default' : 'outline'} onClick={() => {
-          setWithKaryawan(!withKaryawan)
-        }}>
-          {withKaryawan ? 'Hide karyawan' : 'Show Karyawan'}
-        </Button>
-      </div>
+            <div className="mt-4 flex justify-between">
+              <Button type="button" variant={withKaryawan ? 'default' : 'outline'} onClick={() => {
+                setWithKaryawan(!withKaryawan)
+              }}>
+                {withKaryawan ? 'Hide karyawan' : 'Show Karyawan'}
+              </Button>
 
-      <div className={cn(
-        'mt-4', withKaryawan ? 'block border-y-2 py-4' : 'hidden'
-      )}>
-        <CardTitle>Pilih Karyawan</CardTitle>
-        <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
-        <LaravelPagination
-          columns={KaryawanColumns}
-          dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
-          fetcher={{ method: "GET" }}
-        />
-      </div>
-      <div className="mt-4 flex justify-end">
-        <Button type="submit">Simpan</Button>
+              <Button type="submit">Simpan</Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Pilih Karyawan</CardTitle>
+            <CardDescription>Jika karyawan dipilih surat yang dibuat akan dianggap sebagai undangan</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {withKaryawan ? (
+              <LaravelPagination
+                columns={KaryawanColumns}
+                dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
+                fetcher={{ method: "GET" }}
+              />
+            ) : ("[ hidden content ]")}
+          </CardContent>
+        </Card>
       </div>
     </form>
   )
