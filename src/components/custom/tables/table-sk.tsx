@@ -3,6 +3,15 @@ import LaravelPagingx from '@/components/custom-ui/laravel-paging'
 import { Badge } from '@/components/ui/badge'
 import { Combobox } from '../inputs/combo-box'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 
 interface tableProps {
   data: any
@@ -12,7 +21,7 @@ interface tableProps {
   onRowClick?: (row: any) => void;
 }
 
-const TableSk = ({ data,  filterData, setFilterData, isValidating, onRowClick }: tableProps) => {
+const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: tableProps) => {
   const columns = [
     {
       name: 'Nomor',
@@ -39,7 +48,19 @@ const TableSk = ({ data,  filterData, setFilterData, isValidating, onRowClick }:
       name: 'PJ',
       selector: 'pj',
       enableHiding: false,
-      data: (row: any) => <div>{<Badge variant="outline">{row.pj}</Badge>}</div>,
+      // data: (row: any) => <div>{<Badge variant="outline">{row.penanggungjawab.nama}</Badge>}</div>,
+      data: (row: any) => row.penanggungjawab ? (
+        <TooltipProvider delayDuration={50}>
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant={"outline"} className="group-hover:border-primary">{row.pj}</Badge>
+            </TooltipTrigger>
+            <TooltipContent>{row.penanggungjawab.nama}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : (
+        <Badge variant="outline">{row.pj}</Badge>
+      )
     },
     {
       name: 'Tgl Terbit',
@@ -55,8 +76,13 @@ const TableSk = ({ data,  filterData, setFilterData, isValidating, onRowClick }:
 
   return (
     <>
-      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4">
-        <div className="w-full">
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 bg-gray-100/50 border-2 rounded-xl p-4">
+        <div className="w-full space-y-1">
+          <Label htmlFor="tgl_terbit">Tanggal Terbit</Label>
+          <Input type="date" className="w-full" name='tgl_terbit' onChange={(e) => { setFilterData({ ...filterData, tgl_terbit: e.target.value }) }} />
+        </div>
+        <div className="w-full space-y-1">
+          <Label htmlFor="">Jenis SK</Label>
           <Combobox
             items={[
               { value: '', label: 'Semua Data' },
@@ -70,8 +96,10 @@ const TableSk = ({ data,  filterData, setFilterData, isValidating, onRowClick }:
             placeholder="Jenis SK"
           />
         </div>
-        <div className="w-full">
+        <div className="w-full space-y-1">
+          <Label htmlFor="">Keywords</Label>
           <Input
+            id='keyword'
             type="search"
             placeholder="Search..."
             className="w-full min-w-[250px]"
