@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { IconBrandWhatsapp, IconFile, IconFileSearch, IconFileText, IconHash, IconMail, IconPrinter } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface tableSuratMasukProps {
   data: any
@@ -105,8 +106,9 @@ const TableSuratMasuk = ({ data,
 
   return (
     <>
-      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4">
-        <div className="w-full">
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 border">
+        <div className="w-full space-y-1">
+          <Label>Dikirim Via</Label>
           <Combobox
             items={[
               { value: '', label: 'Semua' },
@@ -122,11 +124,34 @@ const TableSuratMasuk = ({ data,
             placeholder="Dikirim Via"
           />
         </div>
-        <div className="w-full">
+        <div className="w-full space-y-1">
+          <Label>No. SIMRS</Label>
+          <Input
+            type="date"
+            className="w-full"
+            name='no_simrs'
+            onChange={(e) => {
+              setFilterData({ ...filterData, no_simrs: e.target.value })
+            }}
+          />
+        </div>
+        <div className="w-full space-y-1">
+          <Label>Tanggal Surat</Label>
+          <Input
+            type="date"
+            className="w-full"
+            name='tgl_surat'
+            onChange={(e) => {
+              setFilterData({ ...filterData, tgl_surat: e.target.value })
+            }}
+          />
+        </div>
+        <div className="w-full space-y-1">
+          <Label>Search</Label>
           <Input
             type="search"
             placeholder="Search..."
-            className="w-full min-w-[250px]"
+            className="w-full"
             defaultValue={filterData?.keyword}
             onChange={(e) => {
               setFilterData({ ...filterData, keyword: e.target.value })
