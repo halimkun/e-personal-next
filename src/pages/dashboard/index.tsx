@@ -8,7 +8,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { IconChevronLeft, IconChevronRight, IconFocus2, IconListDetails } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconFocus2 } from '@tabler/icons-react';
 
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import format from 'date-fns/format'

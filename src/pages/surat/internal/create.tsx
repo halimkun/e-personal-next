@@ -1,9 +1,7 @@
 import FormAddSuratInternal from "@/components/custom/forms/add-surat-internal";
 import AppLayout from "@/components/layouts/app";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { NextPageWithLayout } from "@/pages/_app"
-import { IconArrowLeft, IconLoader } from "@tabler/icons-react";
+import { IconLoader } from "@tabler/icons-react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ReactElement, useState } from "react";
@@ -53,29 +51,7 @@ const SuratInternal: NextPageWithLayout = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-3 items-start">
-      <Card className="max-w-screen">
-        <CardHeader>
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size='icon' onClick={() => route.push('/surat/internal')}>
-              <IconArrowLeft className="rotate-0 scale-100 transition-all" />
-            </Button>
-            <div className="flex flex-col gap-0.5">
-              <CardTitle className="text-primary">Buat Surat Internal Baru</CardTitle>
-              <CardDescription>Buat surat internal baru | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <FormAddSuratInternal penanggungJawab={penanggungJawab} />
-        </CardContent>
-      </Card>
-
-      <Card className="w-full max-w-sm sticky top-[4.5rem]">
-        <CardHeader>
-          <CardTitle className="text-primary">Catatan</CardTitle>
-          <CardDescription>Harap mengisi data dengan benar dan teliti.</CardDescription>
-        </CardHeader>
-      </Card>
+      <FormAddSuratInternal penanggungJawab={penanggungJawab} />
     </div>
   )
 }
