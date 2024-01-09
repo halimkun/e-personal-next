@@ -3,11 +3,12 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Combobox } from "../inputs/combo-box"
 import { DatePickerDemo } from "../inputs/date-picker"
-import { IconDeviceSdCard, IconX } from "@tabler/icons-react"
+import { IconDeviceSdCard, IconLoader, IconX } from "@tabler/icons-react"
 import { getSession } from "next-auth/react"
 
 import toast from "react-hot-toast"
 import React from "react"
+import useSWR from "swr"
 
 interface formAddSKProps {
   data?: any
@@ -24,6 +25,8 @@ const FormAddSK = ({
 }: formAddSKProps) => {
   const [d, setD] = React.useState<any>(null)
   const [j, setJ] = React.useState<any>(null)
+  const [pj, setPj] = React.useState<any>(null)
+  const [selectedPJ, setSelectedPJ] = React.useState<any>('')
 
   React.useEffect(() => {
     if (data) {
@@ -34,6 +37,35 @@ const FormAddSK = ({
       setDate(new Date(data.tgl_terbit))
     }
   }, [data])
+
+  const fetchPegawai = async (url: string) => {
+    const session = await getSession()
+    return await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+    }).then(response => {
+      if (!response.ok) {
+        throw Error(response.status + ' ' + response.statusText)
+      }
+
+      const data = response.json()
+      const result = data.then((res) => {
+        const data = res.data.map((item: any) => {
+          return {
+            value: item.nik,
+            label: item.nama
+          }
+        })
+
+        setPj(data)
+      })
+
+      return data
+    })
+  }
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
@@ -114,6 +146,8 @@ const FormAddSK = ({
     }
   }
 
+  const { data: dataPj, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=1&with=bidang_detail&select=nik,nama`, fetchPegawai);
+
   return (
     <form method="post" id="form-add-sk" onSubmit={data ? onUpdate : onSubmit}>
       {data ? (
@@ -138,10 +172,20 @@ const FormAddSK = ({
           <Label htmlFor="judul">Judul SK</Label>
           <Input id="judul" name="judul" placeholder="judul sk yang akan dibuat" defaultValue={data ? data.judul : ''} className="w-full" />
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3">
           <div className="w-full space-y-1.5">
             <Label htmlFor="pj">Penanggung Jawab</Label>
-            <Input id="pj" name="pj" placeholder="pilih pj" className="w-full" defaultValue={data ? data.pj : ''} />
+            <Input type="hidden" id="pj" name="pj" placeholder="pilih pj" className="w-full" defaultValue={data ? data.pj : selectedPJ} />
+            {
+              pj && (
+                <Combobox
+                  items={pj}
+                  setSelectedItem={setSelectedPJ}
+                  selectedItem={data ? data.pj : selectedPJ}
+                  placeholder="Penanggung Jawab"
+                />
+              )
+            }
           </div>
           <div className="w-full space-y-1.5">
             <Label htmlFor="tgl_terbit">Tanggal Terbit</Label>
