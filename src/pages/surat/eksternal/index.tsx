@@ -1,12 +1,14 @@
-import AppLayout from '@/components/layouts/app';
-import LaravelPagination from '@/components/custom-ui/laravel-pagination';
-import toast from 'react-hot-toast';
-
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../../_app';
+
+import useSWR from 'swr';
+import toast from 'react-hot-toast';
+import AppLayout from '@/components/layouts/app';
+import Loading1 from '@/components/custom/icon-loading';
+import TabelSuratEksternal from '@/components/custom/tables/surat-eksternal';
 
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
@@ -18,9 +20,7 @@ import { Combobox } from '@/components/custom/inputs/combo-box';
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-
-
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 const SuratInternal: NextPageWithLayout = () => {
   const route = useRouter()
@@ -33,6 +33,10 @@ const SuratInternal: NextPageWithLayout = () => {
   const [isOpenDialogEdit, setIsOpenDialogEdit] = useState(false)
   const [penanggungJawab, setPenanggungJawab] = useState<any>([])
 
+  const delayDebounceFn = useRef<any>(null)
+  const [filterData, setFilterData] = useState({})
+  const [filterQuery, setFilterQuery] = useState('')
+
   const [surat, setSurat] = useState({
     no_surat: "",
     pj: "",
@@ -43,7 +47,6 @@ const SuratInternal: NextPageWithLayout = () => {
       nama: ""
     }
   })
-
 
   const fetchPegawai = async (url: string) => {
     const session = await getSession()
@@ -68,6 +71,24 @@ const SuratInternal: NextPageWithLayout = () => {
     } else {
       toast.error(res.message)
     }
+  }
+
+  const fetcher = async (url: any) => {
+    const session = await getSession()
+    const response = await fetch(url + filterQuery, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(response.status + ' ' + response.statusText)
+    }
+
+    const jsonData = await response.json()
+    return jsonData
   }
 
   useEffect(() => {
@@ -97,7 +118,6 @@ const SuratInternal: NextPageWithLayout = () => {
   }
 
   const onDelete = async (no_surat: string) => {
-    // destroy/no_surat
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal/destroy?nomor=${no_surat}`, {
       method: 'DELETE',
       headers: {
@@ -174,6 +194,39 @@ const SuratInternal: NextPageWithLayout = () => {
     },
   ]
 
+  const { data: dataSuratEksternal, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  })
+
+  useEffect(() => {
+    let fq = ''
+    for (const [key, value] of Object.entries(filterData)) {
+      if (value) {
+        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
+      }
+    }
+
+    setFilterQuery(fq)
+  }, [filterData])
+
+  useEffect(() => {
+    if (delayDebounceFn.current) {
+      clearTimeout(delayDebounceFn.current);
+    }
+
+    delayDebounceFn.current = setTimeout(() => {
+      mutate();
+    }, 250);
+
+    return () => clearTimeout(delayDebounceFn.current);
+  }, [filterQuery]);
+
+  if (isLoading) return <Loading1 height={50} width={50} />
+  if (error) return <div>{error.message}</div>
+  if (!data) return <div>No data</div>
+
   return (
     <>
       <div className='space-y-4'>
@@ -190,14 +243,17 @@ const SuratInternal: NextPageWithLayout = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <LaravelPagination
+            <TabelSuratEksternal 
+              data={dataSuratEksternal}
               columns={columns}
-              onRowClick={(row: any) => {
-                setSurat(row)
-                setIsOpenModalMenu(true)
-              }}
-              dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal`}
-              fetcher={{ method: "GET" }}
+              filterData={filterData}
+              setFilterData={setFilterData}
+              isValidating={isValidating}
+              onRowClick={(item: any) => {
+                  setSurat(item)
+                  setIsOpenModalMenu(true)
+                }
+              }
             />
           </CardContent>
         </Card>

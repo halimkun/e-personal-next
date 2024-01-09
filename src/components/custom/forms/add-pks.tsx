@@ -25,10 +25,10 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false)
-  // const [tanggalAwal, setTanggalAwal] = useState<string>(new Date().toISOString().slice(0, 10));
-  const [selected, setSelected] = useState<string | undefined>(undefined);
-  const [selectedType, setSelectedType] = useState<'internal' | 'eksternal'>(typeSelected ?? 'internal');
   const [nomorPks, setNomorPks] = useState<string>('');
+  const [selected, setSelected] = useState<string | undefined>(undefined);
+  // const [tanggalAwal, setTanggalAwal] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [selectedType, setSelectedType] = useState<'internal' | 'eksternal'>(typeSelected ?? 'internal');
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
