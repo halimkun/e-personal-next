@@ -1,66 +1,88 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { getDate, getTime } from "@/lib/date"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Combobox } from "../inputs/combo-box"
+import LaravelPagingx from "@/components/custom-ui/laravel-paging"
+import { useState } from "react"
 
 interface SuratInternalProps {
-  data: any[];
+  data: any
+  columns: any
+  filterData: any
+  setFilterData: any
+  isValidating: boolean | undefined
+  onRowClick?: (row: any) => void;
+  setSelectedItem?: (value: any) => void
+  lastColumnAction?: boolean | undefined
 }
 
-const TabelSuratInternal = ({ data }: SuratInternalProps) => {
+const TabelSuratInternal = ({
+  data,
+  columns,
+  filterData,
+  setFilterData,
+  isValidating,
+  onRowClick = () => { },
+  setSelectedItem = () => { },
+  lastColumnAction
+}: SuratInternalProps) => {
+
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined);
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nomor</TableHead>
-          <TableHead>PJ</TableHead>
-          <TableHead>Perihal</TableHead>
-          <TableHead>Tempat</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((d: any) => (
-          <TableRow key={d.no_surat} className="group">
-            <TableCell className="md:whitespace-nowrap">
-              <Badge variant="default">{d.no_surat}</Badge>
-            </TableCell>
-            <TableCell>
-              <TooltipProvider delayDuration={50}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge variant="outline" className="cursor-pointer group-hover:border-primary">
-                      {d.pj}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>{d.pj_detail ? d.pj_detail.nama : d.pj}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </TableCell>
-            <TableCell>
-              {d.perihal.length > 50 ? d.perihal.substring(0, 80) + ' . . .' : d.perihal}
-            </TableCell>
-            <TableCell>{d.tempat}</TableCell>
-            <TableCell className="text-right">
-              <div className="md:whitespace-nowrap">{getDate(d.tanggal)}</div>
-              <div className="md:whitespace-nowrap">{getTime(d.tanggal)}</div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 border">
+        <div className="w-full space-y-1">
+          <Label>Tanggal Surat</Label>
+          <Combobox items={[
+            { label: "Semua", value: "" },
+            { label: "Disetujui", value: "disetujui" },
+            { label: "Pengajuan", value: "pengajuan" },
+            { label: "Ditolak", value: "ditolak" }
+          ]} setSelectedItem={
+            (value: any) => {
+              setSelectedStatus(value)
+              setFilterData({ ...filterData, status: value })
+            }
+          } selectedItem={selectedStatus} placeholder="Pilih Status" />
+        </div>
+        <div className="w-full space-y-1">
+          <Label>Tanggal Surat</Label>
+          <Input
+            type="date"
+            className="w-full"
+            name='tanggal'
+            onChange={(e) => {
+              setFilterData({ ...filterData, tanggal: e.target.value })
+            }}
+          />
+        </div>
+        <div className="w-full space-y-1">
+          <Label>Search</Label>
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full"
+            defaultValue={filterData?.keyword}
+            onChange={(e) => {
+              setFilterData({ ...filterData, keyword: e.target.value })
+            }}
+          />
+        </div>
+      </div>
+
+      <LaravelPagingx
+        data={data.data}
+        columnsData={columns}
+        filterData={filterData}
+        setFilterData={setFilterData}
+        isValidating={isValidating}
+        onRowClick={(item: any) => {
+          setSelectedItem(item)
+          onRowClick(item)
+        }}
+        lastColumnAction={lastColumnAction}
+      />
+    </>
   )
 }
 

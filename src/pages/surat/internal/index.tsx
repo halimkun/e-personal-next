@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../../_app';
 
+import useSWR from 'swr';
 import AppLayout from '@/components/layouts/app';
-import LaravelPagination from '@/components/custom-ui/laravel-pagination';
+import Loading1 from '@/components/custom/icon-loading';
+import TabelSuratInternal from '@/components/custom/tables/surat-internal';
 import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
 
 import { cn } from '@/lib/utils';
@@ -21,20 +23,21 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 
 
 const SuratInternal: NextPageWithLayout = () => {
-  const [ss, setSS] = useState<any>()
+  const route = useRouter();
+  const delayDebounceFn = useRef<any>(null)
+  const [status, setStatus] = useState<any>('pengajuan');
+  const [filterData, setFilterData] = useState({})
+  const [filterQuery, setFilterQuery] = useState('')
+
   const [metrics, setMetrics] = useState<any>([
     { status: 'disetujui', total: 0 },
     { status: 'pengajuan', total: 0 },
     { status: 'ditolak', total: 0 }
   ])
-  const [status, setStatus] = useState<any>('pengajuan')
-  const route = useRouter()
 
   useEffect(() => {
     const fetchMetrics = async () => {
       const session = await getSession()
-      setSS(session)
-      console.log(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/metrics`);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/metrics`, {
         method: 'GET',
         headers: {
@@ -49,6 +52,57 @@ const SuratInternal: NextPageWithLayout = () => {
 
     fetchMetrics();
   }, [])
+
+  const fetcher = async (url: any) => {
+    const session = await getSession()
+    const response = await fetch(url + filterQuery, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(response.status + ' ' + response.statusText)
+    }
+
+    const jsonData = await response.json()
+    return jsonData
+  }
+
+  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  })
+
+  useEffect(() => {
+    let fq = ''
+    for (const [key, value] of Object.entries(filterData)) {
+      if (value) {
+        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
+      }
+    }
+
+    setFilterQuery(fq)
+  }, [filterData])
+
+  useEffect(() => {
+    if (delayDebounceFn.current) {
+      clearTimeout(delayDebounceFn.current);
+    }
+
+    delayDebounceFn.current = setTimeout(() => {
+      mutate();
+    }, 250);
+
+    return () => clearTimeout(delayDebounceFn.current);
+  }, [filterQuery]);
+
+  if (isLoading) return <Loading1 height={50} width={50} />
+  if (error) return <div>{error.message}</div>
+  if (!data) return <div>No data</div>
 
   const suratInternalColumns = [
     {
@@ -248,16 +302,14 @@ const SuratInternal: NextPageWithLayout = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <LaravelPagination
+          <TabelSuratInternal
+            data={data}
             columns={suratInternalColumns}
-            // onRowClick={(row: any) => {
-            //   toast({
-            //     title: 'Coming soon!',
-            //     description: row.no_surat,
-            //   })
-            // }}
-            dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/surat/internal`}
-            fetcher={{ method: "GET" }}
+            filterData={filterData}
+            setFilterData={setFilterData}
+            isValidating={isValidating}
+            key={data?.data?.length}
+            lastColumnAction={true}
           />
         </CardContent>
       </Card>
