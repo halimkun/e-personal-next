@@ -202,7 +202,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
 
         <div className="w-full space-y-1">
           <Label htmlFor="via">Dikirim Via</Label>
-          <Input type="hidden" id="ket" name="ket" placeholder="ket" className="w-full" defaultValue={data ? data.ket : ''} />
+          <Input type="hidden" id="ket" name="ket" placeholder="ket" className="w-full" defaultValue={data ? data.ket : via} />
           <Combobox
             items={[
               { value: '', label: 'Semua' },
