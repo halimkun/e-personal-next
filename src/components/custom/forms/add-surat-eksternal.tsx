@@ -52,7 +52,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
   const parseNomorSurat = () => {
     const splitNomorSurat = lastNomorSurat.split("/")
     const nomorSurat = isNaN(parseInt(splitNomorSurat[0])) ? 1 : parseInt(splitNomorSurat[0]) + 1
-    const ns = nomorSurat < 100 ? `00${nomorSurat}` : nomorSurat
+    const ns = nomorSurat.toString().padStart(3, '0')
    
     const tgl = tanggal ? new Date(tanggal).toLocaleDateString('id-ID', { day: '2-digit' }) : new Date().toLocaleDateString('id-ID', { day: '2-digit' })
     const bulan = new Date().toLocaleDateString('id-ID', { month: '2-digit' })
