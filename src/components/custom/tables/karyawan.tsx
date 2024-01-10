@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -40,7 +39,6 @@ const Tablekaryawan = ({ karyawan }: karyawanDataType) => {
         ))}
       </TableBody>
     </Table>
-
   )
 }
 

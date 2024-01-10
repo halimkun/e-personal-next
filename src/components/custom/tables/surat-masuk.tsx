@@ -1,10 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { Combobox } from "../inputs/combo-box";
-import LaravelPagingx from "@/components/custom-ui/laravel-paging";
 import { Badge } from "@/components/ui/badge";
 import { IconBrandWhatsapp, IconFile, IconFileSearch, IconFileText, IconHash, IconMail, IconPrinter } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+
+import LaravelPagingx from "@/components/custom-ui/laravel-paging";
 
 interface tableSuratMasukProps {
   data: any

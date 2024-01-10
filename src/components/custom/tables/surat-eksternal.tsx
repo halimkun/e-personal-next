@@ -1,8 +1,6 @@
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Combobox } from "../inputs/combo-box"
 import LaravelPagingx from "@/components/custom-ui/laravel-paging"
-import { useState } from "react"
 
 interface SuratEksternalProps {
   data: any
