@@ -1,6 +1,7 @@
 import { NextPageWithLayout } from "../_app";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 
+import useSWR from "swr";
 import AppLayout from "@/components/layouts/app";
 import FormAddPks from "@/components/custom/forms/add-pks";
 import DialogEditPks from "@/components/custom/modals/dialog-edit-pks";
@@ -17,6 +18,8 @@ import { IconEdit, IconFileSearch, IconPlus, IconTrash } from "@tabler/icons-rea
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import Loading1 from "@/components/custom/icon-loading";
+import TabelPKS from "@/components/custom/tables/pks";
 
 
 const BerkasKerjasama: NextPageWithLayout = () => {
@@ -29,10 +32,38 @@ const BerkasKerjasama: NextPageWithLayout = () => {
   const [tanggalAwal, setTanggalAwal] = useState<string>(new Date().toISOString().slice(0, 10));
   const [isRowClick, setIsRowClick] = useState(false);
 
+  const delayDebounceFn = useRef<any>(null)
+  const [filterData, setFilterData] = useState({})
+  const [filterQuery, setFilterQuery] = useState('')
+
   const [lastNomor, setLastNomor] = useState<any>({
     internal: null,
     eksternal: null
   });
+
+  const fetcher = async (url: any) => {
+    const session = await getSession()
+    const response = await fetch(url + filterQuery, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(response.status + ' ' + response.statusText)
+    }
+
+    const jsonData = await response.json()
+    return jsonData
+  }
+
+  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  })
 
   useEffect(() => {
     const fetchLastNomor = async () => {
@@ -67,7 +98,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     if (result.success) {
       toast.success('Data berhasil dihapus!');
       await new Promise(r => setTimeout(r, 1000));
-      router.reload()
+      mutate();
     } else {
       console.log(result);
     }
@@ -120,6 +151,33 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     },
   ]
 
+  useEffect(() => {
+    let fq = ''
+    for (const [key, value] of Object.entries(filterData)) {
+      if (value) {
+        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
+      }
+    }
+
+    setFilterQuery(fq)
+  }, [filterData])
+
+  useEffect(() => {
+    if (delayDebounceFn.current) {
+      clearTimeout(delayDebounceFn.current);
+    }
+
+    delayDebounceFn.current = setTimeout(() => {
+      mutate();
+    }, 250);
+
+    return () => clearTimeout(delayDebounceFn.current);
+  }, [filterQuery]);
+
+  if (isLoading) return <Loading1 height={50} width={50} />
+  if (error) return <div>{error.message}</div>
+  if (!data) return <div>No data</div>
+
   return (
     <div className="space-y-4">
       <Card className="max-w-screen">
@@ -145,7 +203,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
                   <DialogDescription>Tambahkan data perjanjian kerjasama baru dengan mengisi form dibawah ini.</DialogDescription>
                 </DialogHeader>
                 {/* dialog content */}
-                <FormAddPks 
+                <FormAddPks
                   lastNomor={lastNomor}
                   tglAwal={tanggalAwal}
                   setTglAwal={setTanggalAwal}
@@ -155,7 +213,19 @@ const BerkasKerjasama: NextPageWithLayout = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <LaravelPagination
+          <TabelPKS 
+            data={data}
+            columns={pksColumns}
+            filterData={filterData}
+            setFilterData={setFilterData}
+            isValidating={isValidating}
+            onRowClick={(item: any) => {
+              setPks(item)
+              setIsRowClick(true)
+            }}
+          />
+
+          {/* <LaravelPagination
             columns={pksColumns}
             onRowClick={(row: any) => {
               setPks(row)
@@ -163,7 +233,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
             }}
             dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks`}
             fetcher={{ method: "GET" }}
-          />
+          /> */}
         </CardContent>
       </Card>
 
