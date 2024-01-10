@@ -109,7 +109,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
         setTglPelaksanaan(new Date(data.pelaksanaan))
       }
 
-      setVia(data.via)
+      setVia(data.ket)
     } else {
       const today = new Date()
       setNoSimrs(today)
@@ -120,7 +120,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
   return (
     <form action="" method="post" encType="multipart/form-data" onSubmit={data && Object.keys(data).length > 0 ? handleUpdate : handleCreate}>
       {data && Object.keys(data).length > 0 && (
-        <Input type="hidden" id="no" name="no" placeholder="no" className="w-full" defaultValue={data ? data.no : ''} />
+        <Input type="hidden" id="no" name="no" placeholder="no" className="w-full" defaultValue={data && Object.keys(data).length > 0 ? data.no : ''} />
       )}
 
       <div className="w-full flex flex-col gap-2">
@@ -142,18 +142,18 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
           </div>
           <div className="w-full space-y-1">
             <Label htmlFor="no_surat">No Surat</Label>
-            <Input id="no_surat" name="no_surat" placeholder="no surat" className="w-full" defaultValue={data ? data.no_surat : ''} />
+            <Input id="no_surat" name="no_surat" placeholder="no surat" className="w-full" defaultValue={data && Object.keys(data).length > 0 ? data.no_surat : ''} />
           </div>
         </div>
 
         <div className="w-full space-y-1">
           <Label htmlFor="perihal">Perihal</Label>
-          <Input id="perihal" name="perihal" placeholder="perihal surat" className="w-full" defaultValue={data ? data.perihal : ''} />
+          <Input id="perihal" name="perihal" placeholder="perihal surat" className="w-full" defaultValue={data && Object.keys(data).length > 0 ? data.perihal : ''} />
         </div>
 
         <div className="w-full space-y-1">
           <Label htmlFor="pengirim">Pengirim</Label>
-          <Input id="pengirim" name="pengirim" placeholder="lembaga pengirim" className="w-full" defaultValue={data ? data.pengirim : ''} />
+          <Input id="pengirim" name="pengirim" placeholder="lembaga pengirim" className="w-full" defaultValue={data && Object.keys(data).length > 0 ? data.pengirim : ''} />
         </div>
 
         <div className="w-full flex flex-col lg:flex-row gap-4">
@@ -192,7 +192,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
 
         <div className="w-full space-y-1">
           <Label htmlFor="tempat">Tempat</Label>
-          <Input id="tempat" name="tempat" placeholder="tempat surat" className="w-full" defaultValue={data ? data.tempat : ''} />
+          <Input id="tempat" name="tempat" placeholder="tempat surat" className="w-full" defaultValue={data && Object.keys(data).length > 0 ? data.tempat : ''} />
         </div>
 
         <div className="w-full space-y-1">
@@ -202,7 +202,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
 
         <div className="w-full space-y-1">
           <Label htmlFor="via">Dikirim Via</Label>
-          <Input type="hidden" id="ket" name="ket" placeholder="ket" className="w-full" defaultValue={data ? data.ket : via} />
+          <Input type="text" id="ket" name="ket" placeholder="ket" className="w-full" defaultValue={data && Object.keys(data).length > 0 ? data.ket : via} />
           <Combobox
             items={[
               { value: '', label: 'Semua' },
