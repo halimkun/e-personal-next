@@ -41,7 +41,6 @@ const DialogMenuSuratMasuk = (props: DialogMenuSuratMasukProps) => {
         toast.error(jsonData.message)
       }
 
-      // router.reload()
       mutate()
     }
   }
