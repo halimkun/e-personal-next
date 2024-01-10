@@ -91,6 +91,12 @@ const SuratInternal: NextPageWithLayout = () => {
     return jsonData
   }
 
+  const { data: dataSuratEksternal, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  })
+
   useEffect(() => {
     setSelectedPj(surat.pj)
     setTanggal(surat.tanggal)
@@ -111,7 +117,8 @@ const SuratInternal: NextPageWithLayout = () => {
     if (res.success) {
       toast.success(res.message)
       await new Promise(resolve => setTimeout(resolve, 2000));
-      route.reload()
+      setIsOpenDialogEdit(false)
+      mutate()
     } else {
       toast.error(res.message)
     }
@@ -129,7 +136,7 @@ const SuratInternal: NextPageWithLayout = () => {
     if (res.success) {
       toast.success(res.message)
       setIsOpenModalMenu(false)
-      route.reload()
+      mutate()
     } else {
       toast.error(res.message)
     }
@@ -193,12 +200,6 @@ const SuratInternal: NextPageWithLayout = () => {
       )
     },
   ]
-
-  const { data: dataSuratEksternal, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal`, fetcher, {
-    revalidateOnFocus: false,
-    refreshWhenOffline: false,
-    refreshWhenHidden: true,
-  })
 
   useEffect(() => {
     let fq = ''
@@ -332,11 +333,11 @@ const SuratInternal: NextPageWithLayout = () => {
           </DialogHeader>
 
           <form action="#!" method="post" onSubmit={onEdit}>
+            <Input type="hidden" name="old_no_surat" value={surat.no_surat} />
             <div className="grid gap-3 py-4">
               <div className="w-full space-y-1">
                 <Label className="text-primary" htmlFor="no_surat">Nomor Surat</Label>
-                <Input type="text" name="no_surat" placeholder="nomor surat" id="no_surat" value={surat.no_surat} />
-                <p className="text-xs">nomor surat tidak bisa diubah</p>
+                <Input type="text" name="no_surat" placeholder="nomor surat" id="no_surat" defaultValue={surat.no_surat} />
                 <p className="text-xs text-danger no_surat-error"></p>
               </div>
               <div className="flex flex-col md:flex-row gap-4">
