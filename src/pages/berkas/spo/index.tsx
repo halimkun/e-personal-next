@@ -1,5 +1,7 @@
+import dynamic from "next/dynamic"
 import toast from "react-hot-toast"
 import AppLayout from "@/components/layouts/app"
+import FormAddSpo from "@/components/custom/forms/add-spo"
 import LaravelPagination from "@/components/custom-ui/laravel-pagination"
 
 import { useRouter } from "next/router"
@@ -7,13 +9,13 @@ import { getSession } from "next-auth/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { getDate } from "@/lib/date"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { IconFileSymlink, IconPlus } from "@tabler/icons-react"
-
-import FormAddSpo from "@/components/custom/forms/add-spo"
-import dynamic from "next/dynamic"
+import TabelSPO from "@/components/custom/tables/spo"
+import useSWR from "swr"
+import Loading1 from "@/components/custom/icon-loading"
 
 const DialogEditSpo = dynamic(() => import('@/components/custom/modals/dialog-edit-spo'), { ssr: false })
 const DialogMenuSpo = dynamic(() => import('@/components/custom/modals/dialog-menu-spo'), { ssr: false })
@@ -28,8 +30,36 @@ const SpoPage = () => {
   const [isFormEditOpen, setIsFormEditOpen] = useState(false)
   const [isViewSpoOpen, setIsViewSpoOpen] = useState(false)
 
+  const delayDebounceFn = useRef<any>(null)
+  const [filterData, setFilterData] = useState({})
+  const [filterQuery, setFilterQuery] = useState('')
   const [spoDetail, setSpoDetail] = useState<any>(null)
 
+  const fetcher = async (url: any) => {
+    const session = await getSession()
+    const response = await fetch(url + filterQuery, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(response.status + ' ' + response.statusText)
+    }
+
+    const jsonData = await response.json()
+    return jsonData
+  }
+
+  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  })
+
+  // get spo detail
   useEffect(() => {
     const getSpoDetail = async () => {
       const session = await getSession()
@@ -52,6 +82,7 @@ const SpoPage = () => {
 
   }, [spo.nomor])
 
+  // get last nomor
   useEffect(() => {
     const getLastNomor = async () => {
       const session = await getSession()
@@ -85,7 +116,7 @@ const SpoPage = () => {
     if (data.success) {
       toast.success(data.message)
       await new Promise(resolve => setTimeout(resolve, 1000))
-      router.reload()
+      mutate()
 
       setIsMenuOpen(false)
     } else {
@@ -153,6 +184,33 @@ const SpoPage = () => {
     }
   ]
 
+  useEffect(() => {
+    let fq = ''
+    for (const [key, value] of Object.entries(filterData)) {
+      if (value) {
+        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
+      }
+    }
+
+    setFilterQuery(fq)
+  }, [filterData])
+
+  useEffect(() => {
+    if (delayDebounceFn.current) {
+      clearTimeout(delayDebounceFn.current);
+    }
+
+    delayDebounceFn.current = setTimeout(() => {
+      mutate();
+    }, 250);
+
+    return () => clearTimeout(delayDebounceFn.current);
+  }, [filterQuery]);
+
+  if (isLoading) return <Loading1 height={50} width={50} />
+  if (error) return <div>{error.message}</div>
+  if (!data) return <div>No data</div>
+
   return (
     <>
       <Card>
@@ -182,7 +240,21 @@ const SpoPage = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <LaravelPagination
+
+          <TabelSPO
+            data={data}
+            columns={spoCol}
+            filterData={filterData}
+            setFilterData={setFilterData}
+            isValidating={isValidating}
+            onRowClick={(item: any) => {
+              setSpo(item)
+              setIsMenuOpen(true)
+            }}
+
+          />
+
+          {/* <LaravelPagination
             columns={spoCol}
             onRowClick={(row: any) => {
               setSpo(row)
@@ -190,7 +262,7 @@ const SpoPage = () => {
             }}
             dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo`}
             fetcher={{ method: "GET" }}
-          />
+          /> */}
         </CardContent>
       </Card>
 
@@ -214,7 +286,7 @@ const SpoPage = () => {
       />
 
       {/* Dialog View SPO */}
-      <DialogViewSpo 
+      <DialogViewSpo
         show={isViewSpoOpen}
         onHide={() => setIsViewSpoOpen(false)}
         spo={spo}
