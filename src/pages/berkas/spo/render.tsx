@@ -5,6 +5,7 @@ import { ReactElement, useEffect, useState } from 'react';
 import AppLayout from '@/components/layouts/app';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
+import SPOHtml from '@/templates/pdf/spo-html';
 
 
 const RenderPage = () => {
@@ -12,18 +13,13 @@ const RenderPage = () => {
   const { nomor } = router.query
   const [spoDetail, setSpoDetail] = useState<any>(null)
 
-  useEffect(() => {
-    if (spoDetail) {
-      createRoot(document.getElementById('renderPDF') as HTMLElement).render(
-        <PDFnya detail={spoDetail} />
-      )
-
-      // ReactDOM.render(
-      //   <PDFnya detail={spoDetail} />, 
-      //   document.getElementById('renderPDF')
-      // )
-    }
-  }, [spoDetail])
+  // useEffect(() => {
+  //   if (spoDetail) {
+  //     createRoot(document.getElementById('renderPDF') as HTMLElement).render(
+  //       <PDFnya detail={spoDetail} />
+  //     )
+  //   }
+  // }, [spoDetail])
 
   useEffect(() => {
     const getSpoDetail = async () => {
@@ -46,16 +42,16 @@ const RenderPage = () => {
 
   return (
     <div className="h-full flex items-center">
-      <div className="w-full max-h-[85vh] bg-white" id="renderPDF"></div>
+      <SPOHtml data={spoDetail} />
     </div>
   )
 }
 
-const PDFnya = (data: any) => (
-  <PDFViewer showToolbar={false} className='w-full h-full'>
-    <PDFFile detail={data.detail}/>
-  </PDFViewer>
-)
+// const PDFnya = (data: any) => (
+//   <PDFViewer showToolbar={false} className='w-full h-full'>
+//     <PDFFile detail={data.detail}/>
+//   </PDFViewer>
+// )
 
 RenderPage.getLayout = function getLayout(page: ReactElement) {
   return (

@@ -1,18 +1,14 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { createRoot } from 'react-dom/client'
-
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog"
 
 import PDFFile from '@/templates/pdf/spo'
 import { PDFViewer } from '@react-pdf/renderer';
 import { getSession } from "next-auth/react"
+import SPOHtml from "@/templates/pdf/spo-html"
 
 
 interface ModalViewSpoProps {
@@ -54,25 +50,14 @@ const ModalViewSpo = (props: ModalViewSpoProps) => {
     }
   }, [spo])
 
-  // useEffect(() => {
-  //   if (detailSpo.nomor !== undefined || detailSpo.nomor !== null) {
-  //     createRoot(document.getElementById('renderPDF') as HTMLElement).render(
-  //       <PDFnya detail={detailSpo} />
-  //     )
-
-  //     ReactDOM.render(
-  //       <PDFnya detail={detailSpo} />, 
-  //       document.getElementById('renderPDF')
-  //     )
-  //   }
-  // }, [detailSpo])
-
   return (
     <Dialog open={show} onOpenChange={onHide}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-4xl">
         <div className="w-full max-h-[85vh] bg-white" id="renderPDF">
           {detailSpo.detail != undefined || detailSpo.detail != null ? (
-            <PDFnya detail={detailSpo} />
+            <div className="h-full flex items-start overflow-scroll">
+              <SPOHtml data={detailSpo} />
+            </div>
           ) : (
             <div className="flex items-center justify-center h-full">
               <span className="text-xl font-medium text-gray-400">Tidak ada data SPO yang ditampilkan</span>

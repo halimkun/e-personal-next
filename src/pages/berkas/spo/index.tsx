@@ -2,7 +2,6 @@ import dynamic from "next/dynamic"
 import toast from "react-hot-toast"
 import AppLayout from "@/components/layouts/app"
 import FormAddSpo from "@/components/custom/forms/add-spo"
-import LaravelPagination from "@/components/custom-ui/laravel-pagination"
 
 import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"

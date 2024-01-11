@@ -144,3 +144,15 @@ ol {
 #renderPDF {
   @apply h-[95vh];
 }
+
+.tableSpo ol, .tableSpo ol {
+  @apply list-decimal list-outside ml-4;
+}
+
+.tableSpo ul, .tableSpo ul {
+  @apply list-disc list-outside ml-4;
+}
+
+.tableSpo li, .tableSpo li {
+  @apply mb-1;
+}
