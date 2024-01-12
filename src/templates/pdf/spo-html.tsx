@@ -36,7 +36,7 @@ const SPOHtml = ({ data, isMobile }: SPOHtmlProps) => {
                     RSIA AISYIYAH PEKAJANGAN
                   </span>
 
-                  <Image src="/static/logo.png" width={100} height={100} alt="Logo RSIA Aisyiyah Pekajangan" />
+                  <Image src="/images/logo.png" width={100} height={100} alt="Logo RSIA Aisyiyah Pekajangan" />
                 </div>
               </td>
               <td colSpan={2} className="border border-border text-center">
@@ -87,7 +87,7 @@ const SPOHtml = ({ data, isMobile }: SPOHtmlProps) => {
                 <div className="w-full flex flex-col gap-1 relative">
                   <span className="text-center text-sm">Ditetapkan</span>
                   <span className="text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
-                  <Image src="/static/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" className="mx-auto" />
+                  <Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" className="mx-auto" />
                   <span className="text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
                 </div>
               </td>
@@ -126,7 +126,7 @@ const SPOHtml = ({ data, isMobile }: SPOHtmlProps) => {
       <div className="block md:hidden hideOnPrint">
         {/* logo */} {/* Rsia Aisyiah Pekajangan*/}
         <div className="w-full flex items-center justify-center gap-6">
-          <Image src="/static/logo.png" width={70} height={70} alt="Logo RSIA Aisyiyah Pekajangan" />
+          <Image src="/images/logo.png" width={70} height={70} alt="Logo RSIA Aisyiyah Pekajangan" />
           <span className="text-lg font-bold">
             RSIA AISYIYAH<br />PEKAJANGAN
           </span>
@@ -186,7 +186,7 @@ const SPOHtml = ({ data, isMobile }: SPOHtmlProps) => {
         <div className="w-full flex flex-col items-center justify-center mt-4">
           <span className="text-center text-sm">Ditetapkan</span>
           <span className="text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
-          <Image src="/static/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" />
+          <Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" />
           <span className="text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
         </div>
       </div>

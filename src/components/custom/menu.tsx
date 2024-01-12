@@ -52,7 +52,7 @@ export function Menu() {
 
           <MenubarMenu>
             <Link className="font-bold text-lg text-primary tracking-wide flex items-center gap-2 justify-center" href="/dashboard">
-              <Image src="/static/logo.png" width={32} height={32} alt="Logo RSIA Permata Hati" />
+              <Image src="/images/logo.png" width={32} height={32} alt="Logo RSIA Permata Hati" />
               <span className="text-2xl">E - Personal</span>
             </Link>
           </MenubarMenu>

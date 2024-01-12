@@ -10,7 +10,7 @@ const LoginPage: NextPageWithLayout = () => {
       <div className="relative hidden h-full flex-col bg-muted p-10 dark:text-muted dark:border-r lg:flex">
         <div className="absolute inset-0 bg-secondary" />
         <div className="relative z-20 flex items-center text-lg font-medium gap-3">
-          <Image src="/static/logo.png" width={28} height={28} alt="Logo RSIA Permata Hati" />
+          <Image src="/images/logo.png" width={28} height={28} alt="Logo RSIA Permata Hati" />
           E - Personal
         </div>
         <div className="relative z-20 mt-auto">

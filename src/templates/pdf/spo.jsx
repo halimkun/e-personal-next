@@ -78,7 +78,7 @@ const PDFFile = ({ detail }) => (
                   fontStyle: 'bold',
                 }}>RSIA AISYIYAH PEKAJANGAN</Text>
                 <Image
-                  src="/static/logo.png"
+                  src="/images/logo.png"
                   style={{
                     width: "85px",
                     height: "auto",
@@ -178,7 +178,7 @@ const PDFFile = ({ detail }) => (
                         fontStyle: 'bold',
                       }}>Ditetapkan {"\n"} Direktur RSIA Aisyiyah Pekajangan</Text>
                       <Image
-                        src="/static/ttd-dr-him.jpeg"
+                        src="/images/ttd-dr-him.jpeg"
                         style={{
                           width: "100px",
                           height: "auto",
