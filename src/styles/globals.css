@@ -97,7 +97,7 @@ ol {
 }
 
 .rbc-month-view {
-  @apply border border-border dark:border-gray-700 text-foreground dark:text-gray-300;
+  @apply border border-border dark:border-gray-700 text-foreground dark:text-gray-300 rounded-xl;
 }
 
 .rbc-off-range-bg {
