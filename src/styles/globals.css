@@ -156,3 +156,13 @@ ol {
 .tableSpo li, .tableSpo li {
   @apply mb-1;
 }
+
+@media print {
+  .onPrint {
+    @apply block;
+  }
+
+  .hideOnPrint {
+    @apply hidden;
+  }
+}
