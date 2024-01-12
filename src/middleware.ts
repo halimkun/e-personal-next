@@ -8,12 +8,12 @@ export default withAuth(
   {
     callbacks: {
       authorized: async ({ req, token }) => {
-        
+
         if (token) {
           // Decode JWT Token
           // const jwt = require('jsonwebtoken');
           // const decodedToken = jwt.decode(token.accessToken);
-          
+
           return true
         }
 
@@ -30,12 +30,13 @@ export const config = {
     /*
         * Match all request paths except for the ones starting with:
         * - api (API routes)
+        * - public routes
         * - auth login (login page)
         * - _next/static (static files)
         * - _next/image (image optimization files)
         * - favicon.ico (favicon file)
         */
-    '/((?!api|auth/login|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|public|auth/login|_next/static|_next/image|favicon.ico).*)',
   ]
 }
 
