@@ -28,7 +28,7 @@ export function Combobox1({ items, setSelectedItem, selectedItem, placeholder }:
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full min-w-[200px] justify-between"
         >
           {selectedItem
             ? items.find((item: any) => item.value === selectedItem)?.label
@@ -36,7 +36,7 @@ export function Combobox1({ items, setSelectedItem, selectedItem, placeholder }:
           <IconCaretUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full min-w-[200px] p-0">
         <Command>
           <CommandInput placeholder={placeholder} />
           <CommandEmpty>No framework found.</CommandEmpty>

@@ -1,22 +1,22 @@
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-
 import React, { ReactElement, useEffect, useState } from 'react';
+
 import AppLayout from '@/components/layouts/app';
+import startOfWeek from 'date-fns/startOfWeek'
+import format from 'date-fns/format'
+import getDay from 'date-fns/getDay'
+import id from 'date-fns/locale/id'
+import parse from 'date-fns/parse'
 
 import { NextPageWithLayout } from '../_app';
 import { getSession, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { IconChevronLeft, IconChevronRight, IconFocus2 } from '@tabler/icons-react';
-
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
-import startOfWeek from 'date-fns/startOfWeek'
-import getDay from 'date-fns/getDay'
-import id from 'date-fns/locale/id'
 import { cn } from '@/lib/utils';
+
+import dynamic from 'next/dynamic';
 
 const locales = {
   'id': id,
@@ -30,85 +30,46 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
+const DialogDetailAgenda = dynamic(() => import('@/components/custom/modals/dialog-detail-agenda'), { ssr: false })
+const DialogAddAgenda = dynamic(() => import('@/components/custom/modals/dialog-add-agenda'), { ssr: true })
+
 const DashboardPage: NextPageWithLayout = () => {
-  const { data } = useSession();
+  const [add, setAdd] = useState(false)
   const [evt, sEvt] = useState<any>({})
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState<any>([])
+  const [tgl, setTgl] = useState(new Date())
   const [detail, setDetail] = useState(false)
 
   const [start, setStart] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0])
   const [end, setEnd] = useState(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().split('T')[0])
 
-  useEffect(() => {
-    const fetcher = async (url: string) => {
-      const session = await getSession();
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.rsiap?.access_token}`
-        }
-      });
+  const fetcher = async (url: string) => {
+    const session = await getSession();
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`
+      }
+    });
 
-      const data = await res.json();
-      return data.data;
-    }
-
-    fetcher(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/get/calendar`).then(data => {
-      const nd = data.map((e: any) => {
-        return {
-          title: e.title,
-          start: e.date,
-          end: e.date,
-          resource: {
-            no_surat: e.no_surat,
-            pj: e.pj,
-            pj_detail: e.pj_detail,
-            tempat: e.tempat,
-            tanggal: e.tanggal,
-            status: e.status
-          }
-        }
-      })
-
-      setEvents(nd)
-    }).catch(err => console.log(err))
-  }, [])
+    const data = await res.json();
+    return data.data;
+  }
 
   useEffect(() => {
-    async function fetchEvent() {
-      setEvents([])
-      const session = await getSession();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/get/calendar?start=${start}&end=${end}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.rsiap?.access_token}`
-        }
-      });
+    // agenda/calendar
+    fetcher(`${process.env.NEXT_PUBLIC_API_URL}/agenda/calendar`).then((res) => {
+      setEvents(res.agenda)
+    })
+  }, []);
 
-      const data = await res.json();
-      const nd = data.data.map((e: any) => {
-        return {
-          title: e.title,
-          start: e.date,
-          end: e.date,
-          resource: {
-            no_surat: e.no_surat,
-            pj: e.pj,
-            pj_detail: e.pj_detail,
-            tempat: e.tempat,
-            tanggal: e.tanggal,
-            status: e.status
-          }
-        }
-      })
-
-      setEvents(nd)
-    }
-
-    fetchEvent()
-  }, [start, end])
+  useEffect(() => {
+    // agenda/calendar
+    fetcher(`${process.env.NEXT_PUBLIC_API_URL}/agenda/calendar?start=${start}&end=${end}`).then((res) => {
+      setEvents(res.agenda)
+    })
+  }, [start, end]);
 
   return (
     <>
@@ -145,16 +106,16 @@ const DashboardPage: NextPageWithLayout = () => {
                       <div className="text-center py-2">{e.label}</div>
                     )
                   },
-                  dateHeader: (e: any) => {
-                    return (
-                      <div className="text-sm text-center py-2 pb-1">{e.label}</div>
-                    )
-                  },
+                  // dateHeader: (e: any) => {
+                  //   return (
+                  //     <div className="text-sm text-center py-2 pb-1">{e.label}</div>
+                  //   )
+                  // },
                   event: (e: any) => {
                     return (
                       <div className="flex flex-col gap-1">
                         <div className="text-xs">{e.title}</div>
-                        <div className="mb-1 text-[0.7rem] leading-[0.5rem] text-primary-foreground/80">
+                        <div className="mb-1 text-[0.7rem] leading-[0.5rem]">
                           {
                             new Date(e.event.resource?.tanggal).toLocaleDateString('id-ID', {
                               weekday: 'short',
@@ -169,18 +130,24 @@ const DashboardPage: NextPageWithLayout = () => {
                   },
                 },
               }}
-              onDoubleClickEvent={(event: any) => {
+              onSelectEvent={(event: any) => {
                 sEvt(event)
                 setDetail(true)
               }}
+              onDrillDown={(e: any) => {
+                setAdd(true)
+                setTgl(e)
+              }}
               onRangeChange={(e: any) => {
-                const { start, end } = e;
+                if (e.start && e.end) {
+                  const { start, end } = e;
 
-                const s_ = start.toISOString().split('T')[0]
-                const e_ = end.toISOString().split('T')[0]
+                  const s_ = start.toISOString().split('T')[0]
+                  const e_ = end.toISOString().split('T')[0]
 
-                setStart(s_)
-                setEnd(e_)
+                  setStart(s_)
+                  setEnd(e_)
+                }
               }}
               events={events}
               localizer={localizer}
@@ -246,42 +213,18 @@ const DashboardPage: NextPageWithLayout = () => {
         </Card>
       </div>
 
-      <Dialog open={detail} onOpenChange={setDetail}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className='text-primary leading-6'>{evt.title}</DialogTitle>
-            <DialogHeader><span className="text-sm text-gray-600 dark:text-gray-500">{evt.resource?.no_surat}</span></DialogHeader>
-          </DialogHeader>
+      <DialogDetailAgenda
+        evt={evt}
+        setEvt={sEvt}
+        detail={detail}
+        setDetail={setDetail}
+      />
 
-          <table className="table w-full text-left">
-            <tr>
-              <th>Penanggung Jawab</th>
-              <th>:</th>
-              <td>{evt.resource?.pj_detail ? evt.resource?.pj_detail.nama : evt.resource?.pj}</td>
-            </tr>
-            <tr>
-              <th>Tempat</th>
-              <th>:</th>
-              <td>{evt.resource?.tempat}</td>
-            </tr>
-            <tr>
-              <th>Tanggal</th>
-              <th>:</th>
-              <td>{new Date(evt.resource?.tanggal).toLocaleDateString('id-ID', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })} - {new Date(evt.resource?.tanggal).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</td>
-            </tr>
-            <tr>
-              <th>Status</th>
-              <th>:</th>
-              <td>{evt.resource?.status}</td>
-            </tr>
-          </table>
-        </DialogContent>
-      </Dialog>
+      <DialogAddAgenda
+        add={add}
+        setAdd={setAdd}
+        tanggal={tgl}
+      />
     </>
   )
 };
@@ -291,5 +234,4 @@ DashboardPage.getLayout = function getLayout(page: ReactElement) {
     <AppLayout>{page}</AppLayout>
   )
 }
-
 export default DashboardPage;
