@@ -4,10 +4,9 @@ import he from 'he';
 
 interface SPOHtmlProps {
   data: any
-  isMobile: boolean
 }
 
-const SPOHtml = ({ data, isMobile }: SPOHtmlProps) => {
+const SPOHtml = ({ data }: SPOHtmlProps) => {
 
   const detailSpo = [
     'pengertian',
