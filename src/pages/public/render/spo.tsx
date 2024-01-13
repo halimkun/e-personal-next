@@ -16,7 +16,7 @@ const RenderPage = ({ data, isMobile }: any) => {
 
   return (
     <div className="h-full flex items-center px-4 py-5">
-      <SPOHtml data={data} isMobile={isMobile} />
+      <SPOHtml data={data} />
     </div>
   )
 }
