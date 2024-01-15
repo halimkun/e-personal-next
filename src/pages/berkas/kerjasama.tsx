@@ -293,11 +293,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
           </div>
 
           <div className="flex justify-between">
-            <Button variant="default" size="sm" className="flex items-center gap-2" onClick={() => {
-              setIsPreview(true)
-            }}>
-              <IconFileSearch className="h-4 w-4" /> Lihat File
-            </Button>
+            <div></div>
 
             <div className="flex justify-end gap-2">
               <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => {
