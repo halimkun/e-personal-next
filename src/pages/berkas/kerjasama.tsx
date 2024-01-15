@@ -232,6 +232,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
             filterData={filterData}
             setFilterData={setFilterData}
             isValidating={isValidating}
+            lastColumnAction={true}
             onRowClick={(item: any) => {
               setPks(item)
               setIsRowClick(true)
