@@ -9,7 +9,7 @@ import id from 'date-fns/locale/id'
 import parse from 'date-fns/parse'
 
 import { NextPageWithLayout } from '../_app';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { IconChevronLeft, IconChevronRight, IconFocus2 } from '@tabler/icons-react';
@@ -218,9 +218,12 @@ const DashboardPage: NextPageWithLayout = () => {
         setEvt={sEvt}
         detail={detail}
         setDetail={setDetail}
+        setEdit={setAdd}
       />
 
       <DialogAddAgenda
+        evt={evt}
+        setEvt={sEvt}
         add={add}
         setAdd={setAdd}
         tanggal={tgl}

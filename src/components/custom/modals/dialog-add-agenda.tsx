@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -19,18 +19,33 @@ import toast from "react-hot-toast"
 import { useRouter } from "next/router"
 
 interface DialogAddAgendaProps {
+  evt?: any
+  setEvt?: any
   add: boolean
   setAdd: any
   tanggal: any
 }
 
 const DialogAddAgenda = (props: DialogAddAgendaProps) => {
-  const { add, setAdd, tanggal } = props
+  const { evt, setEvt, add, setAdd, tanggal } = props
 
   const router = useRouter()
-  const [status, setStatus] = useState('Belum Selesai')
-  const [selectedItem, setSelectedItem] = useState<any>()
+  const [status, setStatus] = useState(evt.resource?.status ?? 'Belum Selesai')
+  const [selectedItem, setSelectedItem] = useState<any>(evt.resource?.pj ?? '')
   const [penanggungJawab, setPenanggungJawab] = useState<any>([])
+
+  // is empty event
+  const isEmptyEvt = Object.keys(evt).length === 0
+
+  // evt.resource?.pj on change set selectedItem
+  useEffect(() => {
+    setSelectedItem(evt.resource?.pj)
+  }, [evt.resource?.pj])
+
+  // evt.resource?.status on change set status
+  useEffect(() => {
+    setStatus(evt.resource?.status)
+  }, [evt.resource?.status])
 
   const fetchPegawai = async (url: string) => {
     const session = await getSession()
@@ -68,7 +83,7 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
       label: 'Agenda',
       name: 'agenda',
       type: 'text',
-      value: '',
+      value: isEmptyEvt ? '' : evt.title,
       required: true,
     },
     {
@@ -85,21 +100,21 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
       label: 'Tempat',
       name: 'tempat',
       type: 'text',
-      value: '',
+      value: isEmptyEvt ? '' : evt.resource?.tempat,
       required: true,
     },
     {
       label: 'Waktu Mulai',
       name: 'start',
       type: 'time',
-      value: '',
+      value: isEmptyEvt ? '' : evt.resource?.start,
       required: true,
     },
     {
       label: 'Waktu Selesai',
       name: 'end',
       type: 'time',
-      value: '',
+      value: isEmptyEvt ? '' : evt.resource?.end,
       required: false,
     },
     {
@@ -113,11 +128,15 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
       options: [
         {
           label: 'Belum Selesai',
-          value: 'Belum Selesai'
+          value: 'peengajuan'
         },
         {
           label: 'Selesai',
-          value: 'Selesai'
+          value: 'disetujui'
+        },
+        {
+          label: 'Batal',
+          value: 'ditolak'
         }
       ]
     },
@@ -125,7 +144,7 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
       label: 'Keterangan',
       name: 'keterangan',
       type: 'textarea',
-      value: '',
+      value: isEmptyEvt ? '' : evt.resource?.keterangan,
       required: false,
     },
   ];
@@ -183,6 +202,43 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
     }
   }
 
+  const onUpdate = async (e: any) => {
+    e.preventDefault()
+
+    const data = new FormData(e.target)
+    const session = await getSession()
+
+    // add tanggal to form data
+    data.append('tanggal', tanggal.toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).split('/').reverse().join('-'))
+
+    // start is H:i:s make it H:i
+    const startValue = data.get('start');
+    if (startValue !== null && startValue !== undefined) {
+      data.set('start', startValue.toString().slice(0, 5));
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/agenda/${evt.resource?.id}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`
+      },
+      body: data
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      toast.success('Data berhasil disimpan!');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      router.reload()
+    } else {
+      toast.error('Data gagal disimpan!');
+    }
+  }
+
   return (
     <Dialog open={add} onOpenChange={setAdd}>
       <DialogContent className="max-w-2xl">
@@ -201,7 +257,7 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
         {!data && <div>No data</div>}
 
         {data && (
-          <form action="" method="post" onSubmit={onSubmit}>
+          <form action="" method="post" onSubmit={isEmptyEvt ? onSubmit : onUpdate}>
             <table className="table w-full text-left">
               {field.map((item, index) => (
                 <tr key={index}>
@@ -212,7 +268,11 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
                   </th>
                   <td>
                     <div className="flex items-center justify-start gap-3 mb-3">
-                      : {getInputType(item.type, item)}
+                      : {
+                        item.name == 'pj'
+                          ? (isLoading ? <Loading1 height={20} width={20} /> : getInputType(item.type, item))
+                          : getInputType(item.type, item)
+                      }
                     </div>
                   </td>
                 </tr>
@@ -220,7 +280,10 @@ const DialogAddAgenda = (props: DialogAddAgendaProps) => {
             </table>
 
             <div className="flex justify-end gap-3 mt-5">
-              <Button type="button" size='sm' variant="secondary" onClick={() => setAdd(false)}>Batal</Button>
+              <Button type="button" size='sm' variant="secondary" onClick={() => {
+                setEvt({})
+                setAdd(false)
+              }}>Batal</Button>
               <Button type="submit" size='sm' variant="default">Tambah</Button>
             </div>
           </form>
