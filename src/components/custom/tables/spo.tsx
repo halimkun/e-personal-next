@@ -41,7 +41,7 @@ const TabelSPO = ({
           />
         </div>
         <div className="w-full space-y-1">
-          <Label>Jenis SK</Label>
+          <Label>Jenis SPO</Label>
           <Combobox items={[
             { label: "Semua", value: "" },
             { label: "Medis / Keperawatan", value: "A" },
@@ -50,7 +50,7 @@ const TabelSPO = ({
           ]} setSelectedItem={(value: any) => {
             setSelectedJenis(value)
             setFilterData({ ...filterData, jenis: value })
-          }} selectedItem={selectedJenis} placeholder="Pilih Jenis SK" />
+          }} selectedItem={selectedJenis} placeholder="Pilih Jenis SPO" />
         </div>
         <div className="w-full space-y-1">
           <Label>Search</Label>

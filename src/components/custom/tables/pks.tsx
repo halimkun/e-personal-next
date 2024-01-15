@@ -31,6 +31,21 @@ const TabelPKS = ({
     <>
       <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 dark:bg-gray-900/50 border border-border">
         <div className="w-full space-y-1">
+          <Label htmlFor="">Jenis PKS</Label>
+          <Combobox
+            items={[
+              { value: '', label: 'Semua Data' },
+              { value: 'A', label: 'Internal' },
+              { value: 'B', label: 'Eksternal' },
+            ]}
+            setSelectedItem={(item: any) => {
+              setFilterData({ ...filterData, jenis: item })
+            }}
+            selectedItem={filterData.jenis}
+            placeholder="Jenis PKS"
+          />
+        </div>
+        <div className="w-full space-y-1">
           <Label>Search</Label>
           <Input
             type="search"
