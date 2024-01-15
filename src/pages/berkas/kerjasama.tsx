@@ -3,9 +3,10 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 
 import useSWR from "swr";
 import AppLayout from "@/components/layouts/app";
+import TabelPKS from "@/components/custom/tables/pks";
+import Loading1 from "@/components/custom/icon-loading";
 import FormAddPks from "@/components/custom/forms/add-pks";
 import DialogEditPks from "@/components/custom/modals/dialog-edit-pks";
-import LaravelPagination from "@/components/custom-ui/laravel-pagination";
 import DialogPreviewBerkas from "@/components/custom/modals/dialog-preview-berkas";
 
 import { toast } from "react-hot-toast";
@@ -14,12 +15,10 @@ import { getSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getDate, getFullDate } from "@/lib/date";
-import { IconEdit, IconFileSearch, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconFileOff, IconFileSearch, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import Loading1 from "@/components/custom/icon-loading";
-import TabelPKS from "@/components/custom/tables/pks";
 
 
 const BerkasKerjasama: NextPageWithLayout = () => {
@@ -115,7 +114,9 @@ const BerkasKerjasama: NextPageWithLayout = () => {
       selector: 'judul_or_nama',
       data: (row: any) => (
         <>
-          <div>{row.judul}</div>
+          <div className="flex gap-3 items-center">
+            {row.judul} {row.berkas == '' && (<div className="p-1 bg-red-300 rounded-full"><IconFileOff className="h-4 w-4 stroke-red-500" /></div>)}
+          </div>
           {row.no_pks_eksternal && (
             <div className="text-left mt-1">
               <Badge variant='outline' className="whitespace-nowrap group-hover:border-primary">{row.no_pks_eksternal}</Badge>
@@ -149,6 +150,18 @@ const BerkasKerjasama: NextPageWithLayout = () => {
         </TooltipProvider>
       ) : (<></>)
     },
+    {
+      name: '#',
+      selector: 'action',
+      data: (row: any) => (
+        <Button variant="default" size="icon" className="flex items-center gap-2 h-7 w-7" disabled={!row.berkas || row.berkas == '' || row.berkas == null || row.berkas == undefined} onClick={() => {
+          setPks(row)
+          setIsPreview(true)
+        }}>
+          <IconFileSearch className="h-4 w-4" />
+        </Button>
+      )
+    }
   ]
 
   useEffect(() => {
@@ -213,7 +226,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <TabelPKS 
+          <TabelPKS
             data={data}
             columns={pksColumns}
             filterData={filterData}
