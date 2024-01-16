@@ -1,15 +1,18 @@
+import Loading1 from "@/components/custom/icon-loading"
 import AppLayout from "@/components/layouts/app"
+import useSWR from "swr"
+
+import { ReactElement } from "react"
+import { useRouter } from "next/router"
+import { getSession } from "next-auth/react"
+
+import { cn } from "@/lib/utils"
+import { getDate, getTime } from "@/lib/date"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { getDate, getTime } from "@/lib/date"
-import { cn } from "@/lib/utils"
 import { NextPageWithLayout } from "@/pages/_app"
 import { IconArrowLeft, IconLoader } from "@tabler/icons-react"
-import { getSession } from "next-auth/react"
-import { useRouter } from "next/router"
-import { ReactElement } from "react"
-import useSWR from "swr"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 const DetailSuratInternal: NextPageWithLayout = () => {
   const route = useRouter();
@@ -31,19 +34,11 @@ const DetailSuratInternal: NextPageWithLayout = () => {
     }
   }
 
-  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/detail`, fetcher)
+  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/detail`, fetcher)
 
-  if (error) return (
-    <div className="flex flex-col items-start justify-center h-full gap-4">
-      <div className="text-2xl font-bold">Error {error.message}</div>
-    </div>
-  )
-
-  if (!data) return (
-    <div className="flex flex-col items-start justify-center h-full gap-4">
-      <IconLoader className="animate-spin w-10 h-10" />
-    </div>
-  )
+  if (isLoading) return <Loading1 height={50} width={50} />
+  if (error) return <div>{error.message}</div>
+  if (!data) return <div>No data</div>
 
   const detail = data.data
 
