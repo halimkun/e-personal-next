@@ -6,8 +6,9 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Combobox } from '../inputs/combo-box'
 import { Button } from '@/components/ui/button'
-import { IconFileSearch, IconUpload } from '@tabler/icons-react'
+import { IconFileSearch } from '@tabler/icons-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import dynamic from 'next/dynamic'
 
 interface tableProps {
   data: any
@@ -17,7 +18,11 @@ interface tableProps {
   onRowClick?: (row: any) => void;
 }
 
+const PreviewBerkas = dynamic(() => import('@/components/custom/modals/dialog-preview-berkas'), { ssr: false })
+
 const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: tableProps) => {
+  const [sk, setSk] = React.useState<any>({})
+  const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const columns = [
     {
       name: 'Nomor',
@@ -73,7 +78,16 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
       selector: 'aksi',
       style: ['w-[100px] text-right'],
       data: (row: any) => (
-        <Button variant="default" size="icon" className="flex items-center gap-2 h-6 w-6" disabled={!row.berkas || row.berkas == '' || row.berkas == null || row.berkas == undefined} >
+        <Button 
+          variant="default" 
+          size="icon" 
+          className="flex items-center gap-2 h-6 w-6" 
+          disabled={!row.berkas || row.berkas == '' || row.berkas == null || row.berkas == undefined} 
+          onClick={() => {
+            setSk(row)
+            setIsOpen(true)
+          }}
+        >
           <IconFileSearch className="h-4 w-4" />
         </Button>
       )
@@ -125,6 +139,12 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
         isValidating={isValidating}
         lastColumnAction={true}
         onRowClick={onRowClick}
+      />
+
+      <PreviewBerkas 
+        berkasUrl={`${process.env.NEXT_PUBLIC_BASE_BERKAS_URL}/rsia_sk/${sk?.berkas}#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0&navpanes=0`}
+        isPreview={isOpen}
+        setIsPreview={setIsOpen}
       />
     </>
   )
