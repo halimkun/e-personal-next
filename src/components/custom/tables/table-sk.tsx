@@ -1,17 +1,13 @@
 import React from 'react'
 import LaravelPagingx from '@/components/custom-ui/laravel-paging'
-import { Badge } from '@/components/ui/badge'
-import { Combobox } from '../inputs/combo-box'
+
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-
+import { Badge } from '@/components/ui/badge'
+import { Combobox } from '../inputs/combo-box'
+import { Button } from '@/components/ui/button'
+import { IconFileSearch, IconUpload } from '@tabler/icons-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface tableProps {
   data: any
@@ -29,7 +25,7 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
       enableHiding: false,
       style: ['w-[100px]'],
       data: (row: any) => (
-        <Badge variant={row.status === '1' ? 'default' : 'destructive'}>
+        <Badge variant={row.status === '1' ? 'secondary' : 'destructive'}>
           {`${row.nomor.toString().padStart(3, '0')}/${row.jenis}/${row.prefix}/${new Date(row.tgl_terbit).toLocaleDateString('id-ID', {
             year: '2-digit',
             month: '2-digit',
@@ -72,6 +68,16 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
         day: '2-digit'
       })}</div>,
     },
+    {
+      name: '#',
+      selector: 'aksi',
+      style: ['w-[100px] text-right'],
+      data: (row: any) => (
+        <Button variant="default" size="icon" className="flex items-center gap-2 h-6 w-6" disabled={!row.berkas || row.berkas == '' || row.berkas == null || row.berkas == undefined} >
+          <IconFileSearch className="h-4 w-4" />
+        </Button>
+      )
+    }
   ]
 
   return (
@@ -117,6 +123,7 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
         filterData={filterData}
         setFilterData={setFilterData}
         isValidating={isValidating}
+        lastColumnAction={true}
         onRowClick={onRowClick}
       />
     </>

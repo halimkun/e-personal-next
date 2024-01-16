@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Combobox } from "../inputs/combo-box"
 import { DatePickerDemo } from "../inputs/date-picker"
-import { IconDeviceSdCard, IconLoader, IconX } from "@tabler/icons-react"
+import { IconDeviceSdCard, IconLoader } from "@tabler/icons-react"
 import { getSession } from "next-auth/react"
 
 import toast from "react-hot-toast"
@@ -70,12 +70,10 @@ const FormAddSK = ({
   const onSubmit = async (e: any) => {
     e.preventDefault()
     const session = await getSession()
-    // data : jenis, judul, pj, tgl_terbit
-    const data = {
-      jenis: jenis,
-      judul: e.target.judul.value,
-      pj: e.target.pj.value,
-      tgl_terbit: e.target.tgl_terbit.value
+    const data = new FormData(e.target)
+
+    if (jenis) {
+      data.set('jenis', jenis)
     }
 
     // post data to api
@@ -83,13 +81,11 @@ const FormAddSK = ({
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
+      body: data
     })
 
     const result = await res.json()
-
     if (result.success) {
       toast.success('Data berhasil disimpan!');
 
@@ -100,35 +96,34 @@ const FormAddSK = ({
       e.target.reset()
       setIsOpenFormAdd(false)
     } else {
-      toast.error('Data gagal disimpan!');
+      if (typeof result.message === 'string') {
+        toast.error(result.message)
+        return
+      }
+
+      for (const [key, value] of Object.entries(result.message)) {
+        const val = value as string[]
+        toast.error(val[0])
+      }
     }
   }
 
   const onUpdate = async (e: any) => {
     e.preventDefault()
     const session = await getSession()
+    const data = new FormData(e.target)
 
-    const data = {
-      nomor: e.target.nomor.value,
-      judul: e.target.judul.value,
-      pj: e.target.pj.value,
-      tgl_terbit: e.target.tgl_terbit.value,
-      jenis: jenis,
-      old_jenis: e.target.old_jenis.value,
-      old_nomor: e.target.old_nomor.value,
-      old_tgl_terbit: e.target.old_tgl_terbit.value,
+    if (jenis) {
+      data.set('jenis', jenis)
     }
-
-    console.log(data)
 
     // post data to api
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/sk/update`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
+      body: data
     })
 
     const result = await res.json()
@@ -142,14 +137,22 @@ const FormAddSK = ({
       e.target.reset()
       setIsOpenFormAdd(false)
     } else {
-      toast.error('Data gagal disimpan!');
+      if (typeof result.message === 'string') {
+        toast.error(result.message)
+        return
+      }
+
+      for (const [key, value] of Object.entries(result.message)) {
+        const val = value as string[]
+        toast.error(val[0])
+      }
     }
   }
 
   const { data: dataPj, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=1&with=bidang_detail&select=nik,nama`, fetchPegawai);
 
   return (
-    <form method="post" id="form-add-sk" onSubmit={data ? onUpdate : onSubmit}>
+    <form method="post" id="form-add-sk" onSubmit={data ? onUpdate : onSubmit} encType="multipart/form-data">
       {data ? (
         <>
           <Input type="hidden" name="old_nomor" value={data.nomor} />
@@ -177,13 +180,18 @@ const FormAddSK = ({
             <Label htmlFor="pj">Penanggung Jawab</Label>
             <Input type="hidden" id="pj" name="pj" placeholder="pilih pj" className="w-full" defaultValue={data ? data.pj : selectedPJ} />
             {
-              pj && (
+              pj ? (
                 <Combobox
                   items={pj}
                   setSelectedItem={setSelectedPJ}
                   selectedItem={data ? data.pj : selectedPJ}
                   placeholder="Penanggung Jawab"
                 />
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <IconLoader className="animate-spin h-5 w-5" />
+                  <span>Loading Penanggung Jawab...</span>
+                </div>
               )
             }
           </div>
@@ -204,7 +212,7 @@ const FormAddSK = ({
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="judul">Jenis SK</Label>
+          <Label htmlFor="jenis">Jenis SK</Label>
           <Combobox
             items={[
               { value: 'A', label: 'SK Dokumen' },
@@ -214,6 +222,11 @@ const FormAddSK = ({
             selectedItem={data ? j : jenis}
             placeholder="Jenis SK"
           />
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="berkas">Berkas SK</Label>
+          <Input type="file" id="berkas" name="berkas" placeholder="pilih berkas" className="w-full" />
         </div>
       </div>
 
