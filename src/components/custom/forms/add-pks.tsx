@@ -56,29 +56,29 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
     }
   }
 
-  useEffect(() => {
-    parseNomor();
-  }, [selectedType, tglAwal, typeSelected])
+  // useEffect(() => {
+  //   parseNomor();
+  // }, [selectedType, tglAwal, typeSelected])
 
 
 
-  function parseNomor() {
-    const no = lastNomor[selectedType];
-    const nos = no?.split('/');
+  // function parseNomor() {
+  //   const no = lastNomor[selectedType];
+  //   const nos = no?.split('/');
 
-    const nmr = parseInt(nos?.[0] ?? '0') + 1;
-    const nomor = nmr.toString().padStart(3, '0');
-    const type = selectedType === 'internal' ? 'A' : 'B';
+  //   const nmr = parseInt(nos?.[0] ?? '0') + 1;
+  //   const nomor = nmr.toString().padStart(3, '0');
+  //   const type = selectedType === 'internal' ? 'A' : 'B';
 
-    // get tglAwal and convert to ddMMyy
-    const tanggal = tglAwal.split('-').map((item, index) => {
-      if (index === 0) return item.slice(2);
-      return item;
-    }).reverse().join('');
+  //   // get tglAwal and convert to ddMMyy
+  //   const tanggal = tglAwal.split('-').map((item, index) => {
+  //     if (index === 0) return item.slice(2);
+  //     return item;
+  //   }).reverse().join('');
 
-    const nomorPks = `${nomor}/${type}/PKS-RSIA/${tanggal}`;
-    setNomorPks(nomorPks);
-  }
+  //   const nomorPks = `${nomor}/${type}/PKS-RSIA/${tanggal}`;
+  //   setNomorPks(nomorPks);
+  // }
 
   return (
     <form method="post" encType="multipart/form-data" onSubmit={onSubmit}>
@@ -115,7 +115,8 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
         {/* No Pks Intenal Dan Eksternal */}
         <div className="mb-4 space-y-1.5">
           <Label className="text-primary font-semibold" htmlFor="no_pks_internal">No. PKS Internal</Label>
-          <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" value={nomorPks} readOnly />
+          {/* <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" value={nomorPks} readOnly /> */}
+          <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" />
         </div>
         <div className="mb-4 space-y-1.5">
           <Label className="text-primary font-semibold" htmlFor="no_pks_eksternal">No. PKS Eksternal</Label>
