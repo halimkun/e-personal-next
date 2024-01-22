@@ -29,6 +29,7 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
   const [selected, setSelected] = useState<string | undefined>(undefined);
   // const [tanggalAwal, setTanggalAwal] = useState<string>(new Date().toISOString().slice(0, 10));
   const [selectedType, setSelectedType] = useState<'internal' | 'eksternal'>(typeSelected ?? 'internal');
+  const [tglTerbit, setTglTerbit] = useState<string>(new Date().toISOString().slice(0, 10));
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -56,38 +57,38 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
     }
   }
 
-  // useEffect(() => {
-  //   parseNomor();
-  // }, [selectedType, tglAwal, typeSelected])
+  useEffect(() => {
+    parseNomor();
+  }, [selectedType, tglTerbit, typeSelected])
 
 
 
-  // function parseNomor() {
-  //   const no = lastNomor[selectedType];
-  //   const nos = no?.split('/');
+  function parseNomor() {
+    const no = lastNomor[selectedType];
+    const nos = no?.split('/');
 
-  //   const nmr = parseInt(nos?.[0] ?? '0') + 1;
-  //   const nomor = nmr.toString().padStart(3, '0');
-  //   const type = selectedType === 'internal' ? 'A' : 'B';
+    const nmr = parseInt(nos?.[0] ?? '0') + 1;
+    const nomor = nmr.toString().padStart(3, '0');
+    const type = selectedType === 'internal' ? 'A' : 'B';
 
-  //   // get tglAwal and convert to ddMMyy
-  //   const tanggal = tglAwal.split('-').map((item, index) => {
-  //     if (index === 0) return item.slice(2);
-  //     return item;
-  //   }).reverse().join('');
+    // get tglTerbit and convert to ddMMyy
+    const tanggal = tglTerbit.split('-').map((item, index) => {
+      if (index === 0) return item.slice(2);
+      return item;
+    }).reverse().join('');
 
-  //   const nomorPks = `${nomor}/${type}/PKS-RSIA/${tanggal}`;
-  //   setNomorPks(nomorPks);
-  // }
+    const nomorPks = `${nomor}/${type}/PKS-RSIA/${tanggal}`;
+    setNomorPks(nomorPks);
+  }
 
   return (
     <form method="post" encType="multipart/form-data" onSubmit={onSubmit}>
-      <div className="mb-4 space-y-1.5">
+      <div className="mb-4 space-y-1">
         <Label className="text-primary font-semibold" htmlFor="judul">Judul</Label>
         <Input type="text" id="judul" name="judul" placeholder="Judul / Nama berkas" />
       </div>
 
-      <div className="mb-4 space-y-1.5 relative">
+      <div className="mb-4 space-y-1 relative">
         <Label className="text-primary font-semibold" htmlFor="tipe-surat">Tipe Surat</Label>
         <RadioGroup className="flex gap-6" onValueChange={setSelectedType as any} defaultValue={selectedType}>
           <div className="flex items-center space-x-2">
@@ -103,27 +104,34 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
 
       <div className="grid grid-cols-2 gap-3 gap-y-1">
         {/* tanggal awal dan akhir */}
-        <div className="mb-4 space-y-1.5">
+        <div className="mb-4 space-y-1">
           <Label className="text-primary font-semibold" htmlFor="tanggal_awal">Tanggal Awal</Label>
-          {/* get date now yyyy-MM-dd */}
           <Input type="date" id="tanggal_awal" name="tanggal_awal" placeholder="Tanggal Awal" value={tglAwal} onChange={(e) => setTglAwal(e.target.value)} />
         </div>
-        <div className="mb-4 space-y-1.5">
+        <div className="mb-4 space-y-1">
           <Label className="text-primary font-semibold" htmlFor="tanggal_akhir">Tanggal Ahir</Label>
           <Input type="date" id="tanggal_akhir" name="tanggal_akhir" placeholder="Tanggal Ahir" />
         </div>
+      </div>
+
+      <div className="mb-4 space-y-1">
+        <Label className="text-primary font-semibold" htmlFor="tgl_terbit">Tanggal Terbit</Label>
+        <Input type="date" id="tgl_terbit" name="tgl_terbit" placeholder="Tanggal Terbit" className="border border-warning/80" value={tglTerbit} onChange={(e) => setTglTerbit(e.target.value)} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 gap-y-1">
         {/* No Pks Intenal Dan Eksternal */}
-        <div className="mb-4 space-y-1.5">
+        <div className="mb-4 space-y-1">
           <Label className="text-primary font-semibold" htmlFor="no_pks_internal">No. PKS Internal</Label>
-          {/* <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" value={nomorPks} readOnly /> */}
-          <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" />
+          <Input type="text" id="no_pks_internal" name="no_pks_internal" className="border border-warning/80" placeholder="No. PKS Internal" value={nomorPks} readOnly />
+          {/* <Input type="text" id="no_pks_internal" name="no_pks_internal" placeholder="No. PKS Internal" /> */}
         </div>
-        <div className="mb-4 space-y-1.5">
+        <div className="mb-4 space-y-1">
           <Label className="text-primary font-semibold" htmlFor="no_pks_eksternal">No. PKS Eksternal</Label>
           <Input type="text" id="no_pks_eksternal" name="no_pks_eksternal" placeholder="No. PKS Eksternal" />
         </div>
       </div>
-      <div className="mb-4 space-y-1.5">
+      <div className="mb-4 space-y-1">
         <Label className="text-primary font-semibold" htmlFor="pj">Penanggung Jawab</Label>
         <Input type="hidden" id="pj" name="pj" defaultValue={selected} />
         <Combobox items={[
@@ -133,7 +141,7 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
           { label: "Immawan Hudayanto, ST", value: "3.901.1209" },
         ]} setSelectedItem={setSelected} selectedItem={selected} placeholder="Pilih Penanggung Jawab" />
       </div>
-      <div className="mb-4 space-y-1.5">
+      <div className="mb-4 space-y-1">
         <Label className="text-primary font-semibold" htmlFor="file">File</Label>
         <Input type="file" id="file" name="file" placeholder="File" />
       </div>
@@ -147,7 +155,7 @@ const FormAddPks = ({ typeSelected, tglAwal, setTglAwal, lastNomor }: FormAddPks
           ) : 'Simpan'}
         </Button>
       </div>
-    </form>
+    </form >
   )
 }
 

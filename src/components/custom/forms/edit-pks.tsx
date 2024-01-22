@@ -25,6 +25,16 @@ const FormEditPks = (props: Props) => {
     const session = await getSession();
     const d = new FormData(e.target);
 
+    // split no_pks_internal by / and get the last index
+    const current2DigitYear = new Date().getFullYear().toString().slice(0, 2);
+    const lastNomor = d.get('no_pks_internal')?.toString().split('/').pop();
+    
+    // firs 2 digit of lastNomor is date, second 2 digit is month, and the rest is year (yy)
+    const tgl_terbit = current2DigitYear + lastNomor?.slice(4, 6) + '-' + lastNomor?.slice(2, 4) + '-' + lastNomor?.slice(0, 2);
+
+    // set tgl_terbit to FormData
+    d.set('tgl_terbit', tgl_terbit);
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks/${props.pks?.id}`, {
       method: 'POST',
       body: d,
@@ -70,6 +80,9 @@ const FormEditPks = (props: Props) => {
           <Label className="text-primary font-semibold" htmlFor="tanggal_akhir">Tanggal Ahir</Label>
           <Input type="date" id="tanggal_akhir" name="tanggal_akhir" placeholder="Tanggal Ahir" defaultValue={props.pks?.tanggal_akhir} />
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 gap-y-1">
         {/* No Pks Intenal Dan Eksternal */}
         <div className="mb-4 space-y-1.5">
           <Label className="text-primary font-semibold" htmlFor="no_pks_internal">No. PKS Internal</Label>
