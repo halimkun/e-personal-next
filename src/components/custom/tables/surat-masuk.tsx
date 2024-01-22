@@ -1,9 +1,8 @@
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "../inputs/combo-box";
-import { Badge } from "@/components/ui/badge";
-import { IconBrandWhatsapp, IconFile, IconFileSearch, IconFileText, IconHash, IconMail, IconPrinter } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { ColumnsSuratMasuk } from "@/components/utils/columns/surat-masuk";
+import { IconBrandWhatsapp, IconFile, IconFileText, IconMail, IconPrinter } from "@tabler/icons-react";
 
 import LaravelPagingx from "@/components/custom-ui/laravel-paging";
 
@@ -36,74 +35,8 @@ function getIconFromKetSurat(ket_surat: string) {
   }
 }
 
-const TableSuratMasuk = ({ data,
-  filterData,
-  setFilterData,
-  isValidating,
-  setIsOpenPreview = () => { },
-  setSelectedItem = () => { },
-  onRowClick = () => { },
-  lastColumnAction
-}: tableSuratMasukProps) => {
-
-  const columns = [
-    {
-      name: 'No SIMRS',
-      selector: 'no_simrs',
-      data: (row: any) => <Badge variant={'outline'}>{new Date(row.no_simrs).toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' })}</Badge>,
-    },
-    {
-      name: 'Perihal',
-      selector: 'perihal',
-      enableHiding: false,
-      data: (row: any) => (
-        <div className="flex flex-row items-center gap-4">
-          <div>{row.ket ? getIconFromKetSurat(row.ket) : null}</div>
-          <div className="flex flex-col">
-            <span className="font-semibold">{row.perihal}</span>
-            <div>
-              {row.no_surat ? <Badge variant={'secondary'} className="mt-1">{row.no_surat}</Badge> : null}
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      name: 'Pengirim',
-      selector: 'pengirim',
-      data: (row: any) => <p className="text-sm">{row.pengirim}</p>,
-    },
-    {
-      name: 'Tanggal Surat',
-      selector: 'tgl_surat',
-      data: (row: any) => row.tgl_surat && row.tgl_surat != '0000-00-00' ? <p className="text-sm whitespace-nowrap">{new Date(row.tgl_surat).toLocaleDateString('id-ID', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      })}</p> : '-',
-    },
-    {
-      name: <IconHash className="w-5 h-5" />,
-      selector: 'preview',
-      data: (row: any) => (
-        <div className="w-full flex justify-end">
-          <Button
-            size="icon"
-            className="h-6 w-6"
-            disabled={!row.berkas || row.berkas == '-' || row.berkas == '' || row.berkas == ' '}
-            onClick={(e) => {
-              setSelectedItem(row)
-              setIsOpenPreview(true)
-            }}
-          >
-            <IconFileSearch className="w-4 h-4" />
-          </Button>
-        </div>
-      ),
-    }
-  ]
-
+const TableSuratMasuk = ({ data, filterData, setFilterData, isValidating, setIsOpenPreview = () => { }, setSelectedItem = () => { }, onRowClick = () => { }, lastColumnAction }: tableSuratMasukProps) => {
+  const columns = ColumnsSuratMasuk({ setIsOpenPreview, setSelectedItem, getIconFromKetSurat })
   return (
     <>
       <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 dark:bg-gray-900/50 border border-border">
