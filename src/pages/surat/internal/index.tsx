@@ -185,19 +185,14 @@ const SuratInternal: NextPageWithLayout = () => {
       name: 'Action',
       selector: 'action',
       enableHiding: true,
-      style: [
-        'text-right'
-      ],
       data: (row: any) => (
-        <div className='space-x-1 text-right whitespace-nowrap'>
+        <div className='flex gap-1 justify-end items-center'>
           <Dialog>
-            <DialogTrigger>
-              <Button variant="ghost" className="h-8 w-8 p-0" size='icon' onClick={() => {
-                setStatus(row.status)
-              }}>
-                <span className="sr-only">Open menu</span>
-                <IconTag className="w-5 h-5" />
-              </Button>
+            <DialogTrigger className='h-8 w-8 rounded-lg bg-transparent hover:bg-foreground/5 flex items-center justify-center' onClick={() => {
+              setStatus(row.status)
+            }}>
+              <span className="sr-only">Open menu</span>
+              <IconTag className="w-5 h-5" />
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -211,11 +206,9 @@ const SuratInternal: NextPageWithLayout = () => {
 
 
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0" size='icon'>
-                <span className="sr-only">Open menu</span>
-                <IconDotsVertical className="w-5 h-5" />
-              </Button>
+            <DropdownMenuTrigger className='h-8 w-8 rounded-lg bg-transparent hover:bg-foreground/5 flex items-center justify-center'>
+              <span className="sr-only">Open menu</span>
+              <IconDotsVertical className="w-5 h-5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
