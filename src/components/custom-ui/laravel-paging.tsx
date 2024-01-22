@@ -34,17 +34,16 @@ const LaravelPagingx = ({
         <TableHeader>
           <TableRow>
             {columnsData.map((column: any) => (
-              <TableHead key={column.name}>{column.name}</TableHead>
+              <TableHead key={column.name.toString().replace(/\s+/g, '-').toLowerCase()}>{column.name}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
         <TableBody>
           {isValidating ? (
-            // Number(data.per_page)
             [...Array(Number(data.per_page))].map((_, index) => (
               <TableRow key={index}>
                 {columnsData.map((column: any) => (
-                  <TableCell key={column.selector}>
+                  <TableCell key={column.selector.toString().replace(/\s+/g, '-').toLowerCase() + "-" + index}>
                     <Skeleton className="w-full h-4" />
                   </TableCell>
                 ))}
@@ -58,7 +57,7 @@ const LaravelPagingx = ({
                 ) : (() => { })
               }>
                 {columnsData.map((column: any, index: number) => (
-                  <TableCell key={column.selector} onClick={
+                  <TableCell key={column.selector.toString().replace(/\s+/g, '-').toLowerCase()} onClick={
                     lastColumnAction ? (
                       index === columnsData.length - 1 ? (() => { }) : (onRowClick ? (() => onRowClick?.(d)) : (() => { }))
                     ) : (() => { })

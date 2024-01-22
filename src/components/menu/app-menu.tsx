@@ -79,24 +79,23 @@ const AppMenu = () => {
       <div className="my-4">
         {sidebarMenu.map((menu: any) => (
           Object.keys(menu).map((key) => (
-            <>
-              <ul className="space-y-1 py-2 font-medium">
-                <li className="mb-2 px-4 text-xs tracking-normal uppercase text-slate-600 dark:text-slate-400" key={key}>{key}</li>
-                {menu[key].map((item: any) => (
-                  <li key={item.path} className="ml-4">
-                    <Button variant="ghost" className={cn(
-                      'w-full justify-start',
-                      pathname.startsWith(item.path) && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
-                    )} asChild>
-                      <Link href={item.path}>
-                        {item.icon}
-                        {item.name}
-                      </Link>
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </>
+            <ul className="space-y-1 py-2 font-medium" key={key + Math.random().toString(36).substring(7)}>
+              {/* combin with random string */}
+              <li className="mb-2 px-4 text-xs tracking-normal uppercase text-slate-600 dark:text-slate-400" key={key + Math.random().toString(36).substring(7)}>{key}</li>
+              {menu[key].map((item: any) => (
+                <li key={item.path} className="ml-4">
+                  <Button variant="ghost" className={cn(
+                    'w-full justify-start',
+                    pathname.startsWith(item.path) && 'bg-primary text-primary-foreground dark:bg-primary dark:text-secondary-foreground'
+                  )} asChild>
+                    <Link href={item.path}>
+                      {item.icon}
+                      {item.name}
+                    </Link>
+                  </Button>
+                </li>
+              ))}
+            </ul>
           ))
         ))}
       </div>

@@ -1,6 +1,7 @@
-import React, { ReactElement, useEffect } from "react"
+import React, { ReactElement, useEffect, useRef, useState } from "react"
 
 import useSWR from "swr"
+import dynamic from "next/dynamic"
 import AppLayout from "@/components/layouts/app"
 import Loading1 from "@/components/custom/icon-loading"
 import TableSuratMasuk from "@/components/custom/tables/surat-masuk"
@@ -10,20 +11,21 @@ import { getSession } from "next-auth/react"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card"
-import dynamic from "next/dynamic"
 
 const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
 const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
 const DialogAddSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-add-surat-masuk'), { ssr: false })
 
 const SuratMasukPage: NextPageWithLayout = () => {
-  const delayDebounceFn = React.useRef<any>(null)
-  const [selectedItem, setSelectedItem] = React.useState<any>({})
-  const [isOpenFormAdd, setIsOpenFormAdd] = React.useState(false)
-  const [isOpenPreview, setIsOpenPreview] = React.useState(false)
-  const [isOpenMenu, setIsOpenMenu] = React.useState(false)
-  const [filterData, setFilterData] = React.useState({})
-  const [filterQuery, setFilterQuery] = React.useState('')
+  const [selectedItem, setSelectedItem] = useState<any>({})
+  const [isOpenFormAdd, setIsOpenFormAdd] = useState(false)
+  const [isOpenPreview, setIsOpenPreview] = useState(false)
+  const [isOpenMenu, setIsOpenMenu] = useState(false)
+  
+
+  const delayDebounceFn = useRef<any>(null)
+  const [filterData, setFilterData] = useState({})
+  const [filterQuery, setFilterQuery] = useState('')
 
   const fetcher = async (url: any) => {
     const session = await getSession()
@@ -106,7 +108,7 @@ const SuratMasukPage: NextPageWithLayout = () => {
           }}
         />
       </div>
-      
+
       {/* Add Surat masuk */}
       <DialogAddSuratMasuk
         data={selectedItem}
@@ -115,7 +117,7 @@ const SuratMasukPage: NextPageWithLayout = () => {
         mutate={mutate}
       />
 
-       {/* Preview */}
+      {/* Preview */}
       <DialogPreviewSuratMasuk
         isOpenPreview={isOpenPreview}
         setIsOpenPreview={setIsOpenPreview}
