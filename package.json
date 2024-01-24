@@ -65,7 +65,8 @@
     "react-pdf-html": "^1.1.18",
     "swr": "^2.2.4",
     "tailwind-merge": "^2.0.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.0.0"
   },
   "devDependencies": {
     "@types/draftjs-to-html": "^0.8.4",
