@@ -14,10 +14,8 @@ import { NextPageWithLayout } from "@/pages/_app"
 import { IconArrowLeft, IconLoader } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-const DetailSuratInternal: NextPageWithLayout = () => {
+const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
-  const nomor = route.query.nomor?.toString().replace(/_/g, '/')
-
   const fetcher = async (url: string) => {
     const session = await getSession()
     if (route.isReady) {
@@ -128,4 +126,15 @@ DetailSuratInternal.getLayout = function getLayout(page: ReactElement) {
     <AppLayout>{page}</AppLayout>
   )
 }
+
+export async function getServerSideProps(ctx: any) {
+  const nomor = ctx.query.nomor?.toString().replace(/_/g, '/')
+
+  return {
+    props: {
+      nomor: nomor
+    }
+  }
+}
+
 export default DetailSuratInternal
