@@ -15,11 +15,14 @@ import { cn } from '@/lib/utils';
 import { Badge } from "@/components/ui/badge"
 import { getDate, getTime } from '@/lib/date';
 import { Button } from "@/components/ui/button"
-import { IconPlus, IconDotsVertical, IconTag } from "@tabler/icons-react"
+import { IconPlus, IconDotsVertical, IconTag, IconSearch } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { IconEditCircle } from '@tabler/icons-react';
+import { IconPrinter } from '@tabler/icons-react';
+import toast from 'react-hot-toast';
 
 
 const SuratInternal: NextPageWithLayout = () => {
@@ -186,7 +189,7 @@ const SuratInternal: NextPageWithLayout = () => {
       selector: 'action',
       enableHiding: true,
       data: (row: any) => (
-        <div className='flex gap-1 justify-end items-center'>
+        <div className='flex gap-0.5 justify-end items-center'>
           <Dialog>
             <DialogTrigger className='h-8 w-8 rounded-lg bg-transparent hover:bg-foreground/5 flex items-center justify-center' onClick={() => {
               setStatus(row.status)
@@ -211,13 +214,19 @@ const SuratInternal: NextPageWithLayout = () => {
               <IconDotsVertical className="w-5 h-5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Files</DropdownMenuLabel>
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => toast.error('dalam pengembangan')}>
+                  <IconPrinter className="w-4 h-4 me-2" /> Cetak Undangan
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => route.push(`/surat/internal/${row.no_surat.split('/').join('_')}/edit`)}>
-                  Edit
+                  <IconEditCircle className="w-4 h-4 me-2" /> Edit Surat
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => route.push(`/surat/internal/${row.no_surat.split('/').join('_')}/detail`)}>
-                  Detail
+                  <IconSearch className="w-4 h-4 me-2" /> Detail Surat
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
