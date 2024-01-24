@@ -8,18 +8,26 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/router"
-import { IconArrowLeft } from "@tabler/icons-react"
+import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react"
 import { NextPageWithLayout } from "@/pages/_app"
-import { ReactElement, useState } from "react"
+import { ReactElement, useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import SelectPenanggungJawab from '@/components/custom/inputs/penanggung-jawab-select'
 import { toast } from '@/components/ui/use-toast'
-import Loading1 from '@/components/custom/icon-loading'
 import { getSession } from 'next-auth/react'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
-const EditSuratInternal: NextPageWithLayout = () => {
+
+import Loading1 from '@/components/custom/icon-loading'
+import SelectPenanggungJawab from '@/components/custom/inputs/penanggung-jawab-select'
+import { Textarea } from '@/components/ui/textarea'
+
+const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
-  const nomor = route.query.nomor?.toString().replace(/_/g, '/')
+  // const nomor = route.query.nomor?.toString().replace(/_/g, '/')
   const [penanggungJawab, setPenanggungJawab] = useState<any>("")
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
   const [tempat, setTempat] = useState("")
@@ -63,17 +71,14 @@ const EditSuratInternal: NextPageWithLayout = () => {
       })
     }
   }
-  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/detail`, detailsFetcher)
+  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/detail`, detailsFetcher)
 
   if (error) return (
     <div className="flex flex-col items-start justify-center h-full gap-4">
       <div className="text-2xl font-bold">Error {error.message}</div>
     </div>
   )
-  if (!data) return (
-    <Loading1 height={8} width={8} />
-  )
-
+  if (isLoading) return <Loading1 height={8} width={8} />
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
@@ -168,11 +173,9 @@ const EditSuratInternal: NextPageWithLayout = () => {
     }
   ]
 
-  // setPenerima(data?.data?.penerima.map((item: any) => item.penerima))
-
   return (
-    <Card>
-      <CardHeader>
+    <div className="">
+      <div className="mb-5">
         <div className="flex items-center gap-4">
           <Button variant="outline" size='icon' onClick={() => route.push('/surat/internal')}>
             <IconArrowLeft className="rotate-0 scale-100 transition-all" />
@@ -182,58 +185,74 @@ const EditSuratInternal: NextPageWithLayout = () => {
             <CardDescription>Edit detail Surat Internal dengan nomor <Badge variant='outline' className="ml-2">{nomor}</Badge> </CardDescription>
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <form action="#!" method="post" onSubmit={onSubmit}>
-          <Input type="hidden" name="old_nomor" value={nomor} />
-          <div className="w-full space-y-1">
-              <Label className="" htmlFor="no_surat">Nomor Surat</Label>
+      </div>
+
+      <form action="#!" method="post" onSubmit={onSubmit} className='flex gap-4 items-start'>
+        <Card className='top-16 sticky'>
+          <CardHeader>
+            <CardTitle>Detail Surat</CardTitle>
+            <CardDescription>Isi detail surat internal.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Input type="hidden" name="old_nomor" value={nomor} />
+            <div className="w-full space-y-1 mb-3">
+              <Label className="text-primary" htmlFor="no_surat">Nomor Surat</Label>
               <Input type="text" name="no_surat" placeholder="no_surat" id="no_surat" value={noSurat} onChange={(e) => setNoSurat(e.target.value)} />
             </div>
-          <div className="grid gap-3 py-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="w-[60%] space-y-1">
-                <Label className="" htmlFor="tanggal">Tannggal</Label>
-                <Input type="datetime-local" name="tanggal" placeholder="tanggal" id="tanggal" defaultValue={data?.data?.tanggal} />
+            <div className="space-y-1 mb-3">
+              <div className="flex items-center justify-between pr-1">
+                <Label className="text-primary" htmlFor="tanggal">Tannggal Kegiatan</Label>
+                <Popover>
+                  <PopoverTrigger>
+                    <IconInfoCircle className="cursor-pointer stroke-danger animate-pulse" size={18} strokeWidth={2} />
+                  </PopoverTrigger>
+                  <PopoverContent className="text-sm">
+                    <strong>Tanggal Kegiatan : </strong> adalah tanggal yang digunakan untuk kegiatan yang akan dilaksanakan, tanggal ini tidak akah berpengaruh pada penomoran surat. <br /><br />
+                    tanggal pada nomor surat akan diambil dari tanggal surat dibuat.
+                  </PopoverContent>
+                </Popover>
               </div>
-              <div className="w-full space-y-1">
-                <Label className="" htmlFor="PJ">Penanggung Jawab</Label>
-                <Input type="hidden" name="pj" />
-                <SelectPenanggungJawab setSelectedItem={setPenanggungJawab} selectedItem={penanggungJawab} />
-              </div>
-              <div className="w-full space-y-1">
-                <Label className="" htmlFor="tempat">Tempat</Label>
-                <Input type="text" name="tempat" placeholder="Tempat" id="tempat" value={tempat} onChange={(e) => setTempat(e.target.value)} />
-              </div>
+              <Input type="datetime-local" name="tanggal" placeholder="tanggal" id="tanggal" defaultValue={data?.data?.tanggal} />
             </div>
-            <div className="w-full space-y-1">
-              <Label className="" htmlFor="perihal">Perihal</Label>
-              <Input type="text" name="perihal" placeholder="perihal" id="perihal" value={perihal} onChange={(e) => setPerihal(e.target.value)} />
+            <div className="w-full space-y-1 mb-3">
+              <Label className="text-primary" htmlFor="PJ">Penanggung Jawab</Label>
+              <Input type="hidden" name="pj" />
+              <SelectPenanggungJawab setSelectedItem={setPenanggungJawab} selectedItem={penanggungJawab} />
             </div>
-          </div>
+            <div className="w-full space-y-1 mb-3">
+              <Label className="text-primary" htmlFor="tempat">Tempat</Label>
+              <Input type="text" name="tempat" placeholder="Tempat" id="tempat" value={tempat} onChange={(e) => setTempat(e.target.value)} />
+            </div>
+            <div className="w-full space-y-1 mb-3">
+              <Label className="text-primary" htmlFor="perihal">Perihal</Label>
+              {/* <Input type="text" name="perihal" placeholder="perihal" id="perihal" value={perihal} onChange={(e) => setPerihal(e.target.value)} /> */}
+              {/* change to textarea */}
+              <Textarea name="perihal" placeholder="Perihal Surat . . ." id="perihal" value={perihal} onChange={(e) => setPerihal(e.target.value)} />
+            </div>
 
-          <div className="mt-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Pilih Karyawan</CardTitle>
-                <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <LaravelPagination
-                  columns={KaryawanColumns}
-                  dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
-                  fetcher={{ method: "GET" }}
-                />
-              </CardContent>
-            </Card>
-          </div>
+            <div className="mt-4 flex justify-end">
+              <Button type="submit">Simpan</Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <div className="mt-4 flex justify-end">
-            <Button type="submit">Simpan</Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Pilih Karyawan</CardTitle>
+              <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <LaravelPagination
+                columns={KaryawanColumns}
+                dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
+                fetcher={{ method: "GET" }}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </form>
+    </div>
   )
 }
 
@@ -242,4 +261,14 @@ EditSuratInternal.getLayout = function getLayout(page: ReactElement) {
     <AppLayout>{page}</AppLayout>
   )
 }
+
+export async function getServerSideProps(ctx: any) {
+  const nomor = ctx.query.nomor?.toString().replace(/_/g, '/') ?? ""
+  return {
+    props: {
+      nomor: nomor
+    }
+  }
+}
+
 export default EditSuratInternal

@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -18,8 +17,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 
 export default function FormAddSuratInternal(penanggungJawab: any) {
@@ -137,7 +141,18 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
             <div className="grid gap-3 py-4 w-full">
               <div className="flex flex-col gap-4">
                 <div className="space-y-1">
-                  <Label className="text-primary" htmlFor="tanggal">Tannggal</Label>
+                  <div className="flex items-center justify-between pr-1">
+                    <Label className="text-primary" htmlFor="tanggal">Tannggal Kegiatan</Label>
+                    <Popover>
+                      <PopoverTrigger>
+                        <IconInfoCircle className="cursor-pointer stroke-danger animate-pulse" size={18} strokeWidth={2} />
+                      </PopoverTrigger>
+                      <PopoverContent className="text-sm">
+                        <strong>Tanggal Kegiatan : </strong> adalah tanggal yang digunakan untuk kegiatan yang akan dilaksanakan, tanggal ini tidak akah berpengaruh pada penomoran surat. <br /><br />
+                        tanggal pada nomor surat akan diambil dari tanggal surat dibuat.
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                   <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
                 </div>
                 <div className="w-full space-y-1">
