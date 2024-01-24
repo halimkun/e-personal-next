@@ -1,11 +1,4 @@
-import PDFFile from '@/templates/pdf/spo'
-import AppLayout from '@/components/layouts/app';
 import SPOHtml from '@/templates/pdf/spo-html';
-
-import { createRoot } from 'react-dom/client'
-import { PDFViewer } from '@react-pdf/renderer';
-import { ReactElement, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 
 const RenderPage = ({ data, isMobile }: any) => {

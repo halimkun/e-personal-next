@@ -9,7 +9,6 @@ import { IconDownload, IconEdit, IconFileSearch, IconTrash } from "@tabler/icons
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { getFullDate } from "@/lib/date"
-import { PDFDownloadLink, Document } from "@react-pdf/renderer"
 import SeparatorWithText from "../separator-with-text"
 import { toast } from "react-hot-toast"
 import { useRouter } from "next/router"
@@ -106,21 +105,11 @@ const DialogMenuSpo = (props: DialogMenuSpoProps) => {
             <IconFileSearch className="h-4 w-4" /> Lihat SPO
           </Button>
           {spoDetail && (
-            <PDFDownloadLink document={spoDetail ? <PDFFile detail={spoDetail} key={spoDetail?.nomor} /> : <Document></Document>} fileName={`SPO-${spo.nomor}.pdf`}>
-              {({ blob, url, loading, error }) => {
-                if (error) return 'Terjadi kesalahan saat membuat dokumen'
-
-                return loading ? (
-                  <Button variant="outline" size="sm" className="flex items-center gap-2" disabled>
-                    <IconDownload className="h-4 w-4" /> Loading...
-                  </Button>
-                ) : (
-                  <Button variant="outline" size="sm" className="flex items-center gap-2">
-                    <IconDownload className="h-4 w-4" /> Download
-                  </Button>
-                )
-              }}
-            </PDFDownloadLink>
+            // `${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/render/{nomorspo}
+            // download link to that url
+            <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/render/${spo.nomor.replace(/\//g, '--')}`)}>
+              <IconDownload className="h-4 w-4" /> Download SPO
+            </Button>
           )}
         </div>
       </DialogContent>
