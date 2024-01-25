@@ -8,6 +8,7 @@ import { IconDeviceSdCard } from "@tabler/icons-react"
 import { getSession } from "next-auth/react"
 import toast from "react-hot-toast"
 import Loading1 from "../icon-loading"
+import { useRouter } from "next/router"
 
 interface formAddSuratMasukProps {
   data?: any
@@ -29,6 +30,8 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
     mutate = () => { },
     setIsOpenFormAdd = () => { }
   } = props
+
+  const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
   const [no_simrs, setNoSimrs] = useState<any>()
@@ -55,7 +58,10 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
     if (jsonData.success) {
       setIsOpenFormAdd(false)
       toast.success(jsonData.message)
-      mutate()
+      // mutate()
+
+      // push to surat/masuk
+      router.push('/surat/masuk')
     } else {
       for (const [key, value] of Object.entries(jsonData.message)) {
         const val = value as string[]
