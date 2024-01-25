@@ -24,7 +24,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
   }
 
   return (
-    <>
+    <div className="bg-background dark:bg-background">
       <div className="hidden md:block onPrint">
         <table className="w-full border-collapse border border-border tableSpo">
           <thead>
@@ -189,7 +189,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
           <span className="text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
