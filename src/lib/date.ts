@@ -23,3 +23,13 @@ export function getFullDate(date: Date | string) {
     year: "numeric",
   })
 }
+
+// get full date with day name
+export function getFullDateWithDayName(date: Date | string) {
+  return new Date(date).toLocaleString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })
+}

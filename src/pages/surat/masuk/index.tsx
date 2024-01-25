@@ -4,27 +4,27 @@ import useSWR from "swr"
 import dynamic from "next/dynamic"
 import AppLayout from "@/components/layouts/app"
 import Loading1 from "@/components/custom/icon-loading"
-import TableSuratMasuk from "@/components/custom/tables/surat-masuk"
 
 import { NextPageWithLayout } from "@/pages/_app"
 import { getSession } from "next-auth/react"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card"
+import { useRouter } from "next/router"
 
 const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
 const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
-const DialogAddSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-add-surat-masuk'), { ssr: false })
+const TableSuratMasuk = dynamic(() => import('@/components/custom/tables/surat-masuk'), { ssr: false })
 
 const SuratMasukPage: NextPageWithLayout = () => {
+  const router = useRouter()
+
   const [selectedItem, setSelectedItem] = useState<any>({})
-  const [isOpenFormAdd, setIsOpenFormAdd] = useState(false)
   const [isOpenPreview, setIsOpenPreview] = useState(false)
   const [isOpenMenu, setIsOpenMenu] = useState(false)
-  
 
   const delayDebounceFn = useRef<any>(null)
-  const [filterData, setFilterData] = useState({})
+  const [fltrData, setFltrData] = useState({})
   const [filterQuery, setFilterQuery] = useState('')
 
   const fetcher = async (url: any) => {
@@ -53,23 +53,23 @@ const SuratMasukPage: NextPageWithLayout = () => {
 
   useEffect(() => {
     let fq = ''
-    for (const [key, value] of Object.entries(filterData)) {
+    for (const [key, value] of Object.entries(fltrData)) {
       if (value) {
         fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
       }
     }
 
     setFilterQuery(fq)
-  }, [filterData])
+  }, [fltrData])
 
   useEffect(() => {
     if (delayDebounceFn.current) {
       clearTimeout(delayDebounceFn.current);
     }
 
-    delayDebounceFn.current = setTimeout(() => {
-      mutate();
-    }, 250);
+    delayDebounceFn.current = setTimeout(async () => {
+      await mutate();
+    }, 800);
 
     return () => clearTimeout(delayDebounceFn.current);
   }, [filterQuery]);
@@ -86,18 +86,15 @@ const SuratMasukPage: NextPageWithLayout = () => {
             <CardTitle>Surat Masuk</CardTitle>
             <CardDescription>Data Surat Masuk | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
           </div>
-          <Button size={'icon'} className="w-7 h-7" onClick={() => {
-            setIsOpenFormAdd(true)
-            setSelectedItem({})
-          }}>
+          <Button size={'icon'} className="w-7 h-7" onClick={() => router.push('/surat/masuk/create')}>
             <IconPlus className="w-5 h-5" />
           </Button>
         </div>
 
         <TableSuratMasuk
           data={data}
-          filterData={filterData}
-          setFilterData={setFilterData}
+          filterData={fltrData}
+          setFilterData={setFltrData}
           isValidating={isValidating}
           setIsOpenPreview={setIsOpenPreview}
           setSelectedItem={setSelectedItem}
@@ -108,14 +105,6 @@ const SuratMasukPage: NextPageWithLayout = () => {
           }}
         />
       </div>
-
-      {/* Add Surat masuk */}
-      <DialogAddSuratMasuk
-        data={selectedItem}
-        isOpenFormAdd={isOpenFormAdd}
-        setIsOpenFormAdd={setIsOpenFormAdd}
-        mutate={mutate}
-      />
 
       {/* Preview */}
       <DialogPreviewSuratMasuk
@@ -130,7 +119,6 @@ const SuratMasukPage: NextPageWithLayout = () => {
         isOpenMenu={isOpenMenu}
         setIsOpenMenu={setIsOpenMenu}
         selectedItem={selectedItem}
-        setIsOpenFormAdd={setIsOpenFormAdd}
       />
     </>
   )
