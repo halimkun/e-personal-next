@@ -1,5 +1,7 @@
 import FormAddSuratEksternal from "@/components/custom/forms/add-surat-eksternal";
 import AppLayout from "@/components/layouts/app";
+import useSWR from "swr";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { NextPageWithLayout } from "@/pages/_app"
@@ -7,7 +9,6 @@ import { IconArrowLeft, IconLoader } from "@tabler/icons-react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ReactElement, useState } from "react";
-import useSWR from "swr";
 
 const SuratEksternal: NextPageWithLayout = () => {
   const route = useRouter();
@@ -53,7 +54,7 @@ const SuratEksternal: NextPageWithLayout = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-3 items-start">
-      <Card className="max-w-screen">
+      <Card className="w-full">
         <CardHeader>
           <div className="flex items-center gap-4">
             <Button variant="outline" size='icon' onClick={() => route.push('/surat/eksternal')}>
@@ -70,7 +71,7 @@ const SuratEksternal: NextPageWithLayout = () => {
         </CardContent>
       </Card>
 
-      <Card className="max-w-sm sticky top-[4.5rem]">
+      <Card className="w-[50%] sticky top-[4.5rem]">
         <CardHeader>
           <CardTitle className="text-primary">Catatan</CardTitle>
           <CardDescription>Harap mengisi data dengan benar dan teliti.</CardDescription>
