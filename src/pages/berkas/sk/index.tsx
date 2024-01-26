@@ -2,19 +2,19 @@ import React, { ReactElement, useEffect } from "react"
 
 import useSWR from "swr"
 import dynamic from "next/dynamic"
+import toast from "react-hot-toast"
 import AppLayout from "@/components/layouts/app"
-import Loading1 from "@/components/custom/icon-loading"
-import TableSk from "@/components/custom/tables/table-sk"
 
 import { getSession } from "next-auth/react"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card"
-import toast from "react-hot-toast"
 
 const DialogEditSk = dynamic(() => import('@/components/custom/modals/dialog-edit-sk'), { ssr: false })
 const DialogMenuSk = dynamic(() => import('@/components/custom/modals/dialog-menu-sk'), { ssr: false })
 const DialogAddSk = dynamic(() => import('@/components/custom/modals/dialog-add-sk'), { ssr: false })
+const TableSk = dynamic(() => import('@/components/custom/tables/table-sk'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
 
 const SKPage = () => {
   const delayDebounceFn = React.useRef<any>(null)
