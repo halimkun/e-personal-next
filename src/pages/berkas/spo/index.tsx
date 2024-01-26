@@ -1,7 +1,7 @@
+import useSWR from "swr"
 import dynamic from "next/dynamic"
 import toast from "react-hot-toast"
 import AppLayout from "@/components/layouts/app"
-import FormAddSpo from "@/components/custom/forms/add-spo"
 
 import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
@@ -12,13 +12,14 @@ import { ReactElement, useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { IconFileSymlink, IconPlus } from "@tabler/icons-react"
-import TabelSPO from "@/components/custom/tables/spo"
-import useSWR from "swr"
-import Loading1 from "@/components/custom/icon-loading"
 
 const DialogEditSpo = dynamic(() => import('@/components/custom/modals/dialog-edit-spo'), { ssr: false })
 const DialogMenuSpo = dynamic(() => import('@/components/custom/modals/dialog-menu-spo'), { ssr: false })
 const DialogViewSpo = dynamic(() => import('@/components/custom/modals/view-spo'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
+const TabelSPO = dynamic(() => import('@/components/custom/tables/spo'), { ssr: false })
+const FormAddSpo = dynamic(() => import('@/components/custom/forms/add-spo'), { ssr: false })
+
 
 const SpoPage = () => {
   const router = useRouter()
