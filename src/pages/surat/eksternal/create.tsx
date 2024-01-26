@@ -71,7 +71,7 @@ const SuratEksternal: NextPageWithLayout = () => {
         </CardContent>
       </Card>
 
-      <Card className="w-[50%] sticky top-[4.5rem]">
+      <Card className="w-[40%] sticky top-[4.5rem]">
         <CardHeader>
           <CardTitle className="text-primary">Catatan</CardTitle>
           <CardDescription>Harap mengisi data dengan benar dan teliti.</CardDescription>

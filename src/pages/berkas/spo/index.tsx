@@ -77,7 +77,9 @@ const SpoPage = () => {
       }
     }
 
-    getSpoDetail()
+    if (spo.nomor) {
+      getSpoDetail()
+    }
 
   }, [spo.nomor])
 
@@ -95,6 +97,8 @@ const SpoPage = () => {
       const data = await res.json()
       if (data.success) {
         setLastNomor(data.data)
+
+        console.log(data.data)
       }
     }
 
