@@ -2,12 +2,8 @@ import { NextPageWithLayout } from "../_app";
 import { ReactElement, useEffect, useRef, useState } from "react";
 
 import useSWR from "swr";
+import dynamic from "next/dynamic";
 import AppLayout from "@/components/layouts/app";
-import TabelPKS from "@/components/custom/tables/pks";
-import Loading1 from "@/components/custom/icon-loading";
-import FormAddPks from "@/components/custom/forms/add-pks";
-import DialogEditPks from "@/components/custom/modals/dialog-edit-pks";
-import DialogPreviewBerkas from "@/components/custom/modals/dialog-preview-berkas";
 
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -20,6 +16,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
+const DialogPreviewBerkas = dynamic(() => import('@/components/custom/modals/dialog-preview-berkas'), { ssr: false })
+const DialogEditPks = dynamic(() => import('@/components/custom/modals/dialog-edit-pks'), { ssr: false })
+const FormAddPks = dynamic(() => import('@/components/custom/forms/add-pks'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
+const TabelPKS = dynamic(() => import('@/components/custom/tables/pks'), { ssr: false })
 
 const BerkasKerjasama: NextPageWithLayout = () => {
   const router = useRouter();
