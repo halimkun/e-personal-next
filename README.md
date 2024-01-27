@@ -1,14 +1,3 @@
-<!-- style for columns and row -->
-<style>
-  .row {
-    display: flex;
-  }
-  .column {
-    flex: 50%;
-    padding: 5px;
-  }
-</style>
-
 ## E-Personal
 e-personal adalah kepegawaian berbasis web yang dibuat dengan menggunakan next.js. fitur yang ada pada e-personal adalah sebagai berikut:
 
@@ -21,15 +10,9 @@ aplikasi e-personal ini terintegrasi dengan aplikasi lain seperti aplikasi servi
 
 <!-- screenshoot -->
 ## Screenshoot
-<!-- 2 column -->
-<div class="row">
-  <div class="column">
-    <img src="./demo/demo-1.png" alt="demo-1" width="100%">
-  </div>
-  <div class="column">
-    <img src="./demo/demo-2.png" alt="demo-2" width="100%">
-  </div>
-</div>
+|     |     |
+| --- | --- |
+| ![screenshoot-1](./demo/demo-1.png) | ![screenshoot-2](./demo/demo-2.png) |
 
 ## Stack
 - Next.js
@@ -38,3 +21,7 @@ aplikasi e-personal ini terintegrasi dengan aplikasi lain seperti aplikasi servi
 - shadcn
 - react hot toast
 - tabler icons
+
+
+> [!IMPORTANT]
+> Thanks to all creator of library that i use in this project. you can see in `package.json` file. 
