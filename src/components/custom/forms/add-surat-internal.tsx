@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import {
   Card,
@@ -17,22 +16,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react";
+import { IconArrowLeft, IconInfoCircle, IconLoader } from "@tabler/icons-react";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import toast from "react-hot-toast";
 
 
 export default function FormAddSuratInternal(penanggungJawab: any) {
   const router = useRouter();
-  const { data } = useSession();
 
-  const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false)
+
+  const { data } = useSession();
   const [selectedPj, setSelectedPj] = useState("")
   const [withKaryawan, setWithKaryawan] = useState(false)
+  const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
 
   const KaryawanColumns = [
     {
@@ -89,6 +91,8 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
   const onFormAddSuratInternalSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
 
+    setIsLoading(true)
+
     const tanggal = (event.target as any).tanggal.value
     const pj = (event.target as any).pj.value
     const tempat = (event.target as any).tempat.value
@@ -111,21 +115,21 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
     }).then(response => response.json())
 
     if (response.success) {
+      setIsLoading(false)
+      toast.success(response.message)
+      await new Promise(resolve => setTimeout(resolve, 1500))
+
       router.push('/surat/internal')
     } else {
-      toast({
-        title: "Gagal",
-        description: response.message,
-        duration: 2000,
-      })
+      setIsLoading(false)
+      toast.error(response.message)
     }
-
   }
 
   return (
     <form action="#!" method="post" onSubmit={onFormAddSuratInternalSubmit} className="w-full">
       <div className="flex flex-col lg:flex-row items-start justify-start gap-3 w-full">
-        <Card className="w-[75%] lg:sticky lg:top-[68px]">
+        <Card className="w-full lg:w-[75%] lg:sticky lg:top-[68px]">
           <CardHeader className="p-3">
             <div className="flex items-center gap-4">
               <Button variant="outline" size='icon' onClick={() => router.push('/surat/internal')}>
@@ -179,7 +183,12 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
                 {withKaryawan ? 'Hide karyawan' : 'Show Karyawan'}
               </Button>
 
-              <Button type="submit">Simpan</Button>
+              <Button type="submit">
+                <div className="flex gap-3 items-center justify">
+                  {isLoading ? <IconLoader className="animate-spin stroke-current" size={18} strokeWidth={2} /> : null}
+                  {isLoading ? 'Loading...' : 'Buat Surat'}
+                </div>
+              </Button>
             </div>
           </CardContent>
         </Card>

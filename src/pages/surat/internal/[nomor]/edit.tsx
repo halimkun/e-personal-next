@@ -8,11 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/router"
-import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react"
+import { IconArrowLeft, IconInfoCircle, IconLoader } from "@tabler/icons-react"
 import { NextPageWithLayout } from "@/pages/_app"
 import { ReactElement, useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from '@/components/ui/use-toast'
 import { getSession } from 'next-auth/react'
 import {
   Popover,
@@ -24,15 +23,20 @@ import {
 import Loading1 from '@/components/custom/icon-loading'
 import SelectPenanggungJawab from '@/components/custom/inputs/penanggung-jawab-select'
 import { Textarea } from '@/components/ui/textarea'
+import toast from 'react-hot-toast'
 
 const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
+
   // const nomor = route.query.nomor?.toString().replace(/_/g, '/')
-  const [penanggungJawab, setPenanggungJawab] = useState<any>("")
-  const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
+
+  const [onUpdate, setOnUpdate] = useState(false)
+
   const [tempat, setTempat] = useState("")
   const [perihal, setPerihal] = useState("")
   const [noSurat, setNoSurat] = useState(nomor)
+  const [penanggungJawab, setPenanggungJawab] = useState<any>("")
+  const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
 
   const detailsFetcher = async (url: string) => {
     const session = await getSession()
@@ -60,11 +64,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
             setTempat(d.tempat)
             setPenanggungJawab(d.pj)
           } else {
-            toast({
-              title: 'Error',
-              description: data.message,
-              duration: 5000,
-            })
+            toast.error(data.message)
           }
         })
         return response
@@ -85,6 +85,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
     const formData = new FormData(e.target)
     const session = await getSession()
 
+    setOnUpdate(true)
 
     const noSurat = formData.get('no_surat')
 
@@ -108,18 +109,14 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
     }).then(response => response.json())
 
     if (response.success) {
+      setOnUpdate(false)
+      toast.success(response.message)
+      await new Promise(resolve => setTimeout(resolve, 1500))
+
       route.push(`/surat/internal/${noSurat?.toString().replace(/\//g, '_')}/detail`)
-      toast({
-        title: "Berhasil",
-        description: response.message,
-        duration: 2000,
-      })
     } else {
-      toast({
-        title: "Gagal",
-        description: response.message,
-        duration: 2000,
-      })
+      setOnUpdate(false)
+      toast.error(response.message)
     }
   }
 
@@ -231,7 +228,12 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
             </div>
 
             <div className="mt-4 flex justify-end">
-              <Button type="submit">Simpan</Button>
+              <Button type="submit">
+                <div className="flex gap-3 items-center justify">
+                  {onUpdate ? <IconLoader className="animate-spin stroke-current" size={18} strokeWidth={2} /> : null}
+                  {onUpdate ? 'Loading...' : 'Buat Surat'}
+                </div>
+              </Button>
             </div>
           </CardContent>
         </Card>
