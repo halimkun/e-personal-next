@@ -20,7 +20,6 @@ const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr
 const TabelSPO = dynamic(() => import('@/components/custom/tables/spo'), { ssr: false })
 const FormAddSpo = dynamic(() => import('@/components/custom/forms/add-spo'), { ssr: false })
 
-
 const SpoPage = () => {
   const router = useRouter()
   const [spo, setSpo] = useState<any>([])
@@ -98,8 +97,6 @@ const SpoPage = () => {
       const data = await res.json()
       if (data.success) {
         setLastNomor(data.data)
-
-        console.log(data.data)
       }
     }
 
