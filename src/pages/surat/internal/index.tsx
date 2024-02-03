@@ -172,15 +172,14 @@ const SuratInternal: NextPageWithLayout = () => {
       data: (row: any) => <div>{row.tempat}</div>
     },
     {
-      name: 'Tanggal',
+      name: 'Tgl Terbit',
       selector: 'tanggal',
       style: [
         'text-right'
       ],
       data: (row: any) => (
         <div className='text-right text-xs'>
-          <div className="md:whitespace-nowrap">{getDate(row.tanggal)}</div>
-          <div className="md:whitespace-nowrap">{getTime(row.tanggal)}</div>
+          <div className="md:whitespace-nowrap">{getDate(row.tgl_terbit)}</div>
         </div>
       )
     },

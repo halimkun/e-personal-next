@@ -51,9 +51,9 @@ const TabelSuratInternal = ({
           <Input
             type="date"
             className="w-full"
-            name='tanggal'
+            name='tgl_terbit'
             onChange={(e) => {
-              setFilterData({ ...filterData, tanggal: e.target.value })
+              setFilterData({ ...filterData, tgl_terbit: e.target.value })
             }}
           />
         </div>

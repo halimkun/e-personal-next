@@ -1,30 +1,20 @@
-import LaravelPagination from "../../custom-ui/laravel-pagination";
-
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useRouter } from "next/router";
-import { Combobox } from "../inputs/combo-box";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useSession } from "next-auth/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { IconArrowLeft, IconInfoCircle, IconLoader } from "@tabler/icons-react";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+
+import LaravelPagination from "../../custom-ui/laravel-pagination";
 import toast from "react-hot-toast";
 
+import { useRouter } from "next/router";
+import { Label } from "@/components/ui/label"
+import { useSession } from "next-auth/react";
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge";
+import { Combobox } from "../inputs/combo-box";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { IconArrowLeft, IconInfoCircle, IconLoader } from "@tabler/icons-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function FormAddSuratInternal(penanggungJawab: any) {
   const router = useRouter();
@@ -110,7 +100,8 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
         pj: pj,
         tempat: tempat,
         perihal: perihal,
-        karyawan: karyawan
+        karyawan: karyawan,
+        tgl_terbit: (event.target as any).tgl_terbit.value
       })
     }).then(response => response.json())
 
@@ -143,8 +134,22 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
           </CardHeader>
           <CardContent className="p-3">
             <div className="grid gap-3 py-4 w-full">
-              <div className="flex flex-col gap-4">
-                <div className="space-y-1">
+              <div className="flex flex-col lg:flex-row gap-4">
+                <div className="space-y-1 w-full">
+                  <div className="flex items-center justify-between pr-1">
+                    <Label className="text-primary" htmlFor="tgl_terbit">Tannggal Terbit</Label>
+                    <Popover>
+                      <PopoverTrigger>
+                        <IconInfoCircle className="cursor-pointer stroke-danger animate-pulse" size={18} strokeWidth={2} />
+                      </PopoverTrigger>
+                      <PopoverContent className="text-sm">
+                        <strong>Tanggal Terbit : </strong> adalah tanggal yang digunakan untuk keperluan penomoran surat.
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <Input type="date" name="tgl_terbit" placeholder="Tanggal Terbit" id="tgl_terbit" defaultValue={new Date().toISOString().split('T')[0]} />
+                </div>
+                <div className="space-y-1 w-full">
                   <div className="flex items-center justify-between pr-1">
                     <Label className="text-primary" htmlFor="tanggal">Tannggal Kegiatan</Label>
                     <Popover>
@@ -152,18 +157,17 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
                         <IconInfoCircle className="cursor-pointer stroke-danger animate-pulse" size={18} strokeWidth={2} />
                       </PopoverTrigger>
                       <PopoverContent className="text-sm">
-                        <strong>Tanggal Kegiatan : </strong> adalah tanggal yang digunakan untuk kegiatan yang akan dilaksanakan, tanggal ini tidak akah berpengaruh pada penomoran surat. <br /><br />
-                        tanggal pada nomor surat akan diambil dari tanggal surat dibuat.
+                        <strong>Tanggal Kegiatan : </strong> adalah tanggal yang digunakan untuk kegiatan yang akan dilaksanakan, tanggal ini tidak akah berpengaruh pada penomoran surat.
                       </PopoverContent>
                     </Popover>
                   </div>
                   <Input type="datetime-local" name="tanggal" placeholder="Tanggal Kegiatan" id="tanggal" />
                 </div>
-                <div className="w-full space-y-1">
-                  <Label className="text-primary" htmlFor="PJ">Penanggung Jawab</Label>
-                  <Input type="hidden" name="pj" value={selectedPj} />
-                  <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab" />
-                </div>
+              </div>
+              <div className="w-full space-y-1">
+                <Label className="text-primary" htmlFor="PJ">Penanggung Jawab</Label>
+                <Input type="hidden" name="pj" value={selectedPj} />
+                <Combobox items={penanggungJawab.penanggungJawab} setSelectedItem={setSelectedPj} placeholder="Pilih Penanggung Jawab" />
               </div>
               <div className="w-full space-y-1">
                 <Label className="text-primary" htmlFor="tempat">Tempat</Label>
