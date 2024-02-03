@@ -26,7 +26,9 @@ export type OptionType = {
 interface MultiSelectProps {
     options: OptionType[];
     selected: string[];
+    valueSelected?: string[];
     onChange: React.Dispatch<React.SetStateAction<string[]>>;
+    onValueChange?: (value: string[]) => void;
     className?: string;
 }
 
@@ -92,14 +94,23 @@ function MultiSelect({ options, selected, onChange, className, ...props }: Multi
                                             ? selected.filter((item) => item !== option.label)
                                             : [...selected, option.label]
                                     )
+
+                                    if (props.onValueChange && props.valueSelected) {
+                                        props.onValueChange(
+                                            props.valueSelected.includes(option.value)
+                                                ? props.valueSelected.filter((item) => item !== option.value)
+                                                : [...props.valueSelected, option.value]
+                                        )
+                                    }
                                     setOpen(true)
                                 }}
                             >
                                 <IconCheck
                                     className={cn(
                                         "mr-2 h-4 w-4",
-                                        selected.includes(option.label) ?
-                                            "opacity-100" : "opacity-0"
+                                        selected.includes(option.label)
+                                            ? "opacity-100"
+                                            : "opacity-0"
                                     )}
                                 />
                                 {option.label}

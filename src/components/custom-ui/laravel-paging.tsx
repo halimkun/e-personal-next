@@ -50,23 +50,31 @@ const LaravelPagingx = ({
               </TableRow>
             ))
           ) : (
-            data.data.map((d: any) => (
-              <TableRow key={d?.no_surat} className="group" onClick={
-                !lastColumnAction ? (
-                  onRowClick ? (() => onRowClick?.(d)) : (() => { })
-                ) : (() => { })
-              }>
-                {columnsData.map((column: any, index: number) => (
-                  <TableCell key={column.selector.toString().replace(/\s+/g, '-').toLowerCase()} onClick={
-                    lastColumnAction ? (
-                      index === columnsData.length - 1 ? (() => { }) : (onRowClick ? (() => onRowClick?.(d)) : (() => { }))
-                    ) : (() => { })
-                  }>
-                    {column.data(d)}
-                  </TableCell>
-                ))}
+            data.total === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columnsData.length} className="text-center bg-gray-100">
+                  <span className="text-gray-400">No data found</span>
+                </TableCell>
               </TableRow>
-            ))
+            ) : (
+              data.data.map((d: any) => (
+                <TableRow key={d?.no_surat} className="group" onClick={
+                  !lastColumnAction ? (
+                    onRowClick ? (() => onRowClick?.(d)) : (() => { })
+                  ) : (() => { })
+                }>
+                  {columnsData.map((column: any, index: number) => (
+                    <TableCell key={column.selector.toString().replace(/\s+/g, '-').toLowerCase()} onClick={
+                      lastColumnAction ? (
+                        index === columnsData.length - 1 ? (() => { }) : (onRowClick ? (() => onRowClick?.(d)) : (() => { }))
+                      ) : (() => { })
+                    }>
+                      {column.data(d)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )
           )}
         </TableBody>
       </Table>
