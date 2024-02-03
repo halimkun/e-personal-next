@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate, IconMailDown } from '@tabler/icons-react';
+import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate, IconMailDown, IconNote } from '@tabler/icons-react';
 import { IconMailShare } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/router";
@@ -60,6 +60,16 @@ const AppMenu = () => {
           "icon": <IconFilePower className="w-5 h-5 mr-2" />,
         }
       ],
+    },
+
+    {
+      "lainnya" : [
+        {
+          "name": "Memo Internal",
+          "path": "/memo/internal",
+          "icon": <IconNote className="w-5 h-5 mr-2" />,
+        }
+      ]
     },
 
     {
