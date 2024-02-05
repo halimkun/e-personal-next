@@ -52,7 +52,7 @@ const LaravelPagingx = ({
           ) : (
             data.total === 0 ? (
               <TableRow>
-                <TableCell colSpan={columnsData.length} className="text-center bg-gray-100">
+                <TableCell colSpan={columnsData.length} className="text-center bg-background">
                   <span className="text-gray-400">No data found</span>
                 </TableCell>
               </TableRow>
