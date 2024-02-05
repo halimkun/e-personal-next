@@ -5,8 +5,14 @@ import { Badge } from "@/components/ui/badge"
 import { getFullDateWithDayName } from "@/lib/date"
 
 import dynamic from "next/dynamic"
+import { Button } from "@/components/ui/button"
+import { IconPencilCog, IconTrash } from "@tabler/icons-react"
+import { useRouter } from "next/router"
+import { getSession } from "next-auth/react"
+import toast from "react-hot-toast"
 
 const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
+const DialogMenuMemoInternal = dynamic(() => import('@/components/custom/modals/dialog-menu-memo-internal'), { ssr: false })
 
 interface MemoInternalTableProps {
   data: any
@@ -16,10 +22,49 @@ interface MemoInternalTableProps {
   onRowClick?: (row: any) => void;
   setSelectedItem?: (value: any) => void
   lastColumnAction?: boolean | undefined
+  mutate?: any
 }
 
-const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onRowClick = () => { }, setSelectedItem = () => { }, lastColumnAction }: MemoInternalTableProps) => {
+const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onRowClick = () => { }, setSelectedItem = () => { }, lastColumnAction, mutate }: MemoInternalTableProps) => {
+  const route = useRouter();
+
+  const [items, setItems] = useState<any>({});
+  const [openDialogMenu, setOpenDialogMenu] = useState<boolean>(false);
   const [selectedJenis, setSelectedJenis] = useState<string | undefined>(undefined);
+
+  const onDelete = async (nomor: string) => {
+    const confirm = window.confirm('Apakah anda yakin ingin menghapus data ini?')
+    if (!confirm) return
+
+    const session = await getSession()
+    const forData = new FormData()
+
+    forData.append('no_surat', nomor)
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/delete`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+      body: forData
+    })
+
+    const data = await response.json()
+
+    console.log(data)
+
+    if (data.success) {
+      toast.success('Berhasil menghapus data')
+      setSelectedItem({})
+    }
+
+    if (!data.success) {
+      toast.error('Gagal menghapus data')
+    }
+
+    mutate()
+  }
+
   const columns = [
     {
       name: 'No. Surat',
@@ -53,6 +98,36 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
         </Badge>
       )
     },
+    {
+      // edit and delete
+      name: '',
+      selector: 'action',
+      enableHiding: false,
+      data: (row: any) => (
+        <div className="flex gap-2 w-full justify-end">
+          <Button
+            size={'icon'}
+            onClick={() => {
+              const url = "/memo/internal/" + row.no_surat.toString().replaceAll('/', '--') + "/edit"
+              route.push(url)
+            }}
+            className="bg-primary text-white hover:bg-primary-600 w-7 h-7"
+          >
+            <IconPencilCog size={18} />
+          </Button>
+
+          <Button
+            size={'icon'}
+            onClick={() => {
+              onDelete(row.no_surat)
+            }}
+            className="bg-danger text-white hover:bg-danger-600 w-7 h-7"
+          >
+            <IconTrash size={18} />
+          </Button>
+        </div>
+      )
+    }
   ];
 
   return (
@@ -79,10 +154,16 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
         setFilterData={setFilterData}
         isValidating={isValidating}
         onRowClick={(item: any) => {
-          setSelectedItem(item)
-          onRowClick(item)
+          setItems(item)
+          setOpenDialogMenu(true)
         }}
-        lastColumnAction={lastColumnAction}
+        lastColumnAction={true}
+      />
+
+      <DialogMenuMemoInternal
+        item={items}
+        open={openDialogMenu}
+        onOpenChange={(value: boolean) => setOpenDialogMenu(value)}
       />
     </>
   )

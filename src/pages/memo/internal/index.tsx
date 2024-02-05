@@ -86,6 +86,7 @@ const MemoInternalPage: NextPageWithLayout = () => {
         filterData={filterData}
         setFilterData={setFilterData}
         isValidating={isValidating}
+        mutate={mutate}
       />
     </>
   )
