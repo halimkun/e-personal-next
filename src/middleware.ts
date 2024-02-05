@@ -8,8 +8,26 @@ export default withAuth(
   {
     callbacks: {
       authorized: async ({ req, token }) => {
-
         if (token) {
+          // Check token is valid or not from API server
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token.accessToken}`
+            }
+          });
+
+          if (res.status != 200) {
+            return false
+          }
+
+          const data = await res.json();
+          
+          if (!data.success) {
+            return false
+          }
+
           // Decode JWT Token
           // const jwt = require('jsonwebtoken');
           // const decodedToken = jwt.decode(token.accessToken);
