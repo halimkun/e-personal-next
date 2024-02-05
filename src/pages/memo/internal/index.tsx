@@ -1,7 +1,6 @@
 import useSWR from "swr";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import AppLayout from "@/components/layouts/app";
 
 import { getSession } from "next-auth/react";
 import { NextPageWithLayout } from "@/pages/_app";
@@ -11,6 +10,7 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 
 const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
 const TablesMemoInternal = dynamic(() => import('@/components/custom/tables/memo-internal'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
 
 const MemoInternalPage: NextPageWithLayout = () => {
   const delayDebounceFn = useRef<any>(null)
@@ -79,10 +79,6 @@ const MemoInternalPage: NextPageWithLayout = () => {
           <IconCirclePlus size={20} strokeWidth={2} className="mr-1" />
           Tambah
         </Link>
-        {/* <Button variant={'default'} size={'sm'} className="flex items-center">
-          <IconCirclePlus size={20} strokeWidth={2} className="mr-1" />
-          Tambah
-        </Button> */}
       </div>
 
       <TablesMemoInternal
