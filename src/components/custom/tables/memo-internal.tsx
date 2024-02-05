@@ -30,7 +30,19 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
 
   const [items, setItems] = useState<any>({});
   const [openDialogMenu, setOpenDialogMenu] = useState<boolean>(false);
-  const [selectedJenis, setSelectedJenis] = useState<string | undefined>(undefined);
+  const [additionalItem, setAdditionalItem] = useState<any>({});
+
+  const getPenerimaAndMengetahui = async (nomor: string) => {
+    const session = await getSession()
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/get/pm?no_surat=${nomor}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      }
+    }).then(res => res.json());
+
+    return res;
+  }
 
   const onDelete = async (nomor: string) => {
     const confirm = window.confirm('Apakah anda yakin ingin menghapus data ini?')
@@ -50,8 +62,6 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
     })
 
     const data = await response.json()
-
-    console.log(data)
 
     if (data.success) {
       toast.success('Berhasil menghapus data')
@@ -156,12 +166,16 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
         onRowClick={(item: any) => {
           setItems(item)
           setOpenDialogMenu(true)
+          getPenerimaAndMengetahui(item.no_surat).then(res => {
+            setAdditionalItem(res)
+          })
         }}
         lastColumnAction={true}
       />
 
       <DialogMenuMemoInternal
         item={items}
+        additionalItem={additionalItem}
         open={openDialogMenu}
         onOpenChange={(value: boolean) => setOpenDialogMenu(value)}
       />

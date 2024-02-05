@@ -166,3 +166,7 @@ ol {
     @apply hidden;
   }
 }
+
+.ck-content p {
+  @apply text-slate-900
+}

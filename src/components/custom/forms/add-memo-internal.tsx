@@ -30,13 +30,13 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
 
   const route = useRouter()
 
-  console.log('props', props)
-
   const [isiKonten, setIsiKonten] = useState(props.data?.content ?? '')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [tglTerbit, setTglTerbit] = useState<Date | null>(props.data?.perihal?.tgl_terbit ? new Date(props.data.perihal?.tgl_terbit) : new Date())
 
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>(props.data?.penerima ? props.data.penerima.map((item: any) => item.penerima) : [])
+  const [selectedMengetahui, setSelectedMengetahui] = useState<string[]>(props.data?.mengetahui ? props.data.mengetahui.split('|') : [])
+  const maxPenerima = 2
 
   const delayDebounceFn = useRef<any>(null)
   const [filterData, setFilterData] = useState<any>({})
@@ -44,6 +44,7 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
 
   const fetcher = async (url: any) => {
     const session = await getSession()
+
     const response = await fetch(url + filterQuery, {
       method: 'GET',
       headers: {
@@ -61,6 +62,12 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
   }
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  });
+
+  const { data: dataMengetahui, error: errorMengetahui, mutate: mutateMengetahui, isLoading: isLoadingMengetahui, isValidating: isValidatingMengetahui } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai/get/mengetahui`, fetcher, {
     revalidateOnFocus: false,
     refreshWhenOffline: false,
     refreshWhenHidden: true,
@@ -127,22 +134,82 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
                 {row.nik}
               </Badge>
             </div>
-
-            <div className="flex flex-row gap-1 flex-wrap w-full justify-end">
-              <Badge variant="outline" className="cursor-pointer" title="Bidang">
-                {row.bidang}
-              </Badge>
-              <Badge variant="outline" className="cursor-pointer" title="Jabatan">
-                {row.jbtn}
-              </Badge>
-              <Badge variant="outline" className="cursor-pointer" title="Departemen">
-                {row.dpt.nama}
-              </Badge>
-            </div>
           </label>
         </div>
       )
     },
+
+    {
+      name: 'detail',
+      selector: 'detail',
+      data: (row: any) => (
+        <div className="flex flex-row gap-1 flex-wrap w-full justify-end">
+          <Badge variant="outline" className="cursor-pointer" title="Bidang">
+            {row.bidang}
+          </Badge>
+          <Badge variant="outline" className="cursor-pointer" title="Jabatan">
+            {row.jbtn}
+          </Badge>
+          <Badge variant="outline" className="cursor-pointer" title="Departemen">
+            {row.dpt.nama}
+          </Badge>
+        </div>
+      )
+    }
+  ]
+
+  const mengetahuiColumns = [
+    {
+      name: "",
+      selector: 'pilih',
+      data: (row: any) => (
+        <div className="px-2">
+          <Checkbox
+            id={row.nik}
+            name="karyawan[]"
+            value={row.nik}
+            checked={selectedMengetahui.includes(row.nik)}
+            // disable all not selected if selected >= maxPenerima 
+            disabled={selectedMengetahui.length >= maxPenerima && !selectedMengetahui.includes(row.nik)}
+            onCheckedChange={() => {
+              if (selectedMengetahui.includes(row.nik)) {
+                setSelectedMengetahui(selectedMengetahui.filter((item) => item !== row.nik))
+              } else {
+                setSelectedMengetahui([...selectedMengetahui, row.nik])
+              }
+            }}
+          />
+        </div>
+      )
+    },
+
+    {
+      name: 'Nama',
+      selector: 'nama',
+      data: (row: any) => (
+        <div className="flex items-center gap-4">
+          <label
+            htmlFor={row.nik}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-full"
+          >
+            <div className="font-bold">{row.nama}</div>
+          </label>
+        </div>
+      )
+    }, {
+      name: 'Jabatan',
+      selector: 'jabatan',
+      data: (row: any) => (
+        <div className="flex items-center gap-4">
+          <label
+            htmlFor={row.nik}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-full"
+          >
+            <div>{row.jbtn}</div>
+          </label>
+        </div>
+      )
+    }
   ]
 
   const onSubmit = async (e: any) => {
@@ -156,6 +223,10 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
     data.append('tanggal', tglTerbit?.toISOString().slice(0, 10) ?? '')
     data.append('content', isiKonten)
     data.append('penerima', JSON.stringify(selectedKaryawan))
+
+    // joined mengetahui
+    const jm = selectedMengetahui.join('|')
+    data.append('mengetahui', jm)
 
     if (props.data?.no_surat) {
       data.append('no_surat', props.data.no_surat)
@@ -177,7 +248,7 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
     }).then(response => response.json())
 
     if (response.success) {
-     setIsSubmitting(false)
+      setIsSubmitting(false)
       toast.success(response.message)
       await new Promise(resolve => setTimeout(resolve, 1500))
 
@@ -238,43 +309,69 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
           </CardContent>
         </Card>
 
-        <Card className="w-full top-16 lg:sticky">
-          <CardHeader>
-            <CardTitle>Penerima</CardTitle>
-            <CardDescription>Anda dapat memilikih lebih dari 1 penerima memo ini dengan combobox dibawah ini.</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <div className="w-full flex flex-col gap-3">
+          <Card>
+            <CardHeader>
+              <CardTitle>Mengetahui</CardTitle>
+              <CardDescription>Anda dapat memilih maksimal 2 orang yang mengetahui memo ini dengan tabel dibawah ini.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* is loading */}
+              {isLoading && <Loading1 height={50} width={50} />}
+              {error && <p>Error: {error.message}</p>}
 
-            {/* is loading */}
-            {isLoading && <Loading1 height={50} width={50} />}
-            {error && <p>Error: {error.message}</p>}
-
-            {data && (
-              <>
-                <div className="w-full space-y-1">
-                  <Label>Search</Label>
-                  <Input
-                    type="search"
-                    placeholder="Search..."
-                    className="w-full"
-                    defaultValue={filterData?.keyword}
-                    onChange={(e) => {
-                      setFilterData({ ...filterData, keyword: e.target.value })
-                    }}
+              {dataMengetahui && (
+                <>
+                  <LaravelPagingx
+                    columnsData={mengetahuiColumns}
+                    data={dataMengetahui?.data}
+                    filterData={filterData}
+                    setFilterData={setFilterData}
+                  // isValidating={isValidating}
                   />
-                </div>
+                </>
+              )}
 
-                <LaravelPagingx
-                  columnsData={KaryawanColumns}
-                  data={data?.data}
-                  filterData={filterData}
-                  setFilterData={setFilterData}
-                // isValidating={isValidating}
-                />
-              </>
-            )}
+            </CardContent>
+          </Card>
 
-            {/* <div className="w-full space-y-1 mb-6">
+          <Card className="w-full top-16 lg:sticky">
+            <CardHeader>
+              <CardTitle>Penerima</CardTitle>
+              <CardDescription>Anda dapat memilikih lebih dari 1 penerima memo ini dengan tabel dibawah ini.</CardDescription>
+            </CardHeader>
+            <CardContent>
+
+              {/* is loading */}
+              {isLoading && <Loading1 height={50} width={50} />}
+              {error && <p>Error: {error.message}</p>}
+
+              {data && (
+                <>
+                  <div className="w-full space-y-1">
+                    <Label>Search</Label>
+                    <Input
+                      type="search"
+                      placeholder="Search..."
+                      className="w-full"
+                      defaultValue={filterData?.keyword}
+                      onChange={(e) => {
+                        setFilterData({ ...filterData, keyword: e.target.value })
+                      }}
+                    />
+                  </div>
+
+                  <LaravelPagingx
+                    columnsData={KaryawanColumns}
+                    data={data?.data}
+                    filterData={filterData}
+                    setFilterData={setFilterData}
+                  // isValidating={isValidating}
+                  />
+                </>
+              )}
+
+              {/* <div className="w-full space-y-1 mb-6">
               <Label className="text-primary" htmlFor="PJ">Penerima Memo</Label>
               <Input type="hidden" name="pj" value={selectedPenerimaLabel} />
               <MultiSelect
@@ -285,8 +382,9 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
                 onValueChange={setSelectedPenerimaValue}
               />
             </div> */}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </form>
     </div>
   )
