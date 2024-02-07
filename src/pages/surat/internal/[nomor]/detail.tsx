@@ -11,8 +11,9 @@ import { getDate, getTime } from "@/lib/date"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { NextPageWithLayout } from "@/pages/_app"
-import { IconArrowLeft, IconLoader } from "@tabler/icons-react"
+import { IconArrowLeft, IconInfoCircle, IconLoader, IconNote } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
@@ -55,57 +56,67 @@ const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
       </CardHeader>
       <CardContent>
         <div className="mt-4">
-          <table className="table w-full">
-            <tr>
-              <th className="text-left">Nomor Surat</th>
-              <th>:</th>
-              <td className="p-2">{nomor}</td>
-            </tr>
-            <tr>
-              <th className="text-left">Perihal</th>
-              <th>:</th>
-              <td className="p-2">{detail.perihal}</td>
-            </tr>
-            <tr>
-              <th className="text-left">Penanggung Jawab</th>
-              <th>:</th>
-              <td className="p-2">{detail.pj_detail ? detail.pj_detail.nama : detail.pj}</td>
-            </tr>
-            <tr>
-              <th className="text-left">Tempat</th>
-              <th>:</th>
-              <td className="p-2">{detail.tempat}</td>
-            </tr>
-            <tr>
-              <th className="text-left">Tanggal</th>
-              <th>:</th>
-              <td className="p-2">{getDate(detail.tanggal)} {getTime(detail.tanggal)}</td>
-            </tr>
-            <tr>
-              <th className="text-left">Status</th>
-              <th>:</th>
-              <td className="p-2">
-                <div className="flex items-center gap-3">
-                  <div className={cn(
-                    "px-3 text-sm rounded-full flex items-center justify-center", {
-                    'bg-green-200 border-2 border-green-500 text-green-800': detail.status === 'disetujui',
-                    'bg-red-200 border-2 border-red-500 text-red-800': detail.status === 'ditolak',
-                    'bg-yellow-200 border-2 border-yellow-500 text-yellow-800': detail.status === 'pengajuan'
-                  }
-                  )}>
-                    {detail.status}
+          <div className="flex flex-col lg:flex-row items-start justify-start gap-3">
+            <table className="table w-full">
+              <tr>
+                <th className="text-left">Nomor Surat</th>
+                <th>:</th>
+                <td className="p-2">{nomor}</td>
+              </tr>
+              <tr>
+                <th className="text-left">Perihal</th>
+                <th>:</th>
+                <td className="p-2">{detail.perihal}</td>
+              </tr>
+              <tr>
+                <th className="text-left">Penanggung Jawab</th>
+                <th>:</th>
+                <td className="p-2">{detail.pj_detail ? detail.pj_detail.nama : detail.pj}</td>
+              </tr>
+              <tr>
+                <th className="text-left">Tempat</th>
+                <th>:</th>
+                <td className="p-2">{detail.tempat}</td>
+              </tr>
+              <tr>
+                <th className="text-left">Tanggal</th>
+                <th>:</th>
+                <td className="p-2">{getDate(detail.tanggal)} {getTime(detail.tanggal)}</td>
+              </tr>
+              <tr>
+                <th className="text-left">Status</th>
+                <th>:</th>
+                <td className="p-2">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "px-3 text-sm rounded-full flex items-center justify-center", {
+                      'bg-green-200 border-2 border-green-500 text-green-800': detail.status === 'disetujui',
+                      'bg-red-200 border-2 border-red-500 text-red-800': detail.status === 'ditolak',
+                      'bg-yellow-200 border-2 border-yellow-500 text-yellow-800': detail.status === 'pengajuan'
+                    }
+                    )}>
+                      {detail.status}
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th className="text-left">Jumlah Penerima</th>
-              <th>:</th>
-              <td className="p-2">
-                {detail.penerima.length}
-              </td>
-            </tr>
-          </table>
+                </td>
+              </tr>
+              <tr>
+                <th className="text-left">Jumlah Penerima</th>
+                <th>:</th>
+                <td className="p-2">
+                  {detail.penerima.length}
+                </td>
+              </tr>
+            </table>
+
+            <Alert className="w-[60%]">
+              <IconInfoCircle className="h-5 w-5" />
+              <AlertTitle>Heads up!</AlertTitle>
+              <AlertDescription>
+                You can add components to your app using the cli.
+              </AlertDescription>
+            </Alert>
+          </div>
         </div>
 
         <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
