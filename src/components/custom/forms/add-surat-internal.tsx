@@ -101,7 +101,8 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
         tempat: tempat,
         perihal: perihal,
         karyawan: karyawan,
-        tgl_terbit: (event.target as any).tgl_terbit.value
+        tgl_terbit: (event.target as any).tgl_terbit.value,
+        catatan: (event.target as any).catatan.value
       })
     }).then(response => response.json())
 
@@ -197,21 +198,37 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
           </CardContent>
         </Card>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Pilih Karyawan</CardTitle>
-            <CardDescription>Jika karyawan dipilih surat yang dibuat akan dianggap sebagai undangan</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {withKaryawan ? (
-              <LaravelPagination
-                columns={KaryawanColumns}
-                dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
-                fetcher={{ method: "GET" }}
-              />
-            ) : ("[ hidden content ]")}
-          </CardContent>
-        </Card>
+        <div className="w-full flex flex-col gap-3">
+          <Card>
+            <CardHeader>
+              <CardTitle>Catatan</CardTitle>
+              <CardDescription>Catatan Tambahan untuk surat internal ini</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-1">
+                <Label htmlFor="catatan">Catatan</Label>
+                <Textarea name="catatan" id="catatan" placeholder="catatan untuk surat ini" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Pilih Karyawan</CardTitle>
+              <CardDescription>Jika karyawan dipilih surat yang dibuat akan dianggap sebagai undangan</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {withKaryawan ? (
+                <LaravelPagination
+                  columns={KaryawanColumns}
+                  dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
+                  fetcher={{ method: "GET" }}
+                />
+              ) : ("[ hidden content ]")}
+            </CardContent>
+          </Card>
+        </div>
+
       </div>
     </form>
   )

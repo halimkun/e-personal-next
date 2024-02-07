@@ -96,7 +96,9 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
       tempat: formData.get('tempat'),
       pj: penanggungJawab,
       tanggal: formData.get('tanggal'),
-      penerima: selectedKaryawan
+      tgl_terbit: formData.get('tgl_terbit'),
+      catatan: formData.get('catatan'),
+      penerima: selectedKaryawan,
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/update`, {
@@ -185,7 +187,7 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
       </div>
 
       <form action="#!" method="post" onSubmit={onSubmit} className='flex gap-4 items-start'>
-        <Card className='top-16 sticky'>
+        <Card className='top-16 sticky w-full'>
           <CardHeader>
             <CardTitle>Detail Surat</CardTitle>
             <CardDescription>Isi detail surat internal.</CardDescription>
@@ -195,6 +197,20 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
             <div className="w-full space-y-1 mb-3">
               <Label className="text-primary" htmlFor="no_surat">Nomor Surat</Label>
               <Input type="text" name="no_surat" placeholder="no_surat" id="no_surat" value={noSurat} onChange={(e) => setNoSurat(e.target.value)} />
+            </div>
+            <div className="space-y-1 w-full mb-3">
+              <div className="flex items-center justify-between pr-1">
+                <Label className="text-primary" htmlFor="tgl_terbit">Tannggal Terbit</Label>
+                <Popover>
+                  <PopoverTrigger>
+                    <IconInfoCircle className="cursor-pointer stroke-danger animate-pulse" size={18} strokeWidth={2} />
+                  </PopoverTrigger>
+                  <PopoverContent className="text-sm">
+                    <strong>Tanggal Terbit : </strong> adalah tanggal yang digunakan untuk keperluan penomoran surat.
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <Input type="date" name="tgl_terbit" placeholder="Tanggal Terbit" id="tgl_terbit" defaultValue={data?.data?.tgl_terbit ?? new Date().toISOString().split('T')[0]} />
             </div>
             <div className="space-y-1 mb-3">
               <div className="flex items-center justify-between pr-1">
@@ -238,8 +254,21 @@ const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
           </CardContent>
         </Card>
 
-        <div>
-          <Card>
+        <div className='w-full flex flex-col gap-3'>
+          <Card className='w-full'>
+            <CardHeader>
+              <CardTitle>Catatan</CardTitle>
+              <CardDescription>Catatan Tambahan untuk surat internal ini</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-1">
+                <Label htmlFor="catatan">Catatan</Label>
+                <Textarea name="catatan" id="catatan" placeholder="catatan untuk surat ini" defaultValue={data?.data?.catatan ?? ""} />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className='w-full'>
             <CardHeader>
               <CardTitle>Pilih Karyawan</CardTitle>
               <CardDescription>Pilih karyawan sebagai undangan untuk surat ini.</CardDescription>
