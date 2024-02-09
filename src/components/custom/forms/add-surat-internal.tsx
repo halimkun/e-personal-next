@@ -124,7 +124,7 @@ export default function FormAddSuratInternal(penanggungJawab: any) {
         <Card className="w-full lg:w-[75%] lg:sticky lg:top-[68px]">
           <CardHeader className="p-3">
             <div className="flex items-center gap-4">
-              <Button variant="outline" size='icon' onClick={() => router.push('/surat/internal')}>
+              <Button type="button" variant="outline" size='icon' onClick={() => router.push('/surat/internal')}>
                 <IconArrowLeft className="rotate-0 scale-100 transition-all" />
               </Button>
               <div className="flex flex-col gap-0.5">

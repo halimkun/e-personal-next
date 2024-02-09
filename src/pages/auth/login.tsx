@@ -33,9 +33,9 @@ const LoginPage: NextPageWithLayout = () => {
             </p>
           </div>
           <UserAuthForm />
-          <p className="px-8 text-center text-sm text-muted-foreground/50">
+          {/* <p className="px-8 text-center text-sm text-muted-foreground/50">
             IT Team RSIA Aisyiyah Pekajangan
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
