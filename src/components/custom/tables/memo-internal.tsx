@@ -6,7 +6,7 @@ import { getFullDateWithDayName } from "@/lib/date"
 
 import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
-import { IconPencilCog, IconTrash } from "@tabler/icons-react"
+import { IconFileTypePdf, IconPencilCog, IconTrash } from "@tabler/icons-react"
 import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
 import toast from "react-hot-toast"
@@ -114,14 +114,25 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
       selector: 'action',
       enableHiding: false,
       data: (row: any) => (
-        <div className="flex gap-2 w-full justify-end">
+        <div className="flex gap-1 w-full justify-end">
+          <Button
+            size={'icon'}
+            onClick={() => {
+              const url = `${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/render/${row.no_surat.replaceAll('/', '--')}`
+              window.open(url, '_blank')
+            }}
+            className="bg-success text-white hover:bg-success/80 w-7 h-7"
+          >
+            <IconFileTypePdf size={18} />
+          </Button>
+
           <Button
             size={'icon'}
             onClick={() => {
               const url = "/memo/internal/" + row.no_surat.toString().replaceAll('/', '--') + "/edit"
               route.push(url)
             }}
-            className="bg-primary text-white hover:bg-primary-600 w-7 h-7"
+            className="bg-primary text-white hover:bg-primary/80 w-7 h-7"
           >
             <IconPencilCog size={18} />
           </Button>
