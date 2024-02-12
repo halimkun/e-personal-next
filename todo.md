@@ -1,14 +1,15 @@
 
 
 <!-- ----- new feature -->
-[] Memo internal template
+[x] Memo internal
+[x] Memo Internal PDF
 [] Sistem Notulen digital
 [x] Notif Undangan
 [] Notif undangan 2 jam sebelum
 [] Notif PKS expired
 [] SPO metode aproval
 [] Backend get SpO by unit
-[] surat internal add catatan
+[x] surat internal tambah catatan
 
 <!-- ----- minor bug -->
 [x] undangan tambahkan tanggal terbit
