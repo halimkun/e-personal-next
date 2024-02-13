@@ -27,7 +27,7 @@ const authOption: NextAuthOptions = {
           },
           body: JSON.stringify({ username, password }),
         }).then((res) => res.json());
-
+        
         if (response.success) {
           return response;
         } else {
@@ -38,7 +38,7 @@ const authOption: NextAuthOptions = {
   ],
 
   callbacks: {    
-    jwt({ token, account, profile, user }) {
+    jwt({ token, account, profile, user }) {      
       if (account?.provider == 'credentials') {
         token.accessToken = user.access_token;
         token.tokenType = user.token_type;

@@ -8,44 +8,56 @@ import { signIn } from "next-auth/react";
 
 import { IconInnerShadowTop } from "@tabler/icons-react"
 import { useRouter } from "next/router"
+import toast from "react-hot-toast"
 
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-	const [isLoading, setIsLoading] = React.useState<boolean>(false)
+	const [isDisabled, setIsDisabled] = React.useState<boolean>(false)
 	const router = useRouter();
 
 	async function onSubmit(event: React.SyntheticEvent) {
 		event.preventDefault()
-		setIsLoading(true)
-		
+		setIsDisabled(true)
+
 		// log value from input
 		const username = (event.target as any).username.value
 		const password = (event.target as any).password.value
 
 		const callbackUrl = router.query.callbackUrl as string || '/dashboard'
 
-		try {
-			const res = await signIn("credentials", {
+		toast.promise(
+			signIn("credentials", {
 				redirect: false,
 				username: username,
 				password: password,
 				callbackUrl: callbackUrl,
-			});
-
-			setIsLoading(false);
-
-			if (!res?.error) {
-				router.push(callbackUrl);
-			} else {
-				console.log(res?.error);
+			}).then(async (res) => {
+				await new Promise((resolve) => setTimeout(resolve, 1500)); // <---- fake loading
+				if (res?.ok) {
+					return res?.status;
+				} else {
+					throw new Error("Request failed with status: " + res?.status);
+				}
+			}).catch((error) => {
+				throw error;
+			}),
+			{
+				loading: "Signing in...",
+				success: (status) => {
+					setIsDisabled(false);
+					
+					router.push(callbackUrl);
+					return "Redirecting...";
+				},
+				error: (error) => {
+					setIsDisabled(false);
+					console.error("Failed to sign in", error.message);
+					return "Username or password is incorrect, or the account does not exist.";
+				},
 			}
-		} catch (error: any) {
-			setIsLoading(false);
-			console.log(error);
-		}
-
+		);
 	};
 
 	return (
@@ -64,7 +76,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 							autoComplete="username"
 							autoCorrect="off"
 							required
-							disabled={isLoading}
+							disabled={isDisabled}
 						/>
 					</div>
 					<div className="grid gap-1">
@@ -79,12 +91,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 							autoComplete="password"
 							autoCorrect="off"
 							required
-							disabled={isLoading}
+							disabled={isDisabled}
 						/>
 					</div>
 					<div className="mt-4 w-full">
-						<Button variant="default" disabled={isLoading} className="w-full">
-							{isLoading && (
+						<Button variant="default" disabled={isDisabled} className="w-full">
+							{isDisabled && (
 								<IconInnerShadowTop className="mr-2 h-4 w-4 animate-spin" />
 							)}
 							Sign In

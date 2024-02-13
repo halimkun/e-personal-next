@@ -8,7 +8,7 @@ export default withAuth(
   {
     callbacks: {
       authorized: async ({ req, token }) => {
-        if (token) {
+        if (token) { // Check if token is present
           // Check token is valid or not from API server
           const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
             method: 'POST',
@@ -18,12 +18,15 @@ export default withAuth(
             }
           });
 
+          // If token is invalid, return false
           if (res.status != 200) {
             return false
           }
 
+          // If token is valid, return true
           const data = await res.json();
           
+          // If token is invalid, return false
           if (!data.success) {
             return false
           }
@@ -32,9 +35,11 @@ export default withAuth(
           // const jwt = require('jsonwebtoken');
           // const decodedToken = jwt.decode(token.accessToken);
 
+          // If token is valid,
           return true
         }
 
+        // If token is not present,
         return false
       },
     },
