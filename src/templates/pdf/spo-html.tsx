@@ -86,7 +86,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
                 <div className="w-full flex flex-col gap-1 relative">
                   <span className="text-center text-sm">Ditetapkan</span>
                   <span className="text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
-                  <Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" className="mx-auto" />
+                  {data?.is_verified ? (<Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" className="mx-auto" />) : (<div className="my-10"></div>)}
                   <span className="text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
                 </div>
               </td>
