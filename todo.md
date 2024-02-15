@@ -1,7 +1,7 @@
 #### New Features
 <!-- ----- new feature -->
 - [ ] Sistem Notulen digital
-- [ ] Notif undangan 2 jam sebelum
+- [x] Notif undangan 2 jam dan 30 menit sebelum.
 - [ ] Notif PKS expired
 - [x] Backend get SpO by unit
 - [x] Memo internal
