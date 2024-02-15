@@ -3,7 +3,10 @@ e-personal adalah kepegawaian berbasis web yang dibuat dengan menggunakan next.j
 
 - [x] Manajemen data karyawan.
 - [x] Manajemen berkas karyawan.
-- [x] Manajemen surat-surat perusahaan. 
+- [x] Manajemen surat-surat perusahaan.
+- [x] Memo internal
+- [x] Majamen agenda
+- [x] Penomoran surat otomatis
 
 ## Integrasi
 aplikasi e-personal ini terintegrasi dengan aplikasi lain seperti aplikasi service self employee, yang berjalan di mobile. e-personal merupakan hasil dari integrasi `API` disisi back-end.
