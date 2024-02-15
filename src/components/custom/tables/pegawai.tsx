@@ -1,12 +1,15 @@
-import useSWR from "swr"
-import Loading1 from "../icon-loading"
-import LaravelPagingx from "@/components/custom-ui/laravel-paging"
+import { useEffect, useRef, useState } from "react"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import useSWR from "swr"
+import dynamic from "next/dynamic"
+import fetcherGet from "@/utils/fetcherGet"
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@radix-ui/react-menubar"
-import { getSession } from "next-auth/react"
-import { useEffect, useRef, useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
 
 interface TablePegawaiProps {
   columnsData: any
@@ -28,24 +31,7 @@ const TablePegawai = (props: TablePegawaiProps) => {
   const [filterQuery, setFilterQuery] = useState('')
   const [filterData, setFilterData] = useState<any>({})
 
-  const fetcher = async (url: any) => {
-    const session = await getSession()
-
-    const response = await fetch(url + filterQuery, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(response.status + ' ' + response.statusText)
-    }
-
-    const jsonData = await response.json()
-    return jsonData
-  }
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery });
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=${datatables}&select=${select}`, fetcher, {
     revalidateOnFocus: false,

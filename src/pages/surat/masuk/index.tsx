@@ -2,19 +2,19 @@ import React, { ReactElement, useEffect, useRef, useState } from "react"
 
 import useSWR from "swr"
 import dynamic from "next/dynamic"
+import fetcherGet from "@/utils/fetcherGet"
 import AppLayout from "@/components/layouts/app"
-import Loading1 from "@/components/custom/icon-loading"
 
-import { NextPageWithLayout } from "@/pages/_app"
-import { getSession } from "next-auth/react"
+import { useRouter } from "next/router"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
+import { NextPageWithLayout } from "@/pages/_app"
 import { CardDescription, CardTitle } from "@/components/ui/card"
-import { useRouter } from "next/router"
 
 const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
 const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
 const TableSuratMasuk = dynamic(() => import('@/components/custom/tables/surat-masuk'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })  
 
 const SuratMasukPage: NextPageWithLayout = () => {
   const router = useRouter()
@@ -27,23 +27,7 @@ const SuratMasukPage: NextPageWithLayout = () => {
   const [fltrData, setFltrData] = useState({})
   const [filterQuery, setFilterQuery] = useState('')
 
-  const fetcher = async (url: any) => {
-    const session = await getSession()
-    const response = await fetch(url + filterQuery, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(response.status + ' ' + response.statusText)
-    }
-
-    const jsonData = await response.json()
-    return jsonData
-  }
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery })
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/masuk`, fetcher, {
     revalidateOnFocus: false,

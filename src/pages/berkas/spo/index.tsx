@@ -2,6 +2,7 @@ import useSWR from "swr"
 import dynamic from "next/dynamic"
 import toast from "react-hot-toast"
 import AppLayout from "@/components/layouts/app"
+import fetcherGet from "@/utils/fetcherGet"
 
 import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
@@ -34,23 +35,7 @@ const SpoPage = () => {
   const [filterQuery, setFilterQuery] = useState('')
   const [spoDetail, setSpoDetail] = useState<any>(null)
 
-  const fetcher = async (url: any) => {
-    const session = await getSession()
-    const response = await fetch(url + filterQuery, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(response.status + ' ' + response.statusText)
-    }
-
-    const jsonData = await response.json()
-    return jsonData
-  }
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery })
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo`, fetcher, {
     revalidateOnFocus: false,
@@ -143,9 +128,9 @@ const SpoPage = () => {
         return (
           <div className="flex flex-row items-start gap-1.5">
             {badge.map((item: any, i: number) => (
-              <Badge variant="outline" className="max-w-[150px] whitespace-nowrap group-hover:border-primary" key={i}>{item}</Badge>
+              <Badge variant="outline" className="max-w-[150px] whitespace-wrap group-hover:border-primary" key={i}>{item}</Badge>
             ))}
-            {u.length > 1 && <Badge variant="outline" className="whitespace-nowrap group-hover:border-primary">+{u.length - 1}</Badge>}
+            {u.length > 1 && <Badge variant="outline" className="whitespace-wrap group-hover:border-primary">+{u.length - 1}</Badge>}
           </div>
         )
       }

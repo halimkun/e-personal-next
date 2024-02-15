@@ -6,10 +6,9 @@ import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../../_app';
 
 import useSWR from 'swr';
-import AppLayout from '@/components/layouts/app';
-import Loading1 from '@/components/custom/icon-loading';
-import TabelSuratInternal from '@/components/custom/tables/surat-internal';
-import UpdateStatusSuratInternal from '@/components/custom/forms/update-status-surat-internal';
+import dynamic from 'next/dynamic';
+import toast from 'react-hot-toast';
+import fetcherGet from '@/utils/fetcherGet';
 
 import { cn } from '@/lib/utils';
 import { Badge } from "@/components/ui/badge"
@@ -22,8 +21,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { IconEditCircle } from '@tabler/icons-react';
 import { IconPrinter } from '@tabler/icons-react';
-import toast from 'react-hot-toast';
 
+const UpdateStatusSuratInternal = dynamic(() => import('@/components/custom/forms/update-status-surat-internal'), { ssr: false })
+const TabelSuratInternal = dynamic(() => import('@/components/custom/tables/surat-internal'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
 
 const SuratInternal: NextPageWithLayout = () => {
   const route = useRouter();
@@ -56,23 +58,7 @@ const SuratInternal: NextPageWithLayout = () => {
     fetchMetrics();
   }, [])
 
-  const fetcher = async (url: any) => {
-    const session = await getSession()
-    const response = await fetch(url + filterQuery, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(response.status + ' ' + response.statusText)
-    }
-
-    const jsonData = await response.json()
-    return jsonData
-  }
+  const fetcher = (url: string) => fetcherGet({url, filterQuery}) 
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal`, fetcher, {
     revalidateOnFocus: false,

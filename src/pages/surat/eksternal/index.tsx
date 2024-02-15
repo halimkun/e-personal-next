@@ -5,10 +5,10 @@ import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from '../../_app';
 
 import useSWR from 'swr';
+import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
 import AppLayout from '@/components/layouts/app';
-import Loading1 from '@/components/custom/icon-loading';
-import TabelSuratEksternal from '@/components/custom/tables/surat-eksternal';
+import fetcherGet from '@/utils/fetcherGet';
 
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
@@ -21,6 +21,9 @@ import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
+const TabelSuratEksternal = dynamic(() => import('@/components/custom/tables/surat-eksternal'), { ssr: false })
 
 const SuratInternal: NextPageWithLayout = () => {
   const route = useRouter()
@@ -73,23 +76,7 @@ const SuratInternal: NextPageWithLayout = () => {
     }
   }
 
-  const fetcher = async (url: any) => {
-    const session = await getSession()
-    const response = await fetch(url + filterQuery, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(response.status + ' ' + response.statusText)
-    }
-
-    const jsonData = await response.json()
-    return jsonData
-  }
+  const fetcher = (url: string) => fetcherGet({url, filterQuery})
 
   const { data: dataSuratEksternal, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal`, fetcher, {
     revalidateOnFocus: false,

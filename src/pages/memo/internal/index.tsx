@@ -1,8 +1,8 @@
 import useSWR from "swr";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import fetcherGet from "@/utils/fetcherGet";
 
-import { getSession } from "next-auth/react";
 import { NextPageWithLayout } from "@/pages/_app";
 import { IconCirclePlus } from "@tabler/icons-react";
 import { buttonVariants } from "@/components/ui/button";
@@ -17,23 +17,7 @@ const MemoInternalPage: NextPageWithLayout = () => {
   const [filterData, setFilterData] = useState({})
   const [filterQuery, setFilterQuery] = useState('')
 
-  const fetcher = async (url: any) => {
-    const session = await getSession()
-    const response = await fetch(url + filterQuery, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(response.status + ' ' + response.statusText)
-    }
-
-    const jsonData = await response.json()
-    return jsonData
-  }
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery })
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal`, fetcher, {
     revalidateOnFocus: false,

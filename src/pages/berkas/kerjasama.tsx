@@ -4,6 +4,7 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import dynamic from "next/dynamic";
 import AppLayout from "@/components/layouts/app";
+import fetcherGet from "@/utils/fetcherGet";
 
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -41,23 +42,7 @@ const BerkasKerjasama: NextPageWithLayout = () => {
     eksternal: null
   });
 
-  const fetcher = async (url: any) => {
-    const session = await getSession()
-    const response = await fetch(url + filterQuery, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(response.status + ' ' + response.statusText)
-    }
-
-    const jsonData = await response.json()
-    return jsonData
-  }
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery });
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/berkas/pks`, fetcher, {
     revalidateOnFocus: false,
