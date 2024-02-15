@@ -146,11 +146,15 @@ ol {
 }
 
 .tableSpo ol, .tableSpo ol {
-  @apply list-decimal list-outside ml-4;
+  @apply list-decimal list-outside;
 }
 
 .tableSpo ul, .tableSpo ul {
-  @apply list-disc list-outside ml-4;
+  @apply list-disc list-outside;
+}
+
+.tableSpo ul, .tableSpo ol {
+  @apply ml-6;
 }
 
 .tableSpo li, .tableSpo li {

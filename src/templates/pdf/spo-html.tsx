@@ -94,7 +94,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
             {/* loop detailSpo */}
             {detailSpo.map((item, index) => (
               <tr key={index}>
-                <td className="border border-border p-5 text-center">
+                <td className="border border-border p-5 text-center align-top">
                   <span className="font-bold">
                     {item.toUpperCase()}
                   </span>
@@ -105,14 +105,14 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
             {/* end loop detailSpo */}
             {/* explode unit by , and loop  */}
             <tr>
-              <td className="border border-border p-5 text-center">
+              <td className="border border-border p-5 text-center align-top">
                 <span className="font-bold">
                   UNIT TERKAIT
                 </span>
               </td>
               <td colSpan={2} className="border border-border p-5">
                 <ol className="list-decimal list-outside">
-                  {data?.unit.split(',').map((item: string, index: number) => (
+                  {data?.unit_terkait.split(',').map((item: string, index: number) => (
                     <li key={index}>{item}</li>
                   ))}
                 </ol>
@@ -175,7 +175,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
         <div className="mt-2 tableSpo">
           <span className="text-left text-sm text font-bold">UNIT TERKAIT</span>
           <ol className="list-decimal text-sm list-outside">
-            {data?.unit.split(',').map((item: string, index: number) => (
+            {data?.unit_terkait.split(',').map((item: string, index: number) => (
               <li key={index}>{item}</li>
             ))}
           </ol>

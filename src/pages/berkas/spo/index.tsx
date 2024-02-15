@@ -233,6 +233,7 @@ const SpoPage = () => {
             filterData={filterData}
             setFilterData={setFilterData}
             isValidating={isValidating}
+            lastColumnAction={true}
             onRowClick={(item: any) => {
               setSpo(item)
               setIsMenuOpen(true)

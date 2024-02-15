@@ -53,14 +53,14 @@ const ModalViewSpo = (props: ModalViewSpoProps) => {
   return (
     <Dialog open={show} onOpenChange={onHide}>
       <DialogContent className="max-w-4xl">
-        <div className="w-full max-h-[85vh] bg-white" id="renderPDF">
+        <div className="w-full max-h-[85vh] bg-background" id="renderPDF">
           {detailSpo.detail != undefined || detailSpo.detail != null ? (
             <div className="h-full flex items-start overflow-scroll">
               <SPOHtml data={detailSpo} />
             </div>
           ) : (
             <div className="flex items-center justify-center h-full">
-              <span className="text-xl font-medium text-gray-400">Tidak ada data SPO yang ditampilkan</span>
+              <span className="text-xl font-medium">Isi atau detail SPO belum tersedia</span>
             </div>
           )}
         </div>

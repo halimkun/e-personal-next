@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { MultiSelect } from "../inputs/multi-select";
 import { Toggle } from "@radix-ui/react-toggle";
+import { Combobox } from "../inputs/combo-box";
 
 interface FormAddSpoProps {
   lastNomor: any
@@ -21,9 +22,9 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
   const [ln, setLn] = useState<any>(lastNomor[jenisSpo])
   const [departemen, setDepartemen] = useState<any[]>([])
   const [isTypeManual, setIsTypeManual] = useState<any>()
-  const [selected, setSelected] = useState<string | undefined>(undefined)
   const [tglTerbit, setTglTerbit] = useState<any>(new Date().toISOString().split('T')[0])
-  const [selectedDep, setSelectedDep] = useState<string[]>([]);
+  const [selectedUnitKerja, setSelectedUnitKerja] = useState<string>();
+  const [selectedUnitTerkait, setSelectedUnitTerkait] = useState<string[]>([]);
 
   const [unit, setUnit] = useState<any>('')
 
@@ -56,15 +57,15 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
   }, [])
 
   useEffect(() => {
-    if (selectedDep.length > 0) {
-      const isManual = selectedDep.find((item: any) => item === '-')
+    if (selectedUnitTerkait.length > 0) {
+      const isManual = selectedUnitTerkait.find((item: any) => item === '-')
       if (isManual) {
         setIsTypeManual(true)
       } else {
         setIsTypeManual(false)
       }
     }
-  }, [selectedDep])
+  }, [selectedUnitTerkait])
 
   function parseNomor() {
     const lastn = lastNomor[jenisSpo]
@@ -97,11 +98,19 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
     const data = new FormData(e.target)
 
     if (isTypeManual) {
-      // value is anak,casmix
       data.set('unit', unit)
     } else {
-      data.set('unit', selectedDep.join(','))
+      data.set('unit', selectedUnitKerja ?? '-')
     }
+
+    // unit_terkait
+    const unitTerkait = selectedUnitTerkait.map((item: any) => {
+      if (item != '-') {
+        return item
+      }
+    }).join(',')
+    
+    data.set('unit_terkait', unitTerkait)
 
     data.delete('unit_manual')
 
@@ -153,14 +162,9 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
               </Toggle>
             </div>
           </div>
-          <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selectedDep} />
+          <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selectedUnitKerja} />
           {!isTypeManual ? (
-            <MultiSelect
-              options={departemen}
-              selected={selectedDep}
-              onChange={setSelectedDep}
-              className="w-[560px]"
-            />
+            <Combobox items={departemen} setSelectedItem={setSelectedUnitKerja} selectedItem={selectedUnitKerja} placeholder="Pilih Unit" />
           ) : (<></>)}
         </div>
         {isTypeManual ? (
@@ -169,6 +173,20 @@ const FormAddSpo = ({ lastNomor }: FormAddSpoProps) => {
             <Input type="text" id="tunit" placeholder="tuliskan unit manual" onChange={(e) => setUnit(e.target.value)} name="unit_manual" disabled={!isTypeManual} />
           </div>
         ) : (<></>)}
+
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between mt-3">
+            <Label className="text-primary font-semibold" htmlFor="unit_terkait">Unit Terkait</Label>
+          </div>
+          <Input type="hidden" id="unit_terkait" name="unit_terkait" placeholder="unit terkait" defaultValue={selectedUnitTerkait} />
+          <MultiSelect
+            options={departemen}
+            selected={selectedUnitTerkait}
+            onChange={setSelectedUnitTerkait}
+            className="w-[560px]"
+          />
+        </div>
+
         <div className="mb-4 space-y-1.5 relative">
           <Input type="hidden" id="jenis" name="jenis" value={jenisSpo} />
           <Label className="text-primary font-semibold" htmlFor="tipe-surat">Tipe Surat</Label>

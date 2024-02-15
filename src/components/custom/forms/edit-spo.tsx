@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { getSession } from "next-auth/react"
 import { MultiSelect } from "../inputs/multi-select"
 import { Toggle } from "@radix-ui/react-toggle"
+import { Combobox } from "../inputs/combo-box"
 
 interface FormEditSpoProps {
   data: any
@@ -22,7 +23,8 @@ const FormEditSpo = (props: FormEditSpoProps) => {
   const [departemen, setDepartemen] = useState<any[]>([])
 
   const [unit, setUnit] = useState<any>(data.unit)
-  const [selectedDep, setSelectedDep] = useState<string[]>([]);
+  const [selectedUnitKerja, setSelectedUnitKerja] = useState<string>(data.unit);
+  const [selectedUnitTerkait, setSelectedUnitTerkait] = useState<string[]>([]);
 
   useEffect(() => {
     const getDepartemen = async () => {
@@ -41,18 +43,27 @@ const FormEditSpo = (props: FormEditSpoProps) => {
           }
         })
 
-        const selectedDep = data.unit.split(',')
-        // if selected dep available in departemen, then set selected dep
-        if (selectedDep.every((item: any) => items.some((i: any) => i.value === item))) {
-          setSelectedDep(selectedDep)
-        } else {
-          setIsTypeManual(true)
-          setSelectedDep([])
+        const selectedDep = data.unit_terkait.split(',')
+        if (selectedDep.every((item: any) => items.some((i: any) => i.label === item))) {
+          setSelectedUnitTerkait(selectedDep)
         }
+
+        if (!items.some((item: any) => item.value === data.unit)) {
+          setIsTypeManual(true)
+        }
+
+        // if (selectedDep.every((item: any) => items.some((i: any) => i.value === item))) {
+        //   console.log('selectedDep', selectedDep)
+        //   setSelectedUnitTerkait(selectedDep)
+        // } else {
+        //   // setIsTypeManual(true)
+        //   setSelectedUnitTerkait([])
+        // }
 
         setDepartemen(items)
       }
     }
+    
     getDepartemen()
   }, [])
 
@@ -66,8 +77,17 @@ const FormEditSpo = (props: FormEditSpoProps) => {
     if (isTypeManual) {
       data.set('unit', unit)
     } else {
-      data.set('unit', selectedDep.join(','))
+      data.set('unit', selectedUnitKerja ?? '-')
     }
+
+    // unit_terkait
+    const unitTerkait = selectedUnitTerkait.map((item: any) => {
+      if (item != '-') {
+        return item
+      }
+    }).join(',')
+    
+    data.set('unit_terkait', unitTerkait)
 
     data.delete('unit_manual')
 
@@ -114,22 +134,30 @@ const FormEditSpo = (props: FormEditSpoProps) => {
               </Toggle>
             </div>
           </div>
-          <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selectedDep} />
+          <Input type="hidden" id="unit" name="unit" placeholder="unit kerja" defaultValue={selectedUnitKerja} />
           {!isTypeManual ? (
-            <MultiSelect
-              options={departemen}
-              selected={selectedDep}
-              onChange={setSelectedDep}
-              className="w-[560px]"
-            />
+            <Combobox items={departemen} setSelectedItem={setSelectedUnitKerja} selectedItem={selectedUnitKerja} placeholder="Pilih Unit" />
           ) : (<></>)}
         </div>
         {isTypeManual ? (
           <div className="space-y-1.5">
             {/* <Label className="text-primary font-semibold" htmlFor="tunit">Tuliskan Unit</Label> */}
-            <Input type="text" id="tunit" placeholder="tuliskan unit manual" onChange={(e) => setUnit(e.target.value)} defaultValue={unit} name="unit_manual" disabled={!isTypeManual} />
+            <Input type="text" id="tunit" placeholder="tuliskan unit manual" onChange={(e) => setUnit(e.target.value)} name="unit_manual" disabled={!isTypeManual} defaultValue={data.unit} />
           </div>
         ) : (<></>)}
+
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between mt-3">
+            <Label className="text-primary font-semibold" htmlFor="unit_terkait">Unit Terkait</Label>
+          </div>
+          <Input type="hidden" id="unit_terkait" name="unit_terkait" placeholder="unit terkait" defaultValue={selectedUnitTerkait} />
+          <MultiSelect
+            options={departemen}
+            selected={selectedUnitTerkait}
+            onChange={setSelectedUnitTerkait}
+            className="w-[560px]"
+          />
+        </div>
         <div className="space-y-1.5">
           <Label className="text-primary font-semibold" htmlFor="nomor">Nomor SPO</Label>
           <Input type="text" id="nomor" name="nomor" placeholder="nomor spo" defaultValue={data.nomor} />
