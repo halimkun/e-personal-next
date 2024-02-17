@@ -1,14 +1,16 @@
 import { cn } from "@/lib/utils"
+import { IconSpiral } from "@tabler/icons-react"
 import { IconLoader } from "@tabler/icons-react"
 
 interface Props {
   height?: string | number
   width?: string | number
+  alignItem?: string
 }
 
-// if width is string check if the width contain h- or not, if not concat h- to the width
+// defaulr alignItem is start
 
-const Loading1 = ({ height, width }: Props) => {
+const Loading1 = ({ height, width, alignItem = 'start' }: Props) => {
   if (typeof width === 'string' && !width.includes('h-')) {
     width = 'h-' + width
   }
@@ -17,9 +19,13 @@ const Loading1 = ({ height, width }: Props) => {
     height = 'w-' + height
   }
 
+  if (typeof alignItem === 'string' && !alignItem.includes('items-')) {
+    alignItem = 'items-' + alignItem
+  }
+
   return (
-    <div className="flex flex-col items-start justify-center h-full gap-4">
-      <IconLoader className={cn(
+    <div className={"flex flex-col " + alignItem + " justify-center h-full gap-4"}>
+      <IconSpiral className={cn(
         'animate-spin',
         height ? height : 'h-10',
         width ? width : 'w-10'
