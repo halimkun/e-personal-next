@@ -7,12 +7,11 @@ import type { NextPageWithLayout } from '../../_app';
 
 import useSWR from 'swr';
 import dynamic from 'next/dynamic';
-import toast from 'react-hot-toast';
 import fetcherGet from '@/utils/fetcherGet';
 
 import { cn } from '@/lib/utils';
 import { Badge } from "@/components/ui/badge"
-import { getDate, getTime } from '@/lib/date';
+import { getDate } from '@/lib/date';
 import { Button } from "@/components/ui/button"
 import { IconPlus, IconDotsVertical, IconTag, IconSearch } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -58,7 +57,7 @@ const SuratInternal: NextPageWithLayout = () => {
     fetchMetrics();
   }, [])
 
-  const fetcher = (url: string) => fetcherGet({url, filterQuery}) 
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery })
 
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal`, fetcher, {
     revalidateOnFocus: false,
@@ -199,12 +198,19 @@ const SuratInternal: NextPageWithLayout = () => {
               <IconDotsVertical className="w-5 h-5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Files</DropdownMenuLabel>
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => toast.error('dalam pengembangan')}>
-                  <IconPrinter className="w-4 h-4 me-2" /> Cetak Undangan
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+              {row.penerima && row.penerima.length > 0 && (
+                <>
+                  <DropdownMenuLabel>Files</DropdownMenuLabel>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => {
+                      // open in new tab API_URL
+                      window.open(`${process.env.NEXT_PUBLIC_API_URL}/surat/internal/${row.no_surat.split('/').join('--')}/cetak-undangan`, '_blank') 
+                    }}>
+                      <IconPrinter className="w-4 h-4 me-2" /> Cetak Undangan
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              )}
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => route.push(`/surat/internal/${row.no_surat.split('/').join('_')}/edit`)}>
