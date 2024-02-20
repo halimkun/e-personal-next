@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/router";
 import { IconFileStack } from "@tabler/icons-react";
 import { IconFilePower } from "@tabler/icons-react";
+import { IconWriting } from "@tabler/icons-react";
 
 const AppMenu = () => {
   const router = useRouter();
@@ -68,6 +69,12 @@ const AppMenu = () => {
           "name": "Memo Internal",
           "path": "/memo/internal",
           "icon": <IconNote className="w-5 h-5 mr-2" />,
+        },
+
+        {
+          "name": "Data Notulen",
+          "path": "/berkas/notulen",
+          "icon": <IconWriting className="w-5 h-5 mr-2" />,
         }
       ]
     },
