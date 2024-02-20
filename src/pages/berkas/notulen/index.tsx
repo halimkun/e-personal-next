@@ -1,5 +1,4 @@
 import useSWR from "swr";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import fetcherGet from "@/utils/fetcherGet";
 
