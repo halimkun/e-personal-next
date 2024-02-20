@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button"
 import { IconEditCircle, IconFileTypePdf, IconPencilPlus, IconTrash } from "@tabler/icons-react"
 
 const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
-const DialogMenuMemoInternal = dynamic(() => import('@/components/custom/modals/dialog-menu-memo-internal'), { ssr: false })
 
 interface NotulenProps {
   data: any
@@ -31,12 +30,7 @@ interface NotulenProps {
 
 const TableNotulen = ({ data, filterData, setFilterData, isValidating, onRowClick = () => { }, setSelectedItem = () => { }, lastColumnAction, mutate }: NotulenProps) => {
   const route = useRouter();
-
-  const [items, setItems] = useState<any>({});
-  const [openDialogMenu, setOpenDialogMenu] = useState<boolean>(false);
-  const [additionalItem, setAdditionalItem] = useState<any>({});
-
-
+  
   const onDelete = async (nomor: string) => {
     const confirm = window.confirm('Apakah anda yakin ingin menghapus data ini?')
     if (!confirm) return
@@ -192,18 +186,7 @@ const TableNotulen = ({ data, filterData, setFilterData, isValidating, onRowClic
         filterData={filterData}
         setFilterData={setFilterData}
         isValidating={isValidating}
-        onRowClick={(item: any) => {
-          setItems(item)
-          setOpenDialogMenu(true)
-        }}
         lastColumnAction={true}
-      />
-
-      <DialogMenuMemoInternal
-        item={items}
-        additionalItem={additionalItem}
-        open={openDialogMenu}
-        onOpenChange={(value: boolean) => setOpenDialogMenu(value)}
       />
     </>
   )
