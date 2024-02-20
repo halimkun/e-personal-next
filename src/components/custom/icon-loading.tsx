@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils"
 import { IconSpiral } from "@tabler/icons-react"
-import { IconLoader } from "@tabler/icons-react"
 
 interface Props {
   height?: string | number
