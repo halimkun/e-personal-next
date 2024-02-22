@@ -16,13 +16,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/co
 import useSWR from "swr";
 import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import TablePegawai from "../tables/pegawai";
-import TablePegawaiMengetahui from "../tables/pegawai-mengetahui";
 
-const Editor = dynamic(
-  () => import('@/components/custom/editor'),
-  { ssr: false }
-)
+const TablePegawai = dynamic(() => import('@/components/custom/tables/pegawai'), { ssr: false })
+const TablePegawaiMengetahui = dynamic(() => import('@/components/custom/tables/pegawai-mengetahui'), { ssr: false })
+const Editor = dynamic(() => import('@/components/custom/editor'), { ssr: false })
 
 interface FormAddMemoInternalProps {
   data?: any
@@ -38,7 +35,7 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
   const [isiKonten, setIsiKonten] = useState(props.data?.content ?? '')
   const [tglTerbit, setTglTerbit] = useState<Date | null>(props.data?.perihal?.tgl_terbit ? new Date(props.data.perihal?.tgl_terbit) : new Date())
 
-  const maxPenerima = 2
+  const maxMengetahui = 2
   const [selectedMengetahui, setSelectedMengetahui] = useState<string[]>(props.data?.mengetahui ? props.data.mengetahui.split('|') : [])
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>(props.data?.penerima ? props.data.penerima.map((item: any) => item.penerima) : [])
 
@@ -289,17 +286,28 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
           <TablePegawaiMengetahui
             selectedMengetahui={selectedMengetahui}
             setSelectedMengetahui={setSelectedMengetahui}
-            maxPenerima={maxPenerima}
+            maxMengetahui={maxMengetahui}
           />
         </div>
 
-        <TablePegawai
-          columnsData={KaryawanColumns}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Penerima Memo</CardTitle>
+            <CardDescription>Pilih penerima memo internal</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <TablePegawai
+              columnsData={KaryawanColumns}
+            />
+          </CardContent>
+        </Card>
 
         <Card>
-          <CardContent>
-            <div className="flex justify-end mt-6">
+          <CardHeader className="p-3">
+            <div className="flex justify-between items-center">
+              <div className="font-bold">
+                <span className="text-primary">Penerima</span> ( {selectedKaryawan.length} orang ) 
+              </div>
               <Button
                 type="submit"
                 className="bg-primary text-white hover:bg-primary-600"
@@ -308,7 +316,7 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
                 {isSubmitting ? 'Menyimpan...' : 'Simpan Memo'}
               </Button>
             </div>
-          </CardContent>
+          </CardHeader>
         </Card>
       </form>
     </div>

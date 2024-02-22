@@ -14,12 +14,12 @@ const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr
 interface TablePegawaiMengetahuiProps {
   selectedMengetahui: string[]
   setSelectedMengetahui: (value: string[]) => void
-  maxPenerima: number
+  maxMengetahui: number
 }
 
 const TablePegawaiMengetahui = (props: TablePegawaiMengetahuiProps) => {
 
-  const { selectedMengetahui, setSelectedMengetahui, maxPenerima } = props
+  const { selectedMengetahui, setSelectedMengetahui, maxMengetahui } = props
 
   const delayDebounceFn = useRef<any>(null)
   const [filterData, setFilterData] = useState<any>({})
@@ -67,8 +67,8 @@ const TablePegawaiMengetahui = (props: TablePegawaiMengetahuiProps) => {
             name="karyawan[]"
             value={row.nik}
             checked={selectedMengetahui.includes(row.nik)}
-            // disable all not selected if selected >= maxPenerima 
-            disabled={selectedMengetahui.length >= maxPenerima && !selectedMengetahui.includes(row.nik)}
+            // disable all not selected if selected >= maxMengetahui 
+            disabled={selectedMengetahui.length >= maxMengetahui && !selectedMengetahui.includes(row.nik)}
             onCheckedChange={() => {
               if (selectedMengetahui.includes(row.nik)) {
                 setSelectedMengetahui(selectedMengetahui.filter((item) => item !== row.nik))
