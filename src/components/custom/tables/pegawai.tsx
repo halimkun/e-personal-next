@@ -62,44 +62,29 @@ const TablePegawai = (props: TablePegawaiProps) => {
     return () => clearTimeout(delayDebounceFn.current);
   }, [filterQuery]);
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Penerima</CardTitle>
-        <CardDescription>Anda dapat memilikih lebih dari 1 penerima memo ini dengan tabel dibawah ini.</CardDescription>
-      </CardHeader>
-      <CardContent>
+  return data && (
+    <>
+      <div className="w-full space-y-1">
+        <Label>Search</Label>
+        <Input
+          type="search"
+          placeholder="Search..."
+          className="w-full"
+          defaultValue={filterData?.keyword}
+          onChange={(e) => {
+            setFilterData({ ...filterData, keyword: e.target.value })
+          }}
+        />
+      </div>
 
-        {/* is loading */}
-        {isLoading && <Loading1 height={50} width={50} />}
-        {error && <p>Error: {error.message}</p>}
-
-        {data && (
-          <>
-            <div className="w-full space-y-1">
-              <Label>Search</Label>
-              <Input
-                type="search"
-                placeholder="Search..."
-                className="w-full"
-                defaultValue={filterData?.keyword}
-                onChange={(e) => {
-                  setFilterData({ ...filterData, keyword: e.target.value })
-                }}
-              />
-            </div>
-
-            <LaravelPagingx
-              columnsData={columnsData}
-              data={data?.data}
-              filterData={filterData}
-              setFilterData={setFilterData}
-            // isValidating={isValidating}
-            />
-          </>
-        )}
-      </CardContent>
-    </Card>
+      <LaravelPagingx
+        columnsData={columnsData}
+        data={data?.data}
+        filterData={filterData}
+        setFilterData={setFilterData}
+      // isValidating={isValidating}
+      />
+    </>
   );
 }
 

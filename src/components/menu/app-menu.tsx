@@ -72,7 +72,7 @@ const AppMenu = () => {
         },
 
         {
-          "name": "Data Notulen",
+          "name": "Undangan & Notulen",
           "path": "/berkas/notulen",
           "icon": <IconWriting className="w-5 h-5 mr-2" />,
         }
