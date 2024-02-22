@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from "@/components/ui/badge"
 import { getDate } from '@/lib/date';
 import { Button } from "@/components/ui/button"
-import { IconPlus, IconDotsVertical, IconTag, IconSearch, IconWriting } from "@tabler/icons-react"
+import { IconPlus, IconDotsVertical, IconTag, IconSearch, IconWriting, IconQrcode } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -216,6 +216,15 @@ const SuratInternal: NextPageWithLayout = () => {
                       route.push(`/berkas/notulen/${row.no_surat.split('/').join('--')}/new`)
                     }}>
                       <IconWriting className="w-4 h-4 me-2" /> Buat Notulen
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => {
+                      // open in new tab API_URL
+                      route.push(`/surat/internal/${row.no_surat.split('/').join('--')}/qr`)
+                    }}>
+                      <IconQrcode className="w-4 h-4 me-2" /> QR Kehadiran
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </>
