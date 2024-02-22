@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -12,6 +12,8 @@ import { getFullDateWithDayName, getTime } from "@/lib/date";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import toast from "react-hot-toast";
+import useSWR from "swr";
+import Loading1 from "@/components/custom/icon-loading";
 
 const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
 const PenerimaUndanganTable = dynamic(() => import('@/components/custom/tables/penerima-undangan'), { ssr: false });
@@ -25,6 +27,60 @@ const KehadiranKegiatanPage = ({ nomor, kegiatan, penerima }: { nomor: string, k
 
   const [karyawan, setKaryawan] = useState<string[]>([]);
   const [karyawanHadir, setKaryawanHadir] = useState<any[]>([]);
+
+  const delayDebounceFn = useRef<any>(null)
+  const [filterData, setFilterData] = useState({})
+  const [filterQuery, setFilterQuery] = useState('')
+
+  const fetcher = async (url: string) => {
+    const session = await getSession()
+
+    const response = await fetch(url + filterQuery, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+      },
+      body: JSON.stringify({ no_surat: nomor })
+    })
+
+    if (!response.ok) {
+      throw new Error(response.status + ' ' + response.statusText)
+    }
+
+    const jsonData = await response.json()
+    return jsonData
+  }
+
+  const { data: dataPenerima, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/undangan/penerima`, fetcher, {
+    revalidateOnFocus: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: true,
+  })
+
+  useEffect(() => {
+    let fq = ''
+    for (const [key, value] of Object.entries(filterData)) {
+      if (value) {
+        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
+      }
+    }
+
+    setFilterQuery(fq)
+  }, [filterData])
+
+  useEffect(() => {
+    if (delayDebounceFn.current) {
+      clearTimeout(delayDebounceFn.current);
+    }
+
+    delayDebounceFn.current = setTimeout(() => {
+      mutate();
+    }, 250);
+
+    return () => clearTimeout(delayDebounceFn.current);
+  }, [filterQuery]);
+
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -194,10 +250,16 @@ const KehadiranKegiatanPage = ({ nomor, kegiatan, penerima }: { nomor: string, k
                 <CardDescription>Berikut ini adalah data penerima undangan kegiatan</CardDescription>
               </CardHeader>
               <CardContent>
-                <PenerimaUndanganTable
-                  data={penerima.data ?? []}
-                  setKaryawanHadir={setKaryawanHadir}
-                />
+                {isLoading && <Loading1 height={50} width={50} />}
+                {error && <div>{error.message}</div>}
+                {dataPenerima && (
+                  <PenerimaUndanganTable
+                    data={dataPenerima.data ?? []}
+                    setKaryawanHadir={setKaryawanHadir}
+                    filterData={filterData}
+                    setFilterData={setFilterData}
+                  />
+                )}
 
                 <div className="w-full flex mt-7">
                   <Button type="button" variant="outline" size="sm" onClick={() => {
@@ -336,7 +398,6 @@ export async function getServerSideProps(context: any) {
     props: {
       nomor: nomorSurat,
       kegiatan: kegiatan,
-      penerima: penerima
     },
   }
 

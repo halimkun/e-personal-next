@@ -1,16 +1,21 @@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import dynamic from "next/dynamic"
+import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+
+import dynamic from "next/dynamic"
 
 const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
 
 interface PenerimaUndanganProps {
   data: any,
-  setKaryawanHadir?: any
+  setKaryawanHadir?: any,
+  filterData: any,
+  setFilterData: any
 }
 
-const PenerimaUndanganTable = ({ data, setKaryawanHadir }: PenerimaUndanganProps) => {
+const PenerimaUndanganTable = ({ data, setKaryawanHadir, filterData, setFilterData }: PenerimaUndanganProps) => {
 
   const penerima = data.penerima;
   const [penerimaHadir, setPenerimaHadir] = useState<any[]>(data.penerimaHadir ?? []);
@@ -31,13 +36,13 @@ const PenerimaUndanganTable = ({ data, setKaryawanHadir }: PenerimaUndanganProps
             value={row.penerima}
             checked={penerimaHadir.includes(row.penerima)}
             disabled={true}
-            // onCheckedChange={() => {
-            //   if (penerimaHadir.includes(row.penerima)) {
-            //     setPenerimaHadir(penerimaHadir.filter((item: any) => item !== row.penerima))
-            //   } else {
-            //     setPenerimaHadir([...penerimaHadir, row.penerima])
-            //   }
-            // }}
+          // onCheckedChange={() => {
+          //   if (penerimaHadir.includes(row.penerima)) {
+          //     setPenerimaHadir(penerimaHadir.filter((item: any) => item !== row.penerima))
+          //   } else {
+          //     setPenerimaHadir([...penerimaHadir, row.penerima])
+          //   }
+          // }}
           />
         </div>
       )
@@ -80,11 +85,24 @@ const PenerimaUndanganTable = ({ data, setKaryawanHadir }: PenerimaUndanganProps
 
   return (
     <div>
+      <div className="w-full space-y-1">
+        <Label>Search</Label>
+        <Input
+          type="search"
+          placeholder="Search..."
+          className="w-full"
+          defaultValue={filterData?.keyword}
+          onChange={(e) => {
+            setFilterData({ ...filterData, keyword: e.target.value })
+          }}
+        />
+      </div>
+
       <LaravelPagingx
         data={penerima}
         columnsData={columns}
-        filterData={undefined}
-        setFilterData={undefined}
+        filterData={filterData}
+        setFilterData={setFilterData}
       />
     </div>
   )
