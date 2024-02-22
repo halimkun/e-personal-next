@@ -6,14 +6,15 @@ import toast from "react-hot-toast"
 
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { getFullDateWithDayName } from "@/lib/date"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 import { Button } from "@/components/ui/button"
-import { IconEditCircle, IconFileTypePdf, IconPencilPlus, IconTrash } from "@tabler/icons-react"
+import { IconDotsVertical, IconEditCircle, IconFileTypePdf, IconPencilPlus, IconTrash, IconUserScan } from "@tabler/icons-react"
+import { IconQrcode } from "@tabler/icons-react"
 
 const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
 
@@ -30,7 +31,7 @@ interface NotulenProps {
 
 const TableNotulen = ({ data, filterData, setFilterData, isValidating, onRowClick = () => { }, setSelectedItem = () => { }, lastColumnAction, mutate }: NotulenProps) => {
   const route = useRouter();
-  
+
   const onDelete = async (nomor: string) => {
     const confirm = window.confirm('Apakah anda yakin ingin menghapus data ini?')
     if (!confirm) return
@@ -95,15 +96,15 @@ const TableNotulen = ({ data, filterData, setFilterData, isValidating, onRowClic
       selector: 'notulis',
       enableHiding: false,
       data: (row: any) => (
-        row.notulen ?  (
+        row.notulen ? (
           <TooltipProvider delayDuration={50}>
-          <Tooltip>
-            <TooltipTrigger>
-              <Badge variant={"outline"} className="group-hover:border-primary">{row.notulen.notulis.nik}</Badge>
-            </TooltipTrigger>
-            <TooltipContent>{row.notulen.notulis.nama}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Badge variant={"outline"} className="group-hover:border-primary">{row.notulen.notulis.nik}</Badge>
+              </TooltipTrigger>
+              <TooltipContent>{row.notulen.notulis.nama}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         ) : (
           <Badge variant={'destructive'}>belum ada notulen</Badge>
         )
@@ -125,41 +126,53 @@ const TableNotulen = ({ data, filterData, setFilterData, isValidating, onRowClic
       selector: 'action',
       enableHiding: false,
       data: (row: any) => (
-        <div className="flex gap-1 w-full justify-end">
-          <Button
-            size={'icon'}
-            onClick={() => {
+        <DropdownMenu>
+          <DropdownMenuTrigger className='h-8 w-8 rounded-lg bg-transparent hover:bg-foreground/5 flex items-center justify-center'>
+            <span className="sr-only">Open menu</span>
+            <IconDotsVertical className="w-5 h-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Kehadiran</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="flex items-center gap-2" onClick={() => {
+                  route.push(`/kegiatan/${row.no_surat.split('/').join('--')}/kehadiran`)
+                }}>
+                  <IconUserScan size={18} /> Kehadiran Peserta
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuItem className="flex items-center gap-2" onClick={() => {
+                route.push(`/surat/internal/${row.no_surat.split('/').join('--')}/qr`)
+              }}>
+                <IconQrcode size={18} /> QR Code Kehadiran
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+
+            <DropdownMenuLabel>Files</DropdownMenuLabel>
+            <DropdownMenuItem className="flex items-center gap-2" disabled={!row.notulen} onClick={() => {
               const url = `${process.env.NEXT_PUBLIC_API_URL}/berkas/notulen/render/${row.no_surat.replaceAll('/', '--')}`
               window.open(url, '_blank')
-            }}
-            disabled={!row.notulen}
-            className="bg-success text-white hover:bg-success/80 w-7 h-7"
-          >
-            <IconFileTypePdf size={18} />
-          </Button>
+            }}>
+              <IconFileTypePdf size={18} /> Download Notulen
+            </DropdownMenuItem>
 
-          <Button
-            size={'icon'}
-            onClick={() => {
-              const url = "/berkas/notulen/" + row.no_surat.toString().replaceAll('/', '--') + (row.notulen ? '/edit' : '/new')
-              route.push(url)
-            }}
-            className="bg-primary text-white hover:bg-primary/80 w-7 h-7"
-          >
-            {row.notulen ? <IconEditCircle size={18} /> : <IconPencilPlus size={18} />}
-          </Button>
-
-          <Button
-            size={'icon'}
-            onClick={() => {
-              onDelete(row.no_surat)
-            }}
-            className="bg-danger text-white hover:bg-danger-600 w-7 h-7"
-          >
-            <IconTrash size={18} />
-          </Button>
-        </div>
-      )
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem className="flex items-center gap-2 text-primary" onClick={() => {
+                const url = "/berkas/notulen/" + row.no_surat.toString().replaceAll('/', '--') + (row.notulen ? '/edit' : '/new')
+                route.push(url)
+              }}>
+                {row.notulen ? <IconEditCircle size={18} /> : <IconPencilPlus size={18} />} {(row.notulen ? 'Edit' : 'Buat')} Notulen
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex items-center gap-2 text-danger" onClick={() => {
+                onDelete(row.no_surat)
+              }}>
+                <IconTrash size={18} /> Hapus Notulen
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
     }
   ];
 
