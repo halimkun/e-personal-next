@@ -1,11 +1,14 @@
-import FormAddSuratInternal from "@/components/custom/forms/add-surat-internal";
-import AppLayout from "@/components/layouts/app";
 import { NextPageWithLayout } from "@/pages/_app"
 import { IconLoader } from "@tabler/icons-react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ReactElement, useState } from "react";
+
+import dynamic from "next/dynamic";
 import useSWR from "swr";
+
+const FormAddSuratInternal = dynamic(() => import('@/components/custom/forms/add-surat-internal'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const SuratInternal: NextPageWithLayout = () => {
   const route = useRouter();

@@ -3,8 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Combobox } from "../inputs/combo-box";
 import { ColumnsSuratMasuk } from "@/components/utils/columns/surat-masuk";
 import { IconBrandWhatsapp, IconFile, IconFileText, IconMail, IconPrinter } from "@tabler/icons-react";
+import dynamic from "next/dynamic";
 
-import LaravelPagingx from "@/components/custom-ui/laravel-paging";
+const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
 
 interface tableSuratMasukProps {
   data: any

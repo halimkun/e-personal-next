@@ -3,6 +3,8 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import dynamic from "next/dynamic";
+import toast from "react-hot-toast";
+import useSWR from "swr";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -11,13 +13,11 @@ import { Separator } from "@/components/ui/separator";
 import { getFullDateWithDayName, getTime } from "@/lib/date";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import toast from "react-hot-toast";
-import useSWR from "swr";
-import Loading1 from "@/components/custom/icon-loading";
 
 const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
 const PenerimaUndanganTable = dynamic(() => import('@/components/custom/tables/penerima-undangan'), { ssr: false });
 const TablePegawai = dynamic(() => import('@/components/custom/tables/pegawai'), { ssr: false });
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false });
 
 const KehadiranKegiatanPage = ({ nomor, kegiatan, penerima }: { nomor: string, kegiatan: any, penerima: any }) => {
   const router = useRouter();

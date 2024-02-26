@@ -1,8 +1,8 @@
-import AppLayout from "@/components/layouts/app"
 import { useRouter } from "next/router"
 import { ReactElement, useEffect, useState } from "react"
 
 import dynamic from 'next/dynamic'
+import toast from "react-hot-toast"
 import { getSession } from "next-auth/react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,13 +10,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { IconArrowLeft } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
-import Loading1 from "@/components/custom/icon-loading"
-import toast from "react-hot-toast"
 
-const Editor = dynamic(
-  () => import('@/components/custom/editor'),
-  { ssr: false }
-)
+const Editor = dynamic(() => import('@/components/custom/editor'),{ ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'),{ ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const SpoDetailPage = () => {
   const router = useRouter()

@@ -1,6 +1,6 @@
 import useSWR from 'swr'
-import AppLayout from "@/components/layouts/app"
-import LaravelPagination from "@/components/custom-ui/laravel-pagination"
+import dynamic from 'next/dynamic'
+import toast from 'react-hot-toast'
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -13,17 +13,17 @@ import { NextPageWithLayout } from "@/pages/_app"
 import { ReactElement, useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getSession } from 'next-auth/react'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-
-import Loading1 from '@/components/custom/icon-loading'
-import SelectPenanggungJawab from '@/components/custom/inputs/penanggung-jawab-select'
-import { Textarea } from '@/components/ui/textarea'
-import toast from 'react-hot-toast'
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
+const LaravelPagination = dynamic(() => import('@/components/custom-ui/laravel-pagination'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
+const SelectPenanggungJawab = dynamic(() => import('@/components/custom/inputs/penanggung-jawab-select'), { ssr: false })
 
 const EditSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();

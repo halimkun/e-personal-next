@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 
 import useSWR from "swr";
 import dynamic from "next/dynamic";
-import AppLayout from "@/components/layouts/app";
 import fetcherGet from "@/utils/fetcherGet";
 
 import { toast } from "react-hot-toast";
@@ -22,6 +21,7 @@ const DialogEditPks = dynamic(() => import('@/components/custom/modals/dialog-ed
 const FormAddPks = dynamic(() => import('@/components/custom/forms/add-pks'), { ssr: false })
 const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
 const TabelPKS = dynamic(() => import('@/components/custom/tables/pks'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const BerkasKerjasama: NextPageWithLayout = () => {
   const router = useRouter();

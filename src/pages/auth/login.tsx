@@ -1,8 +1,10 @@
-import type { ReactElement } from 'react'
-import type { NextPageWithLayout } from '../_app';
 import { UserAuthForm } from '@/components/custom/forms/user-auth';
-import AuthLayout from '@/components/layouts/auth';
+import type { NextPageWithLayout } from '../_app';
+import type { ReactElement } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
+
+const AuthLayout = dynamic(() => import('@/components/layouts/auth'), { ssr: false });
 
 const LoginPage: NextPageWithLayout = () => {
   return (

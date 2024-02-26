@@ -1,5 +1,3 @@
-import FormAddSuratMasuk from "@/components/custom/forms/add-surat-masuk";
-import AppLayout from "@/components/layouts/app";
 import dynamic from "next/dynamic";
 
 import { NextPageWithLayout } from "@/pages/_app";
@@ -10,6 +8,8 @@ import { IconCheck, IconSearch, IconX } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 
 const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
+const FormAddSuratMasuk = dynamic(() => import('@/components/custom/forms/add-surat-masuk'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const EditSuratMasuk: NextPageWithLayout = ({ data }: any) => {
   const [hasBerkas, setHasBerkas] = useState(false)

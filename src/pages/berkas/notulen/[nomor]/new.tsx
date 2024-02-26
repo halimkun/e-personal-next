@@ -1,4 +1,3 @@
-import AppLayout from "@/components/layouts/app";
 import { ReactElement, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -9,7 +8,11 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { Label } from "@/components/ui/label";
 import { getSession } from "next-auth/react";
 import { getFullDateWithDayName } from "@/lib/date";
-import FormAddNotulen from "@/components/custom/forms/add-notulen";
+
+import dynamic from "next/dynamic";
+
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
+const FormAddNotulen = dynamic(() => import('@/components/custom/forms/add-notulen'), { ssr: false });
 
 const BuatNotulenPage = (props: any) => {
 

@@ -1,5 +1,4 @@
 import SPOHtml from '@/templates/pdf/spo-html';
-import { getSession } from 'next-auth/react';
 
 const RenderPage = ({ data, isMobile }: any) => {
   // const router = useRouter()

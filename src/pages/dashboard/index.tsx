@@ -1,12 +1,12 @@
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import AppLayout from '@/components/layouts/app';
 import startOfWeek from 'date-fns/startOfWeek'
 import format from 'date-fns/format'
 import getDay from 'date-fns/getDay'
 import id from 'date-fns/locale/id'
 import parse from 'date-fns/parse'
+import dynamic from 'next/dynamic';
 
 import { NextPageWithLayout } from '../_app';
 import { getSession } from 'next-auth/react';
@@ -16,7 +16,9 @@ import { IconChevronLeft, IconChevronRight, IconFocus2 } from '@tabler/icons-rea
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import { cn } from '@/lib/utils';
 
-import dynamic from 'next/dynamic';
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
+const DialogDetailAgenda = dynamic(() => import('@/components/custom/modals/dialog-detail-agenda'), { ssr: false })
+const DialogAddAgenda = dynamic(() => import('@/components/custom/modals/dialog-add-agenda'), { ssr: true })
 
 const locales = {
   'id': id,
@@ -29,9 +31,6 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 })
-
-const DialogDetailAgenda = dynamic(() => import('@/components/custom/modals/dialog-detail-agenda'), { ssr: false })
-const DialogAddAgenda = dynamic(() => import('@/components/custom/modals/dialog-add-agenda'), { ssr: true })
 
 const DashboardPage: NextPageWithLayout = () => {
   const [add, setAdd] = useState(false)

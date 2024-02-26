@@ -1,6 +1,5 @@
-import FormAddSuratEksternal from "@/components/custom/forms/add-surat-eksternal";
-import AppLayout from "@/components/layouts/app";
 import useSWR from "swr";
+import dynamic from "next/dynamic";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -9,6 +8,9 @@ import { IconArrowLeft, IconLoader } from "@tabler/icons-react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ReactElement, useState } from "react";
+
+const FormAddSuratEksternal = dynamic(() => import('@/components/custom/forms/add-surat-eksternal'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const SuratEksternal: NextPageWithLayout = () => {
   const route = useRouter();

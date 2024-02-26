@@ -1,7 +1,6 @@
 import useSWR from "swr"
 import dynamic from "next/dynamic"
 import toast from "react-hot-toast"
-import AppLayout from "@/components/layouts/app"
 import fetcherGet from "@/utils/fetcherGet"
 
 import { useRouter } from "next/router"
@@ -20,6 +19,7 @@ const DialogViewSpo = dynamic(() => import('@/components/custom/modals/view-spo'
 const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
 const TabelSPO = dynamic(() => import('@/components/custom/tables/spo'), { ssr: false })
 const FormAddSpo = dynamic(() => import('@/components/custom/forms/add-spo'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const SpoPage = () => {
   const router = useRouter()

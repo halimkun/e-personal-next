@@ -1,6 +1,4 @@
-import FormAddSuratMasuk from "@/components/custom/forms/add-surat-masuk";
-import AppLayout from "@/components/layouts/app";
-
+import dynamic from "next/dynamic";
 import { NextPageWithLayout } from "@/pages/_app";
 import { ReactElement } from "react";
 import {
@@ -11,6 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
+const FormAddSuratMasuk = dynamic(() => import('@/components/custom/forms/add-surat-masuk'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const CreateSuratMasuk: NextPageWithLayout = () => {
   return (

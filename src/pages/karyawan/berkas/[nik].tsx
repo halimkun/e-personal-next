@@ -1,18 +1,19 @@
-import AppLayout from "@/components/layouts/app";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { getDate } from "@/lib/date";
-import { ReactElement, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import UploadBerkasKaryawan from "@/components/custom/modals/upload-berkas-karyawan";
-import { IconArrowLeft, IconFileSearch, IconLoader, IconTrash } from "@tabler/icons-react";
-import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
+import { Badge } from "@/components/ui/badge";
 import { getSession } from "next-auth/react";
-import useSWR from "swr";
-import DialogPreviewBerkas from "@/components/custom/modals/dialog-preview-berkas";
+import { Button } from "@/components/ui/button";
+import { ReactElement, useState } from "react";
+import { toast } from "@/components/ui/use-toast";
+import { IconArrowLeft, IconFileSearch, IconLoader, IconTrash } from "@tabler/icons-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+import useSWR from "swr";
+import dynamic from 'next/dynamic'
+
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
+const UploadBerkasKaryawan = dynamic(() => import('@/components/custom/modals/upload-berkas-karyawan'), { ssr: false })
+const DialogPreviewBerkas = dynamic(() => import('@/components/custom/modals/dialog-preview-berkas'), { ssr: false })
 
 const BerkasKaryawan = () => {
   const router = useRouter()

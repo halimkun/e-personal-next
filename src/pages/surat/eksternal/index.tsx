@@ -7,7 +7,6 @@ import type { NextPageWithLayout } from '../../_app';
 import useSWR from 'swr';
 import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
-import AppLayout from '@/components/layouts/app';
 import fetcherGet from '@/utils/fetcherGet';
 
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +23,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 
 const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
 const TabelSuratEksternal = dynamic(() => import('@/components/custom/tables/surat-eksternal'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const SuratInternal: NextPageWithLayout = () => {
   const route = useRouter()

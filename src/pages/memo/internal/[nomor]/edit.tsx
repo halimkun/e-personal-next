@@ -1,12 +1,11 @@
 import dynamic from "next/dynamic";
-import AppLayout from "@/components/layouts/app";
 
 import { ReactElement } from "react";
 import { NextPageWithLayout } from "@/pages/_app";
 import { getSession } from "next-auth/react";
 
-
 const FormAddMemoInternal = dynamic(() => import('@/components/custom/forms/add-memo-internal'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const EditMemoInternal: NextPageWithLayout = (props: any) => {
   const { data, nomorSurat } = props

@@ -1,17 +1,18 @@
 import React, { ReactElement } from 'react';
 import { NextPageWithLayout } from '../_app';
-import LaravelPagination from '@/components/custom-ui/laravel-pagination';
-import AppLayout from '@/components/layouts/app';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { IconDotsVertical, IconEditCircle, IconReportSearch } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { toast, useToast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
+
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
-
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
+const LaravelPagination = dynamic(() => import('@/components/custom-ui/laravel-pagination'), { ssr: false });
 
 const suratInternalColumns = [
   {

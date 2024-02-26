@@ -3,7 +3,6 @@ import React, { ReactElement, useEffect, useRef, useState } from "react"
 import useSWR from "swr"
 import dynamic from "next/dynamic"
 import fetcherGet from "@/utils/fetcherGet"
-import AppLayout from "@/components/layouts/app"
 
 import { useRouter } from "next/router"
 import { IconPlus } from "@tabler/icons-react"
@@ -15,6 +14,7 @@ const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals
 const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
 const TableSuratMasuk = dynamic(() => import('@/components/custom/tables/surat-masuk'), { ssr: false })
 const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })  
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const SuratMasukPage: NextPageWithLayout = () => {
   const router = useRouter()

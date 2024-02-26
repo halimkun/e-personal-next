@@ -1,6 +1,5 @@
-import Loading1 from "@/components/custom/icon-loading"
-import AppLayout from "@/components/layouts/app"
 import useSWR from "swr"
+import dynamic from "next/dynamic"
 
 import { ReactElement } from "react"
 import { useRouter } from "next/router"
@@ -14,6 +13,9 @@ import { NextPageWithLayout } from "@/pages/_app"
 import { IconArrowLeft, IconInfoCircle, IconLoader, IconNote } from "@tabler/icons-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const DetailSuratInternal: NextPageWithLayout = ({ nomor }: any) => {
   const route = useRouter();
