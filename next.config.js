@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // reactStrictMode: true,
+  reactStrictMode: false,
   env: {
     PORT: process.env.NEXT_PUBLIC_PORT,
     APP_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
