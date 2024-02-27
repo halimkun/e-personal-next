@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate, IconMailDown, IconNote } from '@tabler/icons-react';
+import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate, IconMailDown, IconNote, IconVirusOff, IconUserHeart, IconBuildingHospital } from '@tabler/icons-react';
 import { IconMailShare } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/router";
@@ -59,6 +59,31 @@ const AppMenu = () => {
           "name": "Surat Keputusan",
           "path": "/berkas/sk",
           "icon": <IconFilePower className="w-5 h-5 mr-2" />,
+        }
+      ],
+    },
+
+    {
+      "berkas lainnya": [
+        {
+          "name": "PPI",
+          "path": "/berkas/ppi",
+          "icon": <IconVirusOff className="w-5 h-5 mr-2" />,
+        },
+        {
+          "name": "PMKP",
+          "path": "/berkas/pmkp",
+          "icon": <IconUserHeart className="w-5 h-5 mr-2" />,
+        },
+      ],
+    },
+
+    {
+      "berkas komite": [
+        {
+          "name": "Keperawatan",
+          "path": "/berkas/komite/keperawatan",
+          "icon": <IconBuildingHospital className="w-5 h-5 mr-2" />,
         }
       ],
     },
