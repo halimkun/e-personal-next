@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react"
 
-import useSWR, { Cache } from "swr"
+import useSWR from "swr"
 import dynamic from "next/dynamic"
 import fetcherGet from "@/utils/fetcherGet"
 
@@ -33,6 +33,7 @@ const SuratMasukPage: NextPageWithLayout = () => {
     refreshWhenHidden: true,
     revalidateOnFocus: false,
     refreshWhenOffline: false,
+    revalidateIfStale: true,
   })
 
   useEffect(() => {
@@ -50,14 +51,7 @@ const SuratMasukPage: NextPageWithLayout = () => {
   }, [fltrData]);
 
   useEffect(() => {
-    // clear cache
-    const cache = new Cache()
-    cache.delete(`${process.env.NEXT_PUBLIC_API_URL}/surat/masuk`)
-
-    // if filterQuery not empty, then revalidate
-    if (debouncedFilterQuery) {
-      mutate()
-    }
+    mutate()
   }, [debouncedFilterQuery, mutate]);
 
   if (isLoading) return <Loading1 height={50} width={50} />
