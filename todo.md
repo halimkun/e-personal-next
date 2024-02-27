@@ -11,14 +11,14 @@
 - [x] Surat internal tambah catatan
 - [x] Undangan PDF
 
-- [x] Penomoran surat PMKP (01/PMKP-RSIA/091123)
-- [x] Penomoran surat PPI (01/PPI-RSIA/300123)
-- [x] Penomoran surat Komite Keperawatan (01/KPRT-RSIA/060223)
+- [x] Penomoran surat PMKP                  (01/PMKP-RSIA/091123)
+- [x] Penomoran surat PPI                   (01/PPI-RSIA/300123)
+- [x] Penomoran surat Komite Keperawatan    (01/KPRT-RSIA/060223)
 
-- [ ] Penomoran Doc Radiologi
-- [ ] Penomoran Komite Kesehatan Lain
-- [ ] Penomoran Komite Medik
-- [ ] Penomoran Sertifikat
+- [ ] Penomoran Doc Radiologi               (001/RAD-RSIA/011023)
+- [ ] Penomoran Komite Kesehatan Lain       (01/KTKL-RSIA/160123)
+- [ ] Penomoran Komite Medik                (01/KOMED-RSIA/080223)
+- [ ] Penomoran Sertifikat                  (004/IHT-RSIA/050723)
 
 #### Improve or Minor Bugs
 <!-- ----- minor bug -->
