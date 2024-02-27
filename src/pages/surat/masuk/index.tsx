@@ -1,62 +1,64 @@
-import React, { ReactElement, useEffect, useRef, useState } from "react"
+import React, { ReactElement, useEffect, useState } from "react"
 
-import useSWR from "swr"
+import useSWR, { Cache } from "swr"
 import dynamic from "next/dynamic"
 import fetcherGet from "@/utils/fetcherGet"
 
 import { useRouter } from "next/router"
+import { useDebounce } from 'use-debounce';
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { NextPageWithLayout } from "@/pages/_app"
 import { CardDescription, CardTitle } from "@/components/ui/card"
 
-const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
-const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
-const TableSuratMasuk = dynamic(() => import('@/components/custom/tables/surat-masuk'), { ssr: false })
-const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })  
 const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
+const TableSuratMasuk = dynamic(() => import('@/components/custom/tables/surat-masuk'), { ssr: false })
+const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
+const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
 
 const SuratMasukPage: NextPageWithLayout = () => {
   const router = useRouter()
 
-  const [selectedItem, setSelectedItem] = useState<any>({})
-  const [isOpenPreview, setIsOpenPreview] = useState(false)
-  const [isOpenMenu, setIsOpenMenu] = useState(false)
-
-  const delayDebounceFn = useRef<any>(null)
   const [fltrData, setFltrData] = useState({})
   const [filterQuery, setFilterQuery] = useState('')
+  const [debouncedFilterQuery] = useDebounce(filterQuery, 1000)
+
+  const [isOpenMenu, setIsOpenMenu] = useState(false)
+  const [isOpenPreview, setIsOpenPreview] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<any>({})
 
   const fetcher = (url: string) => fetcherGet({ url, filterQuery })
-
   const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/masuk`, fetcher, {
+    refreshWhenHidden: true,
     revalidateOnFocus: false,
     refreshWhenOffline: false,
-    refreshWhenHidden: true,
   })
 
   useEffect(() => {
-    let fq = ''
-    for (const [key, value] of Object.entries(fltrData)) {
-      if (value) {
-        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
-      }
-    }
+    const count = Object.keys(fltrData).length
 
-    setFilterQuery(fq)
-  }, [fltrData])
+    if (count > 0) {
+      let fq = '';
+      for (const [key, value] of Object.entries(fltrData)) {
+        if (value) {
+          fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`;
+        }
+      }
+      setFilterQuery(fq);
+    }
+  }, [fltrData]);
 
   useEffect(() => {
-    if (delayDebounceFn.current) {
-      clearTimeout(delayDebounceFn.current);
+    // clear cache
+    const cache = new Cache()
+    cache.delete(`${process.env.NEXT_PUBLIC_API_URL}/surat/masuk`)
+
+    // if filterQuery not empty, then revalidate
+    if (debouncedFilterQuery) {
+      mutate()
     }
-
-    delayDebounceFn.current = setTimeout(async () => {
-      await mutate();
-    }, 800);
-
-    return () => clearTimeout(delayDebounceFn.current);
-  }, [filterQuery]);
+  }, [debouncedFilterQuery, mutate]);
 
   if (isLoading) return <Loading1 height={50} width={50} />
   if (error) return <div>{error.message}</div>
@@ -75,19 +77,21 @@ const SuratMasukPage: NextPageWithLayout = () => {
           </Button>
         </div>
 
-        <TableSuratMasuk
-          data={data}
-          filterData={fltrData}
-          setFilterData={setFltrData}
-          isValidating={isValidating}
-          setIsOpenPreview={setIsOpenPreview}
-          setSelectedItem={setSelectedItem}
-          lastColumnAction={true}
-          onRowClick={(row: any) => {
-            setSelectedItem(row)
-            setIsOpenMenu(true)
-          }}
-        />
+        {data && (
+          <TableSuratMasuk
+            data={data}
+            filterData={fltrData}
+            setFilterData={setFltrData}
+            isValidating={isValidating}
+            setIsOpenPreview={setIsOpenPreview}
+            setSelectedItem={setSelectedItem}
+            lastColumnAction={true}
+            onRowClick={(row: any) => {
+              setSelectedItem(row)
+              setIsOpenMenu(true)
+            }}
+          />
+        )}
       </div>
 
       {/* Preview */}

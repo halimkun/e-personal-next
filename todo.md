@@ -11,6 +11,11 @@
 - [x] Surat internal tambah catatan
 - [x] Undangan PDF
 
+- [ ] Penomoran surat PMKP (01/PMKP-RSIA/091123)
+- [ ] Penomoran surat PPI (01/PPI-RSIA/300123)
+- [ ] Penomoran surat Komite Keperawatan (01/KPRT-RSIA/060223)
+
+
 #### Improve or Minor Bugs
 <!-- ----- minor bug -->
 - [x] Undangan tambahkan tanggal terbit

@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Combobox } from "../inputs/combo-box";
 import { ColumnsSuratMasuk } from "@/components/utils/columns/surat-masuk";
 import { IconBrandWhatsapp, IconFile, IconFileText, IconMail, IconPrinter } from "@tabler/icons-react";
+
 import dynamic from "next/dynamic";
 
 const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
@@ -94,18 +95,20 @@ const TableSuratMasuk = ({ data, filterData, setFilterData, isValidating, setIsO
         </div>
       </div>
 
-      <LaravelPagingx
-        data={data.data}
-        columnsData={columns}
-        filterData={filterData}
-        setFilterData={setFilterData}
-        isValidating={isValidating}
-        onRowClick={(item: any) => {
-          setSelectedItem(item)
-          onRowClick(item)
-        }}
-        lastColumnAction={true}
-      />
+      {data && (
+        <LaravelPagingx
+          data={data.data}
+          columnsData={columns}
+          filterData={filterData}
+          setFilterData={setFilterData}
+          isValidating={isValidating}
+          onRowClick={(item: any) => {
+            setSelectedItem(item)
+            onRowClick(item)
+          }}
+          lastColumnAction={lastColumnAction}
+        />
+      )}
     </>
   );
 }

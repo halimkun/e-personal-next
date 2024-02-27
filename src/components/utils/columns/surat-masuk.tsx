@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { IconFileSearch, IconHash } from "@tabler/icons-react"
+import { IconFileSearch } from "@tabler/icons-react"
 
 interface ColumnsSuratMasukProps {
   setIsOpenPreview: (value: boolean) => void
