@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate, IconMailDown, IconNote, IconVirusOff, IconUserHeart, IconBuildingHospital } from '@tabler/icons-react';
+import { IconMailStar, IconLayoutDashboard, IconUserStar, IconBooks, IconFileCertificate, IconMailDown, IconNote, IconVirusOff, IconUserHeart, IconBuildingHospital, IconStethoscope, IconBodyScan, IconUserUp } from '@tabler/icons-react';
 import { IconMailShare } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/router";
 import { IconFileStack } from "@tabler/icons-react";
 import { IconFilePower } from "@tabler/icons-react";
 import { IconWriting } from "@tabler/icons-react";
+import { IconRibbonHealth } from "@tabler/icons-react";
 
 const AppMenu = () => {
   const router = useRouter();
@@ -64,6 +65,26 @@ const AppMenu = () => {
     },
 
     {
+      "berkas komite": [
+        {
+          "name": "Keperawatan",
+          "path": "/berkas/komite/keperawatan",
+          "icon": <IconStethoscope className="w-5 h-5 mr-2" />,
+        },
+        {
+          "name": "Kesehatan",
+          "path": "/berkas/komite/kesehatan",
+          "icon": <IconBuildingHospital className="w-5 h-5 mr-2" />,
+        },
+        {
+          "name": "Medis",
+          "path": "/berkas/komite/medis",
+          "icon": <IconRibbonHealth className="w-5 h-5 mr-2" />,
+        },
+      ],
+    },
+
+    {
       "berkas lainnya": [
         {
           "name": "PPI",
@@ -75,16 +96,16 @@ const AppMenu = () => {
           "path": "/berkas/pmkp",
           "icon": <IconUserHeart className="w-5 h-5 mr-2" />,
         },
-      ],
-    },
-
-    {
-      "berkas komite": [
         {
-          "name": "Keperawatan",
-          "path": "/berkas/komite/keperawatan",
-          "icon": <IconBuildingHospital className="w-5 h-5 mr-2" />,
-        }
+          "name": "IHT",
+          "path": "/berkas/iht",
+          "icon": <IconUserUp className="w-5 h-5 mr-2" />,
+        },
+        {
+          "name": "Radiologi",
+          "path": "/berkas/radiologi",
+          "icon": <IconBodyScan className="w-5 h-5 mr-2" />,
+        },
       ],
     },
 
