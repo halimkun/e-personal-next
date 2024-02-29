@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -7,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { IconInnerShadowTop } from "@tabler/icons-react"
 import { getSession } from "next-auth/react"
+import toast from "react-hot-toast"
 
 
 const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
@@ -29,10 +29,7 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
       if (data.success) {
         setKategori(data.data)
       } else {
-        toast({
-          title: "Gagal",
-          description: "Gagal mengambil data kategori",
-        })
+        toast.error("Gagal mengambil data kategori")
       }
     }
 
@@ -53,10 +50,7 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
     if (data.success) {
       setBerkas(data.data)
     } else {
-      toast({
-        title: "Gagal",
-        description: "Gagal mengambil data berkas",
-      })
+      toast.error("Gagal mengambil data berkas")
     }
   }
 
@@ -78,21 +72,14 @@ const FormUploadBerkasPegawai = ({ nik, setOpen }: any) => {
     const data = await res.json()
 
     if (data.success) {
-      toast({
-        title: "Berhasil",
-        description: "Berkas berhasil diupload",
-      })
+      toast.success("Berkas berhasil diupload")
 
       router.replace(router.asPath)
       setOpen(false)
       setIsLoading(false)
     } else {
       setIsLoading(false)
-      toast({
-        title: "Gagal",
-        description: "Gagal mengupload berkas",
-      })
-
+      toast.error(data.message)
     }
   }
 

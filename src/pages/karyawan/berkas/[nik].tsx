@@ -4,12 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { getSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { ReactElement, useState } from "react";
-import { toast } from "@/components/ui/use-toast";
 import { IconArrowLeft, IconFileSearch, IconLoader, IconTrash } from "@tabler/icons-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 import useSWR from "swr";
 import dynamic from 'next/dynamic'
+import toast from "react-hot-toast";
 
 const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 const UploadBerkasKaryawan = dynamic(() => import('@/components/custom/modals/upload-berkas-karyawan'), { ssr: false })
@@ -45,17 +45,10 @@ const BerkasKaryawan = () => {
       })
     }).then(res => res.json()).then(data => {
       if (data.success) {
-        toast({
-          title: "Berhasil",
-          description: "Berhasil menghapus berkas",
-        })
-
+        toast.success("Berhasil menghapus berkas")
         router.replace(router.asPath)
       } else {
-        toast({
-          title: "Gagal",
-          description: "Gagal menghapus berkas",
-        })
+        toast.error(data.message)
       }
     })
   }

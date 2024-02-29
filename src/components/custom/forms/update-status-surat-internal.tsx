@@ -2,8 +2,8 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/router"
-import { toast } from "@/components/ui/use-toast"
 import { useSession } from "next-auth/react"
+import toast from "react-hot-toast"
 
 const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_surat: string, status: string, setStatus: any }) => {
   const route = useRouter()
@@ -47,11 +47,7 @@ const UpdateStatusSuratInternal = ({ nomor_surat, status, setStatus }: { nomor_s
           if (d.success) {
             route.reload()
           } else {
-            toast({
-              title: 'Gagal',
-              description: d.message,
-              duration: 5000,
-            })
+            toast.error(d.message)
           }
         }} size="sm">SIMPAN</Button>
       </div>

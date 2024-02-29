@@ -128,9 +128,9 @@ const SpoPage = () => {
         return (
           <div className="flex flex-row items-start gap-1.5">
             {badge.map((item: any, i: number) => (
-              <Badge variant="outline" className="max-w-[150px] whitespace-wrap group-hover:border-primary" key={i}>{item}</Badge>
+              <Badge variant="outline" className="max-w-[150px] whitespace-nowrap group-hover:border-primary" key={i}>{item}</Badge>
             ))}
-            {u.length > 1 && <Badge variant="outline" className="whitespace-wrap group-hover:border-primary">+{u.length - 1}</Badge>}
+            {u.length > 1 && <Badge variant="outline" className="whitespace-nowrap group-hover:border-primary">+{u.length - 1}</Badge>}
           </div>
         )
       }

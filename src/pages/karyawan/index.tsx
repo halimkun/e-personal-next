@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { IconDotsVertical, IconEditCircle, IconReportSearch } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { toast } from '@/components/ui/use-toast';
 
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import toast from 'react-hot-toast';
 
 const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
 const LaravelPagination = dynamic(() => import('@/components/custom-ui/laravel-pagination'), { ssr: false });
@@ -63,11 +63,7 @@ const suratInternalColumns = [
           <DropdownMenuLabel>Data</DropdownMenuLabel>
           <DropdownMenuGroup>
             <span className="flex flex-col gap-1">
-              <DropdownMenuItem onClick={() => toast({
-                title: 'Edit Data',
-                description: 'Fitur ini belum tersedia',
-                duration: 5000,
-              })} className='cursor-pointer hover:bg-secondary'>
+              <DropdownMenuItem onClick={() => toast.error('Fitur ini belum tersedia') } className='cursor-pointer hover:bg-secondary'>
                 <IconEditCircle className='h-4 w-4 mr-2' /> Edit Data
               </DropdownMenuItem>
             </span>

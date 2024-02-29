@@ -28,9 +28,8 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
       name: 'Nomor',
       selector: 'nomor',
       enableHiding: false,
-      style: ['w-[100px]'],
       data: (row: any) => (
-        <Badge variant={row.status === '1' ? 'secondary' : 'destructive'}>
+        <Badge variant={row.status === '1' ? 'secondary' : 'destructive'} className='whitespace-nowrap'>
           {`${row.nomor.toString().padStart(3, '0')}/${row.jenis}/${row.prefix}/${new Date(row.tgl_terbit).toLocaleDateString('id-ID', {
             year: '2-digit',
             month: '2-digit',

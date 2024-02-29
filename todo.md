@@ -14,7 +14,6 @@
 - [x] Penomoran surat PMKP                  (01/PMKP-RSIA/091123)
 - [x] Penomoran surat PPI                   (01/PPI-RSIA/300123)
 - [x] Penomoran surat Komite Keperawatan    (01/KPRT-RSIA/060223)
-
 - [x] Penomoran Komite Kesehatan Lain       (01/KTKL-RSIA/160123)
 - [x] Penomoran Komite Medik                (01/KOMED-RSIA/080223)
 - [x] Penomoran Doc Radiologi               (001/RAD-RSIA/011023)

@@ -34,7 +34,7 @@ const LaravelPagingx = ({
         <TableHeader>
           <TableRow>
             {columnsData.map((column: any) => (
-              <TableHead key={column.name.toString().replace(/\s+/g, '-').toLowerCase()}>{column.name}</TableHead>
+              <TableHead key={column.name.toString().replace(/\s+/g, '-').toLowerCase()} className={column.style}>{column.name}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
