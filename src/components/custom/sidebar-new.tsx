@@ -10,7 +10,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-import { menuItemsType } from "@/menu"
 import { useRouter } from "next/router"
 import * as TablerIcons from "@tabler/icons-react"
 
@@ -19,7 +18,7 @@ const getIcon = (name: any) => {
   return <TIcon iconName={name} iconNamePascal={name} iconNode={[]} className="mr-3 h-5 w-5" />
 }
 
-export function SidebarNew({ links, isCollapsed }: { links: menuItemsType[], isCollapsed: boolean }) {
+export function SidebarNew({ links, isCollapsed }: { links: any[], isCollapsed: boolean }) {
   const route = useRouter()
   const pathname = route.pathname
 
