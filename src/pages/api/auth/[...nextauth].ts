@@ -27,18 +27,38 @@ const authOption: NextAuthOptions = {
           },
           body: JSON.stringify({ username, password }),
         }).then((res) => res.json());
-        
+
         if (response.success) {
+
+          const jwt = require('jsonwebtoken');
+          const decodedToken = jwt.decode(response.access_token);
+
+          if (decodedToken.kd_dep == null || decodedToken.kd_dep == '-' || decodedToken.kd_dep == undefined || decodedToken.kd_dep == '') {
+            throw new Error('Department code is not valid or you the user is not allowed to access this application');
+          }
+
+          // has menu on this application or not
+          const menu = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?dep=${decodedToken.kd_dep}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }).then(res => res.json());
+          
+          if (menu.data.length == 0) {
+            throw new Error('User is not allowed to access this application');
+          }
+
           return response;
         } else {
-          return null;
+          throw new Error("Invalid credentials");
         }
       },
     })
   ],
 
-  callbacks: {    
-    jwt({ token, account, profile, user }) {      
+  callbacks: {
+    jwt({ token, account, profile, user }) {
       if (account?.provider == 'credentials') {
         token.accessToken = user.access_token;
         token.tokenType = user.token_type;

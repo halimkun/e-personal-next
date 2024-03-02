@@ -9,13 +9,11 @@ import { Separator } from '../ui/separator'
 import { isMobile } from 'react-device-detect'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { AppMenuProvider } from '@/components/menu-context'
 
 import { ScrollArea } from '../ui/scroll-area'
 import { useSession } from "next-auth/react"
 import { ModeToggle } from '../custom/mode-toggle'
 import { LogoutButton } from '../custom/buttons/logout'
-import { useAppMenu } from '../menu-context'
 import dynamic from 'next/dynamic'
 
 const UserMenu = dynamic(() => import('../menu/user-menu'), { ssr: false })
