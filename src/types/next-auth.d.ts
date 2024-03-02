@@ -17,9 +17,11 @@ declare module "next-auth" {
 
   interface Session {
     user?: {
-      name?: string | null
-      email?: string | null
-      image?: string | null
+      sub?: string;
+      name?: string;
+      email?: string;
+      dep?: string;
+      department?: string;
     }
     rsiap?: {
       access_token?: string | null

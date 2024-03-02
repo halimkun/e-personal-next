@@ -69,10 +69,40 @@ const authOption: NextAuthOptions = {
 
     // save to session
     async session({ session, token }: any) {
+      const jwt = require('jsonwebtoken');
+      const decodedToken = jwt.decode(token.accessToken);
+
+      if (decodedToken.kd_dep == null || decodedToken.kd_dep == '-' || decodedToken.kd_dep == undefined || decodedToken.kd_dep == '') {
+        return null;
+      }
+
       session.rsiap = session.rsiap ?? {}; // Create the `rsiap` object if it doesn't exist
       if ("accessToken" in token) {
         session.rsiap.access_token = token.accessToken;
         session.rsiap.token_type = token.tokenType;
+      }
+
+      // {
+      //   iss: 'http://192.168.100.33/rsiap-api-dev/api/auth/login',
+      //   iat: 1709262658,
+      //   exp: 1711854658,
+      //   nbf: 1709262658,
+      //   jti: 'MDce0Vclug6TdNKF',
+      //   sub: 'humas',
+      //   prv: '23bd5c8949f600adb39e701c400872db7a5976f7',
+      //   isDokter: false,
+      //   kd_dep: '-',
+      //   nm_dep: '-'
+      // }
+
+      if (decodedToken) {
+        session.user = {
+          ...session.user,
+          sub: decodedToken.sub,
+          name: decodedToken.sub,
+          dep: decodedToken.kd_dep,
+          department: decodedToken.nm_dep
+        };
       }
 
       return session;
