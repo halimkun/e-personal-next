@@ -38,7 +38,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 				if (res?.ok) {
 					return res?.status;
 				} else {
-					throw new Error("Request failed with status: " + res?.status);
+					throw new Error(res?.error || "Failed to sign in");
 				}
 			}).catch((error) => {
 				throw error;
@@ -53,8 +53,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 				},
 				error: (error) => {
 					setIsDisabled(false);
-					console.error("Failed to sign in", error.message);
-					return "Username or password is incorrect, or the account does not exist.";
+					return error instanceof Error ? error.message : "Failed to sign in";
 				},
 			}
 		);
