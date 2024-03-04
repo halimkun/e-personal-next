@@ -7,18 +7,15 @@ import { Combobox } from "../inputs/combo-box";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
-import { parse } from "path";
 
 export default function FormAddSuratEksternal(penanggungJawab: any) {
   const router = useRouter();
   const { data } = useSession();
 
   const [selectedPj, setSelectedPj] = useState("")
-  const [withKaryawan, setWithKaryawan] = useState(false)
   const [tanggal, setTanggal] = useState("")
   const [lastNomorSurat, setLastNomorSurat] = useState("");
   const [newNomorSurat, setNewNomorSurat] = useState("");
@@ -47,7 +44,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
 
   useEffect(() => {
     parseNomorSurat()
-  }, [lastNomorSurat, tanggal])
+  }, [lastNomorSurat, tanggal, data?.rsiap?.access_token])
 
   const parseNomorSurat = () => {
     const splitNomorSurat = lastNomorSurat.split("/")

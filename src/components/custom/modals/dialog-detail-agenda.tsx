@@ -69,7 +69,7 @@ const DialogDetailAgenda = (props: DialogDetailAgendaProps) => {
         }
       })
     }
-  }, [selectedSTatus])
+  }, [selectedSTatus, evt.resource?.id])
 
   // delete function 
   async function deleteAgenda() {
