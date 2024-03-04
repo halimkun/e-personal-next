@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react"
 import { ModeToggle } from '../custom/mode-toggle'
 import { LogoutButton } from '../custom/buttons/logout'
 import dynamic from 'next/dynamic'
+import SearchMenu from '../custom/search-menu'
 
 const UserMenu = dynamic(() => import('../menu/user-menu'), { ssr: false })
 
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
 const AppLayout = ({ children }: any) => {
   const { data: session, status } = useSession()
   const [isCollapsed, setIsCollapsed] = React.useState(false)
+  const [menu, setMenu] = React.useState<any>([])
 
   useEffect(() => {
     document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
@@ -64,14 +66,18 @@ const AppLayout = ({ children }: any) => {
             <div className={cn("flex flex-col h-[80px] items-center justify-between p-3", isCollapsed ? 'h-[80px]' : 'p-3')}>
               <div>Login Sebagai : <span className="font-semibold">{session?.user?.name}</span></div>
 
-              <div className="flex items-center justify-center gap-2">
-                <ModeToggle /> <LogoutButton className='h-7 w-7' />
+              <div className="flex items-center justify-between w-full px-5">
+                <LogoutButton className='h-7 w-7' />
+                <div className="flex gap-2">
+                  <ModeToggle />
+                  <SearchMenu menu={menu}/>
+                </div>
               </div>
 
             </div>
             <Separator />
             <ScrollArea className="w-full pr-2 h-[calc(100vh-80px)]">
-              <UserMenu isCollapsed={isCollapsed} />
+              <UserMenu setMenu={setMenu} isCollapsed={isCollapsed} />
             </ScrollArea>
           </ResizablePanel>
           <ResizableHandle withHandle />

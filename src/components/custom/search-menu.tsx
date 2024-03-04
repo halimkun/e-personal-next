@@ -1,0 +1,76 @@
+import React from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { IconSearch } from '@tabler/icons-react';
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { buttonVariants } from '../ui/button';
+import { SidebarNew } from './sidebar-new';
+import { Separator } from '../ui/separator';
+
+interface SearchMenuProps {
+  menu: any
+}
+
+const SearchMenu = (props: SearchMenuProps) => {
+  const { menu } = props
+  const [search, setSearch] = React.useState<any[]>([])
+
+  const onSearch = (e: any) => {
+    var val = e.target.value;
+
+    const result = Object.keys(menu).reduce((acc: any, key: any) => {
+      const menuItem = menu[key]
+      const filtered = menuItem.filter((item: any) => item.label.toLowerCase().includes(val.toLowerCase()))
+      if (filtered.length > 0) {
+        acc[key] = filtered
+      }
+      return acc
+    }, {})
+    setSearch(result)
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger className={buttonVariants({
+        variant: 'outline',
+        size: 'icon',
+        className: 'h-7 w-7',
+      })}>
+        <IconSearch className="h-[1rem] w-[1rem]" />
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Find Menu</DialogTitle>
+          <DialogDescription>
+            cannot find the menu you are looking for? use the search feature to find the menu you are looking for.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-1">
+          <Label htmlFor="menu">Find Your Menu</Label>
+          {/* onsearch */}
+          <Input name='menu' id='menu' placeholder='Search menu' onChange={(e) => onSearch(e)} />
+        </div>
+
+        {Object.keys(search).length > 0 && (
+          Object.keys(search).map((key: any, index: number) => {
+            return (
+              <div className='-mb-5'>
+                <p className="px-3 pt-3 text-sm -mb-1 font-semibold text-primary tracking-wide">{key}</p>
+                <SidebarNew key={index} links={search[key]} isCollapsed={false} />
+              </div>
+            )
+          })
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default SearchMenu;

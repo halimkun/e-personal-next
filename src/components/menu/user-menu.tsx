@@ -4,17 +4,16 @@ import { useSession } from "next-auth/react"
 
 import useSWRImmutable from 'swr/immutable';
 import dynamic from 'next/dynamic'
-import useSWR from "swr"
 
 const Loading1 = dynamic(() => import('../custom/icon-loading'), { ssr: false })
 
 interface UserMenuProps {
+  setMenu: any
   isCollapsed: boolean
 }
 
 const UserMenu = (props: UserMenuProps) => {
-  const { isCollapsed } = props
-
+  const { isCollapsed, setMenu } = props
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
   const { data: session } = useSession();
@@ -27,6 +26,11 @@ const UserMenu = (props: UserMenuProps) => {
       revalidateOnReconnect: false,
     }
   );
+
+  // if has data then set menu
+  if (data) {
+    setMenu(data.data)
+  }
 
   return isLoading ? (
     <div className="flex justify-center items-center h-full py-10">
