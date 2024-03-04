@@ -25,7 +25,5 @@ aplikasi e-personal ini terintegrasi dengan aplikasi lain seperti aplikasi servi
 - react hot toast
 - tabler icons
 
-<br /><br /><br />
-
 > [!IMPORTANT]
 > Thanks to all creator of library that i use in this project. you can see in `package.json` file. 
