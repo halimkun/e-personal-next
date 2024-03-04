@@ -32,6 +32,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-pdf/renderer": "^3.1.14",
     "@tabler/icons-react": "^2.41.0",
+    "@tabler/icons-webfont": "^2.47.0",
     "@types/react-big-calendar": "^1.8.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

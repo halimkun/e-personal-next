@@ -11,12 +11,7 @@ import {
 } from "@/components/ui/tooltip"
 
 import { useRouter } from "next/router"
-import * as TablerIcons from "@tabler/icons-react"
-
-const getIcon = (name: any) => {
-  const TIcon = TablerIcons[name as keyof typeof TablerIcons]
-  return <TIcon iconName={name} iconNamePascal={name} iconNode={[]} className="mr-3 h-5 w-5" />
-}
+import "@tabler/icons-webfont/tabler-icons.min.css";
 
 export function SidebarNew({ links, isCollapsed }: { links: any[], isCollapsed: boolean }) {
   const route = useRouter()
@@ -61,9 +56,11 @@ export function SidebarNew({ links, isCollapsed }: { links: any[], isCollapsed: 
                 "justify-start"
               )}
             >
-              {getIcon(link.icon)}
+              <i className={`ti ti-${link.icon} h-5 w-5 mr-2`} style={{
+                fontSize: `18px`,
+              }}></i>
               {link.label}
-              
+
               {/* number on right */}
               {/* {link.label && (
                 <span
