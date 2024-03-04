@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react"
 
 import useSWRImmutable from 'swr/immutable';
 import dynamic from 'next/dynamic'
+import { cn } from "@/lib/utils";
 
 const Loading1 = dynamic(() => import('../custom/icon-loading'), { ssr: false })
 
@@ -42,7 +43,10 @@ const UserMenu = (props: UserMenuProps) => {
         const menuItem = data.data[key]
         return (
           <>
-            <p className="px-3 pt-3 text-sm font-semibold text-primary tracking-wide">{key}</p>
+            <p className={cn(
+              'px-3 pt-3 text-sm font-semibold text-primary tracking-wide',
+              isCollapsed && 'hidden'
+            )}>{key}</p>
             <SidebarNew key={index} links={menuItem} isCollapsed={isCollapsed} />
             <Separator />
           </>

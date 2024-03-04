@@ -25,6 +25,11 @@ const SearchMenu = (props: SearchMenuProps) => {
   const onSearch = (e: any) => {
     var val = e.target.value;
 
+    if (val === '') {
+      setSearch([])
+      return
+    }
+
     const result = Object.keys(menu).reduce((acc: any, key: any) => {
       const menuItem = menu[key]
       const filtered = menuItem.filter((item: any) => item.label.toLowerCase().includes(val.toLowerCase()))

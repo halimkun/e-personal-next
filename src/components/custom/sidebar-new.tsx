@@ -30,11 +30,13 @@ export function SidebarNew({ links, isCollapsed }: { links: any[], isCollapsed: 
                 <Link
                   href={link.url}
                   className={cn(
-                    buttonVariants({ variant: pathname.startsWith(link.url) ? "default" : "ghost", size: "icon" }),
+                    buttonVariants({ variant: pathname.startsWith(`/${link.url}`) ? "default" : "ghost", size: "icon" }),
                     "h-9 w-9"
                   )}
                 >
-                  <link.icon className="h-4 w-4" />
+                  <i className={`ti ti-${link.icon} h-5 w-5`} style={{
+                    fontSize: `18px`,
+                  }}></i>
                   <span className="sr-only">{link.label}</span>
                 </Link>
               </TooltipTrigger>
@@ -53,7 +55,7 @@ export function SidebarNew({ links, isCollapsed }: { links: any[], isCollapsed: 
               href={`/${link.url}`}
               className={cn(
                 buttonVariants({ size: "sm", variant: pathname.startsWith(`/${link.url}`) ? "default" : "ghost" }),
-                "justify-start"
+                isCollapsed ? 'justify-center' : 'justify-start',
               )}
             >
               <i className={`ti ti-${link.icon} h-5 w-5 mr-2`} style={{

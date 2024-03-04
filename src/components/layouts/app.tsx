@@ -63,8 +63,8 @@ const AppLayout = ({ children }: any) => {
             onExpand={(expanded: void) => setIsCollapsed(false)}
             className={cn(isCollapsed && "min-w-[50px] transition-all duration-300 ease-in-out")}
           >
-            <div className={cn("flex flex-col h-[80px] items-center justify-between p-3", isCollapsed ? 'h-[80px]' : 'p-3')}>
-              <div>Login Sebagai : <span className="font-semibold">{session?.user?.name}</span></div>
+            <div className={cn("flex flex-col h-[80px] items-center justify-between p-3", isCollapsed ? 'hidden h-[80px]' : 'p-3')}>
+              <div>Halo : <span className="text-sm font-semibold">{session?.user?.name}</span></div>
 
               <div className="flex items-center justify-between w-full px-5">
                 <LogoutButton className='h-7 w-7' />
@@ -76,7 +76,9 @@ const AppLayout = ({ children }: any) => {
 
             </div>
             <Separator />
-            <ScrollArea className="w-full pr-2 h-[calc(100vh-80px)]">
+            <ScrollArea className={cn(
+              'w-full pr-2', isCollapsed ? 'h-screen' : 'h-[calc(100vh-80px)]'
+            )}>
               <UserMenu setMenu={setMenu} isCollapsed={isCollapsed} />
             </ScrollArea>
           </ResizablePanel>
