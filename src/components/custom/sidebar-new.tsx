@@ -28,7 +28,7 @@ export function SidebarNew({ links, isCollapsed }: { links: any[], isCollapsed: 
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
                 <Link
-                  href={link.url}
+                  href={`/${link.url}`}
                   className={cn(
                     buttonVariants({ variant: pathname.startsWith(`/${link.url}`) ? "default" : "ghost", size: "icon" }),
                     "h-9 w-9"
