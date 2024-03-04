@@ -61,8 +61,8 @@ const SearchMenu = (props: SearchMenuProps) => {
         {Object.keys(search).length > 0 && (
           Object.keys(search).map((key: any, index: number) => {
             return (
-              <div className='-mb-5'>
-                <p className="px-3 pt-3 text-sm -mb-1 font-semibold text-primary tracking-wide">{key}</p>
+              <div className='-mb-2'>
+                <p className="px-3 text-sm -mb-1 font-semibold text-primary tracking-wide">{key}</p>
                 <SidebarNew key={index} links={search[key]} isCollapsed={false} />
               </div>
             )
