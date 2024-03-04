@@ -16,6 +16,7 @@ import { ModeToggle } from '../custom/mode-toggle'
 import { LogoutButton } from '../custom/buttons/logout'
 import dynamic from 'next/dynamic'
 import SearchMenu from '../custom/search-menu'
+import { useKeyboardShortcut } from '@/lib/useKeyboardShortcut'
 
 const UserMenu = dynamic(() => import('../menu/user-menu'), { ssr: false })
 
@@ -28,6 +29,19 @@ const AppLayout = ({ children }: any) => {
   const { data: session, status } = useSession()
   const [isCollapsed, setIsCollapsed] = React.useState(false)
   const [menu, setMenu] = React.useState<any>([])
+
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false)
+
+  const handleSearch = () => {
+    if (isSearchOpen) return
+    setIsSearchOpen(true)
+  }
+
+  useKeyboardShortcut(["ctrl", "f"], handleSearch)
+  useKeyboardShortcut(["Escape"], () => {
+    if (!isSearchOpen) return
+    setIsSearchOpen(false)
+  })
 
   useEffect(() => {
     document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
@@ -70,7 +84,11 @@ const AppLayout = ({ children }: any) => {
                 <LogoutButton className='h-7 w-7' />
                 <div className="flex gap-2">
                   <ModeToggle />
-                  <SearchMenu menu={menu}/>
+                  <SearchMenu 
+                    open={isSearchOpen}
+                    setOpen={setIsSearchOpen}
+                    menu={menu}
+                  />
                 </div>
               </div>
 

@@ -15,10 +15,12 @@ import { SidebarNew } from './sidebar-new';
 
 interface SearchMenuProps {
   menu: any
+  open: boolean
+  setOpen: (open: boolean) => void
 }
 
 const SearchMenu = (props: SearchMenuProps) => {
-  const { menu } = props
+  const { menu, open, setOpen } = props
   const [search, setSearch] = React.useState<any[]>([])
 
   const onSearch = (e: any) => {
@@ -41,7 +43,7 @@ const SearchMenu = (props: SearchMenuProps) => {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className={buttonVariants({
         variant: 'outline',
         size: 'icon',
@@ -59,7 +61,7 @@ const SearchMenu = (props: SearchMenuProps) => {
         <div className="space-y-1">
           <Label htmlFor="menu">Find Your Menu</Label>
           {/* onsearch */}
-          <Input name='menu' id='menu' placeholder='Search menu' onChange={(e) => onSearch(e)} />
+          <Input name='menu' id='menu' placeholder='Search menu' onChange={(e) => onSearch(e)} autoComplete='off' />
         </div>
 
         {Object.keys(search).length > 0 && (
