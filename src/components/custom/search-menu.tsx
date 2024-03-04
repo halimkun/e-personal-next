@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { buttonVariants } from '../ui/button';
 import { SidebarNew } from './sidebar-new';
-import { Separator } from '../ui/separator';
 
 interface SearchMenuProps {
   menu: any

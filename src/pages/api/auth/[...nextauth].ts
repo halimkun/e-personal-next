@@ -38,7 +38,7 @@ const authOption: NextAuthOptions = {
           }
 
           // has menu on this application or not
-          const menu = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?dep=${decodedToken.kd_dep}`, {
+          const menu = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?nik=${decodedToken.sub}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

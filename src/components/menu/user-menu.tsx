@@ -19,7 +19,7 @@ const UserMenu = (props: UserMenuProps) => {
 
   const { data: session } = useSession();
   const { data, isLoading } = useSWRImmutable( // Ubah dari useSWR ke useSWRImmutable
-    `${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?dep=${session?.user?.dep}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?nik=${session?.user?.sub}`,
     fetcher,
     {
       revalidateIfStale: false,
