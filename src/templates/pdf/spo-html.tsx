@@ -24,14 +24,14 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
   }
 
   return (
-    <div className="bg-background dark:bg-background">
+    <div className="bg-background dark:bg-white dark:text-gray-900">
       <div className="hidden md:block onPrint">
         <table className="w-full border-collapse border border-border tableSpo">
           <thead>
             <tr>
               <td rowSpan={2} className="border border-border p-5 text-center">
                 <div className="w-full flex flex-col items-center justify-center gap-6">
-                  <span className="text-center text-lg font-bold">
+                  <span className="text-center text-lg font-bold dark:text-gray-900">
                     RSIA AISYIYAH PEKAJANGAN
                   </span>
 
@@ -39,7 +39,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
                 </div>
               </td>
               <td colSpan={2} className="border border-border text-center">
-                <span className="text-center text-xl font-bold">
+                <span className="text-center text-xl font-bold dark:text-gray-900">
                   {data?.judul}
                 </span>
               </td>
@@ -47,16 +47,16 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
             <tr>
               <td className="border border-border">
                 <div className="flex flex-col gap-1 w-full">
-                  <span className="text-center text-sm">No Dokumen : </span>
-                  <span className="text-center text-lg font-bold">
+                  <span className="dark:text-gray-900 text-center text-sm">No Dokumen : </span>
+                  <span className="dark:text-gray-900 text-center text-lg font-bold">
                     {data?.nomor}
                   </span>
                 </div>
               </td>
               <td className="border border-border">
                 <div className="flex flex-col gap-1 w-full">
-                  <span className="text-center text-sm">Halaman : </span>
-                  <span className="text-center text-lg font-bold">
+                  <span className="dark:text-gray-900 text-center text-sm">Halaman : </span>
+                  <span className="dark:text-gray-900 text-center text-lg font-bold">
                     1/1
                   </span>
                 </div>
@@ -66,14 +66,14 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
           <tbody>
             <tr>
               <td className="border border-border p-5 text-center">
-                <span className="text-lg font-bold">
+                <span className="dark:text-gray-900 text-lg font-bold">
                   STANDAR PROSEDUR OPERASIONAL
                 </span>
               </td>
               <td className="border border-border">
                 <div className="w-full flex flex-col gap-1">
-                  <span className="text-center text-sm">Tanggal Terbit : </span>
-                  <span className="text-center text-lg font-bold">{
+                  <span className="dark:text-gray-900 text-center text-sm">Tanggal Terbit : </span>
+                  <span className="dark:text-gray-900 text-center text-lg font-bold">{
                     new Date(data?.tgl_terbit).toLocaleDateString('id-ID', {
                       day: 'numeric',
                       month: 'long',
@@ -84,10 +84,10 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
               </td>
               <td className="border border-border">
                 <div className="w-full flex flex-col gap-1 relative">
-                  <span className="text-center text-sm">Ditetapkan</span>
-                  <span className="text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
+                  <span className="dark:text-gray-900 text-center text-sm">Ditetapkan</span>
+                  <span className="dark:text-gray-900 text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
                   {data?.is_verified ? (<Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" className="mx-auto" />) : (<div className="my-10"></div>)}
-                  <span className="text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
+                  <span className="dark:text-gray-900 text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
                 </div>
               </td>
             </tr>
@@ -95,25 +95,25 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
             {detailSpo.map((item, index) => (
               <tr key={index}>
                 <td className="border border-border p-5 text-center align-top">
-                  <span className="font-bold">
+                  <span className="dark:text-gray-900 font-bold">
                     {item.toUpperCase()}
                   </span>
                 </td>
-                <td colSpan={2} className="border border-border p-5" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as String }}></td>
+                <td colSpan={2} className="border border-border p-5 dark:text-gray-900 detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as String }}></td>
               </tr>
             ))}
             {/* end loop detailSpo */}
             {/* explode unit by , and loop  */}
             <tr>
               <td className="border border-border p-5 text-center align-top">
-                <span className="font-bold">
+                <span className="dark:text-gray-900 font-bold">
                   UNIT TERKAIT
                 </span>
               </td>
               <td colSpan={2} className="border border-border p-5">
                 <ol className="list-decimal list-outside">
                   {data?.unit_terkait.split(',').map((item: string, index: number) => (
-                    <li key={index}>{item}</li>
+                    <li key={index} className="dark:text-gray-900">{item}</li>
                   ))}
                 </ol>
               </td>
@@ -126,14 +126,14 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
         {/* logo */} {/* Rsia Aisyiah Pekajangan*/}
         <div className="w-full flex items-center justify-center gap-6">
           <Image src="/images/logo.png" width={70} height={70} alt="Logo RSIA Aisyiyah Pekajangan" />
-          <span className="text-lg font-bold">
+          <span className="dark:text-gray-900 text-lg font-bold">
             RSIA AISYIYAH<br />PEKAJANGAN
           </span>
         </div>
 
         {/* judul */}
         <div className="w-full flex items-center justify-center mt-4">
-          <span className="text-center text-xl font-bold">
+          <span className="dark:text-gray-900 text-center text-xl font-bold">
             {data?.judul}
           </span>
         </div>
@@ -141,14 +141,14 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
         {/* no dokumen, tanggal terbit */}
         <div className="w-full flex items-left justify-between mt-4">
           <div className="flex flex-col gap-1">
-            <span className="text-left text-sm">No Dokumen : </span>
-            <span className="text-left text-sm font-bold">
+            <span className="dark:text-gray-900 text-left text-sm">No Dokumen : </span>
+            <span className="dark:text-gray-900 text-left text-sm font-bold">
               {data?.nomor}
             </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-right text-sm">Tanggal Terbit : </span>
-            <span className="text-right text-sm font-bold">{
+            <span className="dark:text-gray-900 text-right text-sm">Tanggal Terbit : </span>
+            <span className="dark:text-gray-900 text-right text-sm font-bold">{
               new Date(data?.tgl_terbit).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
@@ -161,11 +161,11 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
 
         {/* detailSpo */}
         <div className="mt-4">
-          <span className="text-left text font-bold">STANDAR PROSEDUR OPERASIONAL</span>
+          <span className="dark:text-gray-900 text-left text font-bold">STANDAR PROSEDUR OPERASIONAL</span>
           {detailSpo.map((item, index) => (
             <div key={index} className="w-full flex flex-col gap-1 mt-2 tableSpo">
-              <span className="text-left text-sm font-bold">{item.toUpperCase()}</span>
-              <div className="text-left text-sm" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as String }}></div>
+              <span className="dark:text-gray-900 text-left text-sm font-bold">{item.toUpperCase()}</span>
+              <div className="dark:text-gray-900 text-left text-sm detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as String }}></div>
             </div>
           ))}
 
@@ -173,8 +173,8 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
 
         {/* unit terkait */}
         <div className="mt-2 tableSpo">
-          <span className="text-left text-sm text font-bold">UNIT TERKAIT</span>
-          <ol className="list-decimal text-sm list-outside">
+          <span className="dark:text-gray-900 text-left text-sm text font-bold">UNIT TERKAIT</span>
+          <ol className="dark:text-gray-900 list-decimal text-sm list-outside">
             {data?.unit_terkait.split(',').map((item: string, index: number) => (
               <li key={index}>{item}</li>
             ))}
@@ -183,10 +183,10 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
 
         {/* ttd */}
         <div className="w-full flex flex-col items-center justify-center mt-4">
-          <span className="text-center text-sm">Ditetapkan</span>
-          <span className="text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
+          <span className="dark:text-gray-900 text-center text-sm">Ditetapkan</span>
+          <span className="dark:text-gray-900 text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
           <Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" />
-          <span className="text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
+          <span className="dark:text-gray-900 text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
         </div>
       </div>
     </div>
