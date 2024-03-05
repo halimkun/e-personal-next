@@ -10,7 +10,9 @@ import { getDate } from "@/lib/date"
 import { ReactElement, useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { IconFileSymlink, IconPlus } from "@tabler/icons-react"
+import { IconCircleCheckFilled, IconCircleXFilled, IconFileSymlink, IconPlus } from "@tabler/icons-react"
+import { IconCircleCheck } from "@tabler/icons-react"
+import { IconCircleX } from "@tabler/icons-react"
 
 const DialogEditSpo = dynamic(() => import('@/components/custom/modals/dialog-edit-spo'), { ssr: false })
 const DialogMenuSpo = dynamic(() => import('@/components/custom/modals/dialog-menu-spo'), { ssr: false })
@@ -134,6 +136,15 @@ const SpoPage = () => {
       }
     },
     {
+      name: "",
+      selector: 'terverifikasi',
+      data: (row: any) => row.is_verified ? (
+        <IconCircleCheck className="h-5 w-5 stroke-green-500" />
+      ) : (
+        <IconCircleX className="h-5 w-5 stroke-red-500" />
+      )
+    },
+    {
       name: 'Judul',
       selector: 'judul',
       data: (row: any) => (
@@ -151,7 +162,8 @@ const SpoPage = () => {
           <div className="md:whitespace-nowrap">{getDate(row.tgl_terbit)}</div>
         </div>
       )
-    }, {
+    },
+    {
       name: "#",
       selector: 'Action',
       data: (row: any) => (
