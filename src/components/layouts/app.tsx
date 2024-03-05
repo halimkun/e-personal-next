@@ -14,10 +14,11 @@ import { ScrollArea } from '../ui/scroll-area'
 import { useSession } from "next-auth/react"
 import { ModeToggle } from '../custom/mode-toggle'
 import { LogoutButton } from '../custom/buttons/logout'
-import dynamic from 'next/dynamic'
-import SearchMenu from '../custom/search-menu'
 import { useKeyboardShortcut } from '@/lib/useKeyboardShortcut'
+import { Toaster } from 'react-hot-toast'
+import dynamic from 'next/dynamic'
 
+const SearchMenu = dynamic(() => import('../custom/search-menu'), { ssr: false })
 const UserMenu = dynamic(() => import('../menu/user-menu'), { ssr: false })
 
 export const metadata: Metadata = {
@@ -84,7 +85,7 @@ const AppLayout = ({ children }: any) => {
                 <LogoutButton className='h-7 w-7' />
                 <div className="flex gap-2">
                   <ModeToggle />
-                  <SearchMenu 
+                  <SearchMenu
                     open={isSearchOpen}
                     setOpen={setIsSearchOpen}
                     menu={menu}
@@ -111,6 +112,16 @@ const AppLayout = ({ children }: any) => {
           </ResizablePanel>
         </ResizablePanelGroup>
       </TooltipProvider>
+
+      <Toaster position='bottom-right' toastOptions={
+        {
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        }
+      } />
     </main>
   );
 };
