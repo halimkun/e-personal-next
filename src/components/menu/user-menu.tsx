@@ -38,7 +38,7 @@ const UserMenu = (props: UserMenuProps) => {
       <Loading1 height="h-10" width="w-10" />
     </div>
   ) : (
-    Object.keys(data.data).length > 0 ? (
+    data && Object.keys(data.data).length > 0 ? (
       Object.keys(data.data).map((key: any, index: number) => {
         const menuItem = data.data[key]
         return (

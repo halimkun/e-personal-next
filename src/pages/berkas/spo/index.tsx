@@ -3,7 +3,6 @@ import dynamic from "next/dynamic"
 import toast from "react-hot-toast"
 import fetcherGet from "@/utils/fetcherGet"
 
-import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -22,7 +21,6 @@ const FormAddSpo = dynamic(() => import('@/components/custom/forms/add-spo'), { 
 const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
 
 const SpoPage = () => {
-  const router = useRouter()
   const [spo, setSpo] = useState<any>([])
   const [lastNomor, setLastNomor] = useState<any>([])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -238,7 +236,6 @@ const SpoPage = () => {
               setSpo(item)
               setIsMenuOpen(true)
             }}
-
           />
 
           {/* <LaravelPagination
