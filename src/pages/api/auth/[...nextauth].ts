@@ -33,9 +33,9 @@ const authOption: NextAuthOptions = {
           const jwt = require('jsonwebtoken');
           const decodedToken = jwt.decode(response.access_token);
 
-          if (decodedToken.kd_dep == null || decodedToken.kd_dep == '-' || decodedToken.kd_dep == undefined || decodedToken.kd_dep == '') {
-            throw new Error('Department code is not valid or you the user is not allowed to access this application');
-          }
+          // if (decodedToken.kd_dep == null || decodedToken.kd_dep == '-' || decodedToken.kd_dep == undefined || decodedToken.kd_dep == '') {
+          //   throw new Error('Department code is not valid or you the user is not allowed to access this application');
+          // }
 
           // has menu on this application or not
           const menu = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?nik=${decodedToken.sub}`, {
@@ -72,9 +72,9 @@ const authOption: NextAuthOptions = {
       const jwt = require('jsonwebtoken');
       const decodedToken = jwt.decode(token.accessToken);
 
-      if (decodedToken.kd_dep == null || decodedToken.kd_dep == '-' || decodedToken.kd_dep == undefined || decodedToken.kd_dep == '') {
-        return null;
-      }
+      // if (decodedToken.kd_dep == null || decodedToken.kd_dep == '-' || decodedToken.kd_dep == undefined || decodedToken.kd_dep == '') {
+      //   return null;
+      // }
 
       session.rsiap = session.rsiap ?? {}; // Create the `rsiap` object if it doesn't exist
       if ("accessToken" in token) {
