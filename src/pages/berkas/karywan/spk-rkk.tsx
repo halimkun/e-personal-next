@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
 const TablePegawai = dynamic(() => import('@/components/custom/tables/pegawai'), { ssr: false });
 
-const berkasSPKRKK = () => {
+const BerkasSpkRkk = () => {
   const [karyawan, setKaryawan] = useState<any>()
   const [open, setOpen] = useState(false)
 
@@ -146,10 +146,10 @@ const berkasSPKRKK = () => {
   )
 }
 
-berkasSPKRKK.getLayout = (page: any) => (
+BerkasSpkRkk.getLayout = (page: any) => (
   <AppLayout>
     {page}
   </AppLayout>
 )
 
-export default berkasSPKRKK
+export default BerkasSpkRkk
