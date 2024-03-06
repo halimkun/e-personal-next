@@ -1,9 +1,27 @@
 import React, { ReactElement } from 'react';
 import { NextPageWithLayout } from '../_app';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { IconDotsVertical, IconEditCircle, IconReportSearch } from '@tabler/icons-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  IconDotsVertical,
+  IconEditCircle,
+  IconReportSearch,
+} from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -11,41 +29,49 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
 
-const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
-const LaravelPagination = dynamic(() => import('@/components/custom-ui/laravel-pagination'), { ssr: false });
+const AppLayout = dynamic(() => import('@/components/layouts/app'), {
+  ssr: false,
+});
+const LaravelPagination = dynamic(
+  () => import('@/components/custom-ui/laravel-pagination'),
+  { ssr: false }
+);
 
 const suratInternalColumns = [
   {
     name: 'Nama',
     selector: 'nama',
-    data: (row: any) => <div>{row.nama}</div>
+    data: (row: any) => <div>{row.nama}</div>,
   },
   {
     name: 'Bidang',
     selector: 'bidang',
-    data: (row: any) => <div>{row.bidang}</div>
+    data: (row: any) => <div>{row.bidang}</div>,
   },
   {
     name: 'Jabatan',
     selector: 'jabatan',
-    data: (row: any) => <div>{row.jbtn}</div>
+    data: (row: any) => <div>{row.jbtn}</div>,
   },
   {
     name: 'Departemen',
     selector: 'departemen',
-    data: (row: any) => <div>{row.dpt.nama}</div>
+    data: (row: any) => <div>{row.dpt.nama}</div>,
   },
   {
     name: 'NIK',
     selector: 'nik',
     style: ['text-right'],
     data: (row: any) => (
-      <div className="w-full flex justify-end">
-        <Badge variant="outline" className="cursor-pointer group-hover:border-primary">
+      <div className='flex w-full justify-end'>
+        <Badge
+          variant='outline'
+          className='cursor-pointer group-hover:border-primary'
+        >
           {row.nik}
         </Badge>
       </div>
-    )
+    ),
   },
   {
     name: 'Action',
@@ -54,17 +80,20 @@ const suratInternalColumns = [
     data: (row: any) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0" size='icon'>
-            <span className="sr-only">Open menu</span>
-            <IconDotsVertical className="w-5 h-5" />
+          <Button variant='ghost' className='h-8 w-8 p-0' size='icon'>
+            <span className='sr-only'>Open menu</span>
+            <IconDotsVertical className='h-5 w-5' />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className='w-40'>
+        <DropdownMenuContent align='end' className='w-40'>
           <DropdownMenuLabel>Data</DropdownMenuLabel>
           <DropdownMenuGroup>
-            <span className="flex flex-col gap-1">
-              <DropdownMenuItem onClick={() => toast.error('Fitur ini belum tersedia') } className='cursor-pointer hover:bg-secondary'>
-                <IconEditCircle className='h-4 w-4 mr-2' /> Edit Data
+            <span className='flex flex-col gap-1'>
+              <DropdownMenuItem
+                onClick={() => toast.error('Fitur ini belum tersedia')}
+                className='cursor-pointer hover:bg-secondary'
+              >
+                <IconEditCircle className='mr-2 h-4 w-4' /> Edit Data
               </DropdownMenuItem>
             </span>
           </DropdownMenuGroup>
@@ -73,29 +102,30 @@ const suratInternalColumns = [
           <DropdownMenuGroup>
             <DropdownMenuItem className='cursor-pointer hover:bg-secondary'>
               <Link href={`/karyawan/berkas/${row.nik}`} className='flex gap-1'>
-                <IconReportSearch className='h-4 w-4 mr-2' /> Lihat Berkas
+                <IconReportSearch className='mr-2 h-4 w-4' /> Lihat Berkas
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-    )
+    ),
   },
-]
+];
 
 const KaryawanPage: NextPageWithLayout = () => {
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>Data Karyawan</CardTitle>
-        <CardDescription>Data Karyawan <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+        <CardDescription>
+          Data Karyawan <strong>RSIA Aisyiyah Pekajangan</strong>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <LaravelPagination
           columns={suratInternalColumns}
           dataSrc={`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=0&select=nik,nama,bidang,jbtn`}
-          fetcher={{ method: "GET" }}
+          fetcher={{ method: 'GET' }}
         />
       </CardContent>
     </Card>
@@ -103,9 +133,7 @@ const KaryawanPage: NextPageWithLayout = () => {
 };
 
 KaryawanPage.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <AppLayout>{page}</AppLayout>
-  )
-}
+  return <AppLayout>{page}</AppLayout>;
+};
 
 export default KaryawanPage;

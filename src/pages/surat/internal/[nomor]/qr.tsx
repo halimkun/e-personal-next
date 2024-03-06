@@ -7,33 +7,41 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 
 const QRUndanganPage = ({ nomor }: { nomor: string }) => {
-
   const { Canvas } = useQRCode();
   const router = useRouter();
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 dark:text-white gap-4">
+    <div className='flex h-screen w-screen flex-col items-center justify-center gap-4 bg-gray-100 dark:bg-gray-900 dark:text-white'>
       <Card className='shadow-none'>
-        <CardHeader className="p-3">
-          <div className="flex items-center gap-4">
-            <Button type="button" variant="outline" size='icon' onClick={() => router.back()}>
-              <IconArrowLeft className="rotate-0 scale-100 transition-all" />
+        <CardHeader className='p-3'>
+          <div className='flex items-center gap-4'>
+            <Button
+              type='button'
+              variant='outline'
+              size='icon'
+              onClick={() => router.back()}
+            >
+              <IconArrowLeft className='rotate-0 scale-100 transition-all' />
             </Button>
-            <div className="flex flex-col gap-0.5">
-              <CardTitle className="text-primary">Kembali ke aplikasi</CardTitle>
-              <CardDescription>QR Code kehadiran | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+            <div className='flex flex-col gap-0.5'>
+              <CardTitle className='text-primary'>
+                Kembali ke aplikasi
+              </CardTitle>
+              <CardDescription>
+                QR Code kehadiran | <strong>RSIA Aisyiyah Pekajangan</strong>
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
       </Card>
 
-      <div className="border border-border overflow-hidden rounded-xl">
+      <div className='overflow-hidden rounded-xl border border-border'>
         <Canvas
           text={nomor}
           logo={{
@@ -55,13 +63,13 @@ const QRUndanganPage = ({ nomor }: { nomor: string }) => {
         />
       </div>
 
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">Scan QR Code</h1>
+      <div className='text-center'>
+        <h1 className='text-2xl font-bold'>Scan QR Code</h1>
         <p>Untuk konfirmasi kehadiran</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export async function getServerSideProps(context: any) {
   const { nomor } = context.query;
@@ -70,9 +78,9 @@ export async function getServerSideProps(context: any) {
 
   return {
     props: {
-      nomor: nomorSurat
-    }
-  }
+      nomor: nomorSurat,
+    },
+  };
 }
 
-export default QRUndanganPage
+export default QRUndanganPage;

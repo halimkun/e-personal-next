@@ -1,43 +1,60 @@
-import React, { ReactElement, useEffect, useState } from "react"
+import React, { ReactElement, useEffect, useState } from 'react';
 
-import useSWR from "swr"
-import dynamic from "next/dynamic"
-import fetcherGet from "@/utils/fetcherGet"
+import useSWR from 'swr';
+import dynamic from 'next/dynamic';
+import fetcherGet from '@/utils/fetcherGet';
 
-import { useRouter } from "next/router"
+import { useRouter } from 'next/router';
 import { useDebounce } from 'use-debounce';
-import { IconPlus } from "@tabler/icons-react"
-import { Button } from "@/components/ui/button"
-import { NextPageWithLayout } from "@/pages/_app"
-import { CardDescription, CardTitle } from "@/components/ui/card"
+import { IconPlus } from '@tabler/icons-react';
+import { Button } from '@/components/ui/button';
+import { NextPageWithLayout } from '@/pages/_app';
+import { CardDescription, CardTitle } from '@/components/ui/card';
 
-const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false })
-const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
-const TableSuratMasuk = dynamic(() => import('@/components/custom/tables/surat-masuk'), { ssr: false })
-const DialogMenuSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-menu-surat-masuk'), { ssr: false })
-const DialogPreviewSuratMasuk = dynamic(() => import('@/components/custom/modals/dialog-preview-surat-masuk'), { ssr: false })
+const AppLayout = dynamic(() => import('@/components/layouts/app'), {
+  ssr: false,
+});
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), {
+  ssr: false,
+});
+const TableSuratMasuk = dynamic(
+  () => import('@/components/custom/tables/surat-masuk'),
+  { ssr: false }
+);
+const DialogMenuSuratMasuk = dynamic(
+  () => import('@/components/custom/modals/dialog-menu-surat-masuk'),
+  { ssr: false }
+);
+const DialogPreviewSuratMasuk = dynamic(
+  () => import('@/components/custom/modals/dialog-preview-surat-masuk'),
+  { ssr: false }
+);
 
 const SuratMasukPage: NextPageWithLayout = () => {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [fltrData, setFltrData] = useState({})
-  const [filterQuery, setFilterQuery] = useState('')
-  const [debouncedFilterQuery] = useDebounce(filterQuery, 1000)
+  const [fltrData, setFltrData] = useState({});
+  const [filterQuery, setFilterQuery] = useState('');
+  const [debouncedFilterQuery] = useDebounce(filterQuery, 1000);
 
-  const [isOpenMenu, setIsOpenMenu] = useState(false)
-  const [isOpenPreview, setIsOpenPreview] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<any>({})
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [isOpenPreview, setIsOpenPreview] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>({});
 
-  const fetcher = (url: string) => fetcherGet({ url, filterQuery })
-  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/surat/masuk`, fetcher, {
-    refreshWhenHidden: true,
-    revalidateOnFocus: false,
-    refreshWhenOffline: false,
-    revalidateIfStale: true,
-  })
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery });
+  const { data, error, mutate, isLoading, isValidating } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/surat/masuk`,
+    fetcher,
+    {
+      refreshWhenHidden: true,
+      revalidateOnFocus: false,
+      refreshWhenOffline: false,
+      revalidateIfStale: true,
+    }
+  );
 
   useEffect(() => {
-    const count = Object.keys(fltrData).length
+    const count = Object.keys(fltrData).length;
 
     if (count > 0) {
       let fq = '';
@@ -51,23 +68,29 @@ const SuratMasukPage: NextPageWithLayout = () => {
   }, [fltrData]);
 
   useEffect(() => {
-    mutate()
+    mutate();
   }, [debouncedFilterQuery, mutate]);
 
-  if (isLoading) return <Loading1 height={50} width={50} />
-  if (error) return <div>{error.message}</div>
-  if (!data) return <div>No data</div>
+  if (isLoading) return <Loading1 height={50} width={50} />;
+  if (error) return <div>{error.message}</div>;
+  if (!data) return <div>No data</div>;
 
   return (
     <>
-      <div className="space-y-2">
-        <div className="flex justify-between items-center mb-4">
-          <div className="space-y-1">
+      <div className='space-y-2'>
+        <div className='mb-4 flex items-center justify-between'>
+          <div className='space-y-1'>
             <CardTitle>Surat Masuk</CardTitle>
-            <CardDescription>Data Surat Masuk | <strong>RSIA Aisyiyah Pekajangan</strong></CardDescription>
+            <CardDescription>
+              Data Surat Masuk | <strong>RSIA Aisyiyah Pekajangan</strong>
+            </CardDescription>
           </div>
-          <Button size={'icon'} className="w-7 h-7" onClick={() => router.push('/surat/masuk/create')}>
-            <IconPlus className="w-5 h-5" />
+          <Button
+            size={'icon'}
+            className='h-7 w-7'
+            onClick={() => router.push('/surat/masuk/create')}
+          >
+            <IconPlus className='h-5 w-5' />
           </Button>
         </div>
 
@@ -81,8 +104,8 @@ const SuratMasukPage: NextPageWithLayout = () => {
             setSelectedItem={setSelectedItem}
             lastColumnAction={true}
             onRowClick={(row: any) => {
-              setSelectedItem(row)
-              setIsOpenMenu(true)
+              setSelectedItem(row);
+              setIsOpenMenu(true);
             }}
           />
         )}
@@ -103,13 +126,11 @@ const SuratMasukPage: NextPageWithLayout = () => {
         selectedItem={selectedItem}
       />
     </>
-  )
-}
+  );
+};
 
 SuratMasukPage.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <AppLayout>{page}</AppLayout>
-  )
-}
+  return <AppLayout>{page}</AppLayout>;
+};
 
-export default SuratMasukPage
+export default SuratMasukPage;

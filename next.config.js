@@ -18,21 +18,23 @@ const nextConfig = {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     // Berkas
     NEXT_PUBLIC_BASE_BERKAS_URL: process.env.NEXT_PUBLIC_BASE_BERKAS_URL,
-  }
-}
+  },
+};
 
 const {
   PHASE_DEVELOPMENT_SERVER,
   PHASE_PRODUCTION_BUILD,
-} = require("next/constants");
+} = require('next/constants');
 
 module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER || phase === PHASE_PRODUCTION_BUILD) {
-    const withPWA = require("@ducanh2912/next-pwa").default({
-      dest: "public"
+    const withPWA = require('@ducanh2912/next-pwa').default({
+      dest: 'public',
+      workboxOptions: {
+        maximumFileSizeToCacheInBytes: 5000000,
+      }
     });
     return withPWA(nextConfig);
   }
   return nextConfig;
 };
-

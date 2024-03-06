@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 
-declare module "next-auth/jwt" {
+declare module 'next-auth/jwt' {
   interface JWT {
     access_token: string;
     tokenType: string;
@@ -8,7 +8,7 @@ declare module "next-auth/jwt" {
   }
 }
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface User {
     access_token: string;
     token_type: string;
@@ -22,11 +22,11 @@ declare module "next-auth" {
       email?: string;
       dep?: string;
       department?: string;
-    }
+    };
     rsiap?: {
-      access_token?: string | null
-      token_type?: string | null
-    }
-    expires: ISODateString
+      access_token?: string | null;
+      token_type?: string | null;
+    };
+    expires: ISODateString;
   }
 }

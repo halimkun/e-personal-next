@@ -1,18 +1,31 @@
-import { getToken } from "next-auth/jwt";
-import { NextFetchEvent, NextMiddleware, NextRequest, NextResponse } from "next/server";
+import { getToken } from 'next-auth/jwt';
+import {
+  NextFetchEvent,
+  NextMiddleware,
+  NextRequest,
+  NextResponse,
+} from 'next/server';
 
-export default function withAuth(middleware: NextMiddleware, requireAuth: string[] = []) {
+export default function withAuth(
+  middleware: NextMiddleware,
+  requireAuth: string[] = []
+) {
   return async (req: NextRequest, next: NextFetchEvent) => {
     const pathname = req.nextUrl.pathname;
 
-    if (requireAuth.some(path => pathname.startsWith(path.replace('*', '')))) {
-      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-      
+    if (
+      requireAuth.some((path) => pathname.startsWith(path.replace('*', '')))
+    ) {
+      const token = await getToken({
+        req,
+        secret: process.env.NEXTAUTH_SECRET,
+      });
+
       if (!token) {
         const url = new URL('/auth/login', req.url);
         return NextResponse.redirect(url);
       }
-      
+
       // TODO : validate token to API server https://sim.rsiaaisyiyah.com/rsiap-api/api/auth/me
       // check token is valid or not from api server
       // if token is invalid, redirect to login page
@@ -21,8 +34,8 @@ export default function withAuth(middleware: NextMiddleware, requireAuth: string
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token.accessToken}`
-        }
+          Authorization: `Bearer ${token.accessToken}`,
+        },
       });
 
       console.log(res);
@@ -47,5 +60,5 @@ export default function withAuth(middleware: NextMiddleware, requireAuth: string
     }
 
     return middleware(req, next);
-  }
+  };
 }

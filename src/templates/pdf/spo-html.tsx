@@ -1,62 +1,65 @@
-import Image from "next/image"
-import React from "react"
+import Image from 'next/image';
+import React from 'react';
 import he from 'he';
 
 interface SPOHtmlProps {
-  data: any
+  data: any;
 }
 
 const SPOHtml = ({ data }: SPOHtmlProps) => {
-
-  const detailSpo = [
-    'pengertian',
-    'tujuan',
-    'kebijakan',
-    'prosedur'
-  ]
+  const detailSpo = ['pengertian', 'tujuan', 'kebijakan', 'prosedur'];
 
   function decodedHTML(htmlString: string): string | null {
     if (htmlString) {
-      return he.decode(htmlString)
+      return he.decode(htmlString);
     }
 
-    return null
+    return null;
   }
 
   return (
-    <div className="bg-background dark:bg-white dark:text-gray-900">
-      <div className="hidden md:block onPrint">
-        <table className="w-full border-collapse border border-border tableSpo">
+    <div className='bg-background dark:bg-white dark:text-gray-900'>
+      <div className='onPrint hidden md:block'>
+        <table className='tableSpo w-full border-collapse border border-border'>
           <thead>
             <tr>
-              <td rowSpan={2} className="border border-border p-5 text-center">
-                <div className="w-full flex flex-col items-center justify-center gap-6">
-                  <span className="text-center text-lg font-bold dark:text-gray-900">
+              <td rowSpan={2} className='border border-border p-5 text-center'>
+                <div className='flex w-full flex-col items-center justify-center gap-6'>
+                  <span className='text-center text-lg font-bold dark:text-gray-900'>
                     RSIA AISYIYAH PEKAJANGAN
                   </span>
 
-                  <Image src="/images/logo.png" width={100} height={100} alt="Logo RSIA Aisyiyah Pekajangan" />
+                  <Image
+                    src='/images/logo.png'
+                    width={100}
+                    height={100}
+                    alt='Logo RSIA Aisyiyah Pekajangan'
+                  />
                 </div>
               </td>
-              <td colSpan={2} className="border border-border text-center">
-                <span className="text-center text-xl font-bold dark:text-gray-900">
+              <td colSpan={2} className='border border-border text-center'>
+                <span className='text-center text-xl font-bold dark:text-gray-900'>
                   {data?.judul}
                 </span>
               </td>
             </tr>
             <tr>
-              <td className="border border-border">
-                <div className="flex flex-col gap-1 w-full">
-                  <span className="dark:text-gray-900 text-center text-sm">No Dokumen : </span>
-                  <span className="dark:text-gray-900 text-center text-lg font-bold">
+              <td className='border border-border'>
+                <div className='flex w-full flex-col gap-1'>
+                  <span className='text-center text-sm dark:text-gray-900'>
+                    No Dokumen :{' '}
+                  </span>
+                  <span className='text-center text-lg font-bold dark:text-gray-900'>
                     {data?.nomor}
                   </span>
                 </div>
               </td>
-              <td className="border border-border">
-                <div className="flex flex-col gap-1 w-full">
-                  <span className="dark:text-gray-900 text-center text-sm">Halaman : </span>
-                  <span className="dark:text-gray-900 text-center text-lg font-bold">
+              <td className='border border-border'>
+                <div className='flex w-full flex-col gap-1'>
+                  <span className='text-center text-sm dark:text-gray-900'>
+                    Halaman :{' '}
+                  </span>
+                  <span className='text-center text-lg font-bold dark:text-gray-900'>
                     1/1
                   </span>
                 </div>
@@ -65,56 +68,84 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
           </thead>
           <tbody>
             <tr>
-              <td className="border border-border p-5 text-center">
-                <span className="dark:text-gray-900 text-lg font-bold">
+              <td className='border border-border p-5 text-center'>
+                <span className='text-lg font-bold dark:text-gray-900'>
                   STANDAR PROSEDUR OPERASIONAL
                 </span>
               </td>
-              <td className="border border-border">
-                <div className="w-full flex flex-col gap-1">
-                  <span className="dark:text-gray-900 text-center text-sm">Tanggal Terbit : </span>
-                  <span className="dark:text-gray-900 text-center text-lg font-bold">{
-                    new Date(data?.tgl_terbit).toLocaleDateString('id-ID', {
+              <td className='border border-border'>
+                <div className='flex w-full flex-col gap-1'>
+                  <span className='text-center text-sm dark:text-gray-900'>
+                    Tanggal Terbit :{' '}
+                  </span>
+                  <span className='text-center text-lg font-bold dark:text-gray-900'>
+                    {new Date(data?.tgl_terbit).toLocaleDateString('id-ID', {
                       day: 'numeric',
                       month: 'long',
-                      year: 'numeric'
-                    })
-                  }</span>
+                      year: 'numeric',
+                    })}
+                  </span>
                 </div>
               </td>
-              <td className="border border-border">
-                <div className="w-full flex flex-col gap-1 relative">
-                  <span className="dark:text-gray-900 text-center text-sm">Ditetapkan</span>
-                  <span className="dark:text-gray-900 text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
-                  {data?.is_verified ? (<Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" className="mx-auto" />) : (<div className="my-10"></div>)}
-                  <span className="dark:text-gray-900 text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
+              <td className='border border-border'>
+                <div className='relative flex w-full flex-col gap-1'>
+                  <span className='text-center text-sm dark:text-gray-900'>
+                    Ditetapkan
+                  </span>
+                  <span className='text-center text-sm dark:text-gray-900'>
+                    Direktur RSIA Aisyiyah Pekajangan
+                  </span>
+                  {data?.is_verified ? (
+                    <Image
+                      src='/images/ttd-dr-him.jpeg'
+                      width={150}
+                      height={150}
+                      alt='Logo RSIA Aisyiyah Pekajangan'
+                      className='mx-auto'
+                    />
+                  ) : (
+                    <div className='my-10'></div>
+                  )}
+                  <span className='-mt-5 text-center font-bold underline dark:text-gray-900'>
+                    dr. Himawan Budityastomo, Sp.OG
+                  </span>
                 </div>
               </td>
             </tr>
             {/* loop detailSpo */}
             {detailSpo.map((item, index) => (
               <tr key={index}>
-                <td className="border border-border p-5 text-center align-top">
-                  <span className="dark:text-gray-900 font-bold">
+                <td className='border border-border p-5 text-center align-top'>
+                  <span className='font-bold dark:text-gray-900'>
                     {item.toUpperCase()}
                   </span>
                 </td>
-                <td colSpan={2} className="border border-border p-5 dark:text-gray-900 detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as string }}></td>
+                <td
+                  colSpan={2}
+                  className='detail-spo border border-border p-5 dark:text-gray-900'
+                  dangerouslySetInnerHTML={{
+                    __html: decodedHTML(data?.detail[item]) as string,
+                  }}
+                ></td>
               </tr>
             ))}
             {/* end loop detailSpo */}
             {/* explode unit by , and loop  */}
             <tr>
-              <td className="border border-border p-5 text-center align-top">
-                <span className="dark:text-gray-900 font-bold">
+              <td className='border border-border p-5 text-center align-top'>
+                <span className='font-bold dark:text-gray-900'>
                   UNIT TERKAIT
                 </span>
               </td>
-              <td colSpan={2} className="border border-border p-5">
-                <ol className="list-decimal list-outside">
-                  {data?.unit_terkait.split(',').map((item: string, index: number) => (
-                    <li key={index} className="dark:text-gray-900">{item}</li>
-                  ))}
+              <td colSpan={2} className='border border-border p-5'>
+                <ol className='list-outside list-decimal'>
+                  {data?.unit_terkait
+                    .split(',')
+                    .map((item: string, index: number) => (
+                      <li key={index} className='dark:text-gray-900'>
+                        {item}
+                      </li>
+                    ))}
                 </ol>
               </td>
             </tr>
@@ -122,75 +153,106 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
         </table>
       </div>
 
-      <div className="block md:hidden hideOnPrint">
+      <div className='hideOnPrint block md:hidden'>
         {/* logo */} {/* Rsia Aisyiah Pekajangan*/}
-        <div className="w-full flex items-center justify-center gap-6">
-          <Image src="/images/logo.png" width={70} height={70} alt="Logo RSIA Aisyiyah Pekajangan" />
-          <span className="dark:text-gray-900 text-lg font-bold">
-            RSIA AISYIYAH<br />PEKAJANGAN
+        <div className='flex w-full items-center justify-center gap-6'>
+          <Image
+            src='/images/logo.png'
+            width={70}
+            height={70}
+            alt='Logo RSIA Aisyiyah Pekajangan'
+          />
+          <span className='text-lg font-bold dark:text-gray-900'>
+            RSIA AISYIYAH
+            <br />
+            PEKAJANGAN
           </span>
         </div>
-
         {/* judul */}
-        <div className="w-full flex items-center justify-center mt-4">
-          <span className="dark:text-gray-900 text-center text-xl font-bold">
+        <div className='mt-4 flex w-full items-center justify-center'>
+          <span className='text-center text-xl font-bold dark:text-gray-900'>
             {data?.judul}
           </span>
         </div>
-
         {/* no dokumen, tanggal terbit */}
-        <div className="w-full flex items-left justify-between mt-4">
-          <div className="flex flex-col gap-1">
-            <span className="dark:text-gray-900 text-left text-sm">No Dokumen : </span>
-            <span className="dark:text-gray-900 text-left text-sm font-bold">
+        <div className='items-left mt-4 flex w-full justify-between'>
+          <div className='flex flex-col gap-1'>
+            <span className='text-left text-sm dark:text-gray-900'>
+              No Dokumen :{' '}
+            </span>
+            <span className='text-left text-sm font-bold dark:text-gray-900'>
               {data?.nomor}
             </span>
           </div>
-          <div className="flex flex-col gap-1">
-            <span className="dark:text-gray-900 text-right text-sm">Tanggal Terbit : </span>
-            <span className="dark:text-gray-900 text-right text-sm font-bold">{
-              new Date(data?.tgl_terbit).toLocaleDateString('id-ID', {
+          <div className='flex flex-col gap-1'>
+            <span className='text-right text-sm dark:text-gray-900'>
+              Tanggal Terbit :{' '}
+            </span>
+            <span className='text-right text-sm font-bold dark:text-gray-900'>
+              {new Date(data?.tgl_terbit).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
-                year: 'numeric'
-              })
-            }</span>
+                year: 'numeric',
+              })}
+            </span>
           </div>
         </div>
-
-
         {/* detailSpo */}
-        <div className="mt-4">
-          <span className="dark:text-gray-900 text-left text font-bold">STANDAR PROSEDUR OPERASIONAL</span>
+        <div className='mt-4'>
+          <span className='text text-left font-bold dark:text-gray-900'>
+            STANDAR PROSEDUR OPERASIONAL
+          </span>
           {detailSpo.map((item, index) => (
-            <div key={index} className="w-full flex flex-col gap-1 mt-2 tableSpo">
-              <span className="dark:text-gray-900 text-left text-sm font-bold">{item.toUpperCase()}</span>
-              <div className="dark:text-gray-900 text-left text-sm detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as string }}></div>
+            <div
+              key={index}
+              className='tableSpo mt-2 flex w-full flex-col gap-1'
+            >
+              <span className='text-left text-sm font-bold dark:text-gray-900'>
+                {item.toUpperCase()}
+              </span>
+              <div
+                className='detail-spo text-left text-sm dark:text-gray-900'
+                dangerouslySetInnerHTML={{
+                  __html: decodedHTML(data?.detail[item]) as string,
+                }}
+              ></div>
             </div>
           ))}
-
         </div>
-
         {/* unit terkait */}
-        <div className="mt-2 tableSpo">
-          <span className="dark:text-gray-900 text-left text-sm text font-bold">UNIT TERKAIT</span>
-          <ol className="dark:text-gray-900 list-decimal text-sm list-outside">
-            {data?.unit_terkait.split(',').map((item: string, index: number) => (
-              <li key={index}>{item}</li>
-            ))}
+        <div className='tableSpo mt-2'>
+          <span className='text text-left text-sm font-bold dark:text-gray-900'>
+            UNIT TERKAIT
+          </span>
+          <ol className='list-outside list-decimal text-sm dark:text-gray-900'>
+            {data?.unit_terkait
+              .split(',')
+              .map((item: string, index: number) => (
+                <li key={index}>{item}</li>
+              ))}
           </ol>
         </div>
-
         {/* ttd */}
-        <div className="w-full flex flex-col items-center justify-center mt-4">
-          <span className="dark:text-gray-900 text-center text-sm">Ditetapkan</span>
-          <span className="dark:text-gray-900 text-center text-sm">Direktur RSIA Aisyiyah Pekajangan</span>
-          <Image src="/images/ttd-dr-him.jpeg" width={150} height={150} alt="Logo RSIA Aisyiyah Pekajangan" />
-          <span className="dark:text-gray-900 text-center font-bold underline -mt-5">dr. Himawan Budityastomo, Sp.OG</span>
+        <div className='mt-4 flex w-full flex-col items-center justify-center'>
+          <span className='text-center text-sm dark:text-gray-900'>
+            Ditetapkan
+          </span>
+          <span className='text-center text-sm dark:text-gray-900'>
+            Direktur RSIA Aisyiyah Pekajangan
+          </span>
+          <Image
+            src='/images/ttd-dr-him.jpeg'
+            width={150}
+            height={150}
+            alt='Logo RSIA Aisyiyah Pekajangan'
+          />
+          <span className='-mt-5 text-center font-bold underline dark:text-gray-900'>
+            dr. Himawan Budityastomo, Sp.OG
+          </span>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SPOHtml
+export default SPOHtml;

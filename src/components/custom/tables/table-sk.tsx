@@ -1,40 +1,62 @@
-import React from 'react'
-import LaravelPagingx from '@/components/custom-ui/laravel-paging'
+import React from 'react';
+import LaravelPagingx from '@/components/custom-ui/laravel-paging';
 
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Combobox } from '../inputs/combo-box'
-import { Button } from '@/components/ui/button'
-import { IconFileSearch } from '@tabler/icons-react'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import dynamic from 'next/dynamic'
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Combobox } from '../inputs/combo-box';
+import { Button } from '@/components/ui/button';
+import { IconFileSearch } from '@tabler/icons-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import dynamic from 'next/dynamic';
 
 interface tableProps {
-  data: any
-  filterData: any
-  setFilterData: any
-  isValidating?: boolean
+  data: any;
+  filterData: any;
+  setFilterData: any;
+  isValidating?: boolean;
   onRowClick?: (row: any) => void;
 }
 
-const PreviewBerkas = dynamic(() => import('@/components/custom/modals/dialog-preview-berkas'), { ssr: false })
+const PreviewBerkas = dynamic(
+  () => import('@/components/custom/modals/dialog-preview-berkas'),
+  { ssr: false }
+);
 
-const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: tableProps) => {
-  const [sk, setSk] = React.useState<any>({})
-  const [isOpen, setIsOpen] = React.useState<boolean>(false)
+const TableSk = ({
+  data,
+  filterData,
+  setFilterData,
+  isValidating,
+  onRowClick,
+}: tableProps) => {
+  const [sk, setSk] = React.useState<any>({});
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const columns = [
     {
       name: 'Nomor',
       selector: 'nomor',
       enableHiding: false,
       data: (row: any) => (
-        <Badge variant={row.status === '1' ? 'secondary' : 'destructive'} className='whitespace-nowrap'>
-          {`${row.nomor.toString().padStart(3, '0')}/${row.jenis}/${row.prefix}/${new Date(row.tgl_terbit).toLocaleDateString('id-ID', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit'
-          }).split('/').join('')}`}
+        <Badge
+          variant={row.status === '1' ? 'secondary' : 'destructive'}
+          className='whitespace-nowrap'
+        >
+          {`${row.nomor.toString().padStart(3, '0')}/${row.jenis}/${row.prefix}/${new Date(
+            row.tgl_terbit
+          )
+            .toLocaleDateString('id-ID', {
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit',
+            })
+            .split('/')
+            .join('')}`}
         </Badge>
       ),
     },
@@ -49,59 +71,81 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
       selector: 'pj',
       enableHiding: false,
       // data: (row: any) => <div>{<Badge variant="outline">{row.penanggungjawab.nama}</Badge>}</div>,
-      data: (row: any) => row.penanggungjawab ? (
-        <TooltipProvider delayDuration={50}>
-          <Tooltip>
-            <TooltipTrigger>
-              <Badge variant={"outline"} className="group-hover:border-primary">{row.pj}</Badge>
-            </TooltipTrigger>
-            <TooltipContent>{row.penanggungjawab.nama}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      ) : (
-        <Badge variant="outline">{row.pj}</Badge>
-      )
+      data: (row: any) =>
+        row.penanggungjawab ? (
+          <TooltipProvider delayDuration={50}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Badge
+                  variant={'outline'}
+                  className='group-hover:border-primary'
+                >
+                  {row.pj}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>{row.penanggungjawab.nama}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <Badge variant='outline'>{row.pj}</Badge>
+        ),
     },
     {
       name: 'Tgl Terbit',
       selector: 'tgl_terbit',
       enableHiding: false,
-      data: (row: any) => <div>{new Date(row.tgl_terbit).toLocaleDateString('id-ID', {
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit'
-      })}</div>,
+      data: (row: any) => (
+        <div>
+          {new Date(row.tgl_terbit).toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+          })}
+        </div>
+      ),
     },
     {
       name: '#',
       selector: 'aksi',
       style: ['w-[100px] text-right'],
       data: (row: any) => (
-        <Button 
-          variant="default" 
-          size="icon" 
-          className="flex items-center gap-2 h-6 w-6" 
-          disabled={!row.berkas || row.berkas == '' || row.berkas == null || row.berkas == undefined} 
+        <Button
+          variant='default'
+          size='icon'
+          className='flex h-6 w-6 items-center gap-2'
+          disabled={
+            !row.berkas ||
+            row.berkas == '' ||
+            row.berkas == null ||
+            row.berkas == undefined
+          }
           onClick={() => {
-            setSk(row)
-            setIsOpen(true)
+            setSk(row);
+            setIsOpen(true);
           }}
         >
-          <IconFileSearch className="h-4 w-4" />
+          <IconFileSearch className='h-4 w-4' />
         </Button>
-      )
-    }
-  ]
+      ),
+    },
+  ];
 
   return (
     <>
-      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 bg-gray-100/50 dark:bg-gray-900/50 border border-border rounded-xl p-4">
-        <div className="w-full space-y-1">
-          <Label htmlFor="tgl_terbit">Tanggal Terbit</Label>
-          <Input type="date" className="w-full" name='tgl_terbit' onChange={(e) => { setFilterData({ ...filterData, tgl_terbit: e.target.value }) }} />
+      <div className='mb-4 mt-4 flex w-full flex-col items-center justify-end gap-4 rounded-xl border border-border bg-gray-100/50 p-4 dark:bg-gray-900/50 md:flex-row'>
+        <div className='w-full space-y-1'>
+          <Label htmlFor='tgl_terbit'>Tanggal Terbit</Label>
+          <Input
+            type='date'
+            className='w-full'
+            name='tgl_terbit'
+            onChange={(e) => {
+              setFilterData({ ...filterData, tgl_terbit: e.target.value });
+            }}
+          />
         </div>
-        <div className="w-full space-y-1">
-          <Label htmlFor="">Jenis SK</Label>
+        <div className='w-full space-y-1'>
+          <Label htmlFor=''>Jenis SK</Label>
           <Combobox
             items={[
               { value: '', label: 'Semua Data' },
@@ -109,22 +153,22 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
               { value: 'B', label: 'SK Pengangkatan Jabatan' },
             ]}
             setSelectedItem={(item: any) => {
-              setFilterData({ ...filterData, jenis: item })
+              setFilterData({ ...filterData, jenis: item });
             }}
             selectedItem={filterData.jenis}
-            placeholder="Jenis SK"
+            placeholder='Jenis SK'
           />
         </div>
-        <div className="w-full space-y-1">
-          <Label htmlFor="">Keywords</Label>
+        <div className='w-full space-y-1'>
+          <Label htmlFor=''>Keywords</Label>
           <Input
             id='keyword'
-            type="search"
-            placeholder="Search..."
-            className="w-full min-w-[250px]"
+            type='search'
+            placeholder='Search...'
+            className='w-full min-w-[250px]'
             defaultValue={filterData.keyword}
             onChange={(e) => {
-              setFilterData({ ...filterData, keyword: e.target.value })
+              setFilterData({ ...filterData, keyword: e.target.value });
             }}
           />
         </div>
@@ -140,13 +184,13 @@ const TableSk = ({ data, filterData, setFilterData, isValidating, onRowClick }: 
         onRowClick={onRowClick}
       />
 
-      <PreviewBerkas 
+      <PreviewBerkas
         berkasUrl={`${process.env.NEXT_PUBLIC_BASE_BERKAS_URL}/rsia_sk/${sk?.berkas}#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0&navpanes=0`}
         isPreview={isOpen}
         setIsPreview={setIsOpen}
       />
     </>
-  )
-}
+  );
+};
 
-export default TableSk
+export default TableSk;

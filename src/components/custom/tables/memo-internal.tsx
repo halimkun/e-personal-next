@@ -1,31 +1,46 @@
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { getFullDateWithDayName } from "@/lib/date"
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { getFullDateWithDayName } from '@/lib/date';
 
-import dynamic from "next/dynamic"
-import { Button } from "@/components/ui/button"
-import { IconFileTypePdf, IconPencilCog, IconTrash } from "@tabler/icons-react"
-import { useRouter } from "next/router"
-import { getSession } from "next-auth/react"
-import toast from "react-hot-toast"
+import dynamic from 'next/dynamic';
+import { Button } from '@/components/ui/button';
+import { IconFileTypePdf, IconPencilCog, IconTrash } from '@tabler/icons-react';
+import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
-const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
-const DialogMenuMemoInternal = dynamic(() => import('@/components/custom/modals/dialog-menu-memo-internal'), { ssr: false })
+const LaravelPagingx = dynamic(
+  () => import('@/components/custom-ui/laravel-paging'),
+  { ssr: false }
+);
+const DialogMenuMemoInternal = dynamic(
+  () => import('@/components/custom/modals/dialog-menu-memo-internal'),
+  { ssr: false }
+);
 
 interface MemoInternalTableProps {
-  data: any
-  filterData: any
-  setFilterData: any
-  isValidating: boolean | undefined
+  data: any;
+  filterData: any;
+  setFilterData: any;
+  isValidating: boolean | undefined;
   onRowClick?: (row: any) => void;
-  setSelectedItem?: (value: any) => void
-  lastColumnAction?: boolean | undefined
-  mutate?: any
+  setSelectedItem?: (value: any) => void;
+  lastColumnAction?: boolean | undefined;
+  mutate?: any;
 }
 
-const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onRowClick = () => { }, setSelectedItem = () => { }, lastColumnAction, mutate }: MemoInternalTableProps) => {
+const TablesMemoInternal = ({
+  data,
+  filterData,
+  setFilterData,
+  isValidating,
+  onRowClick = () => {},
+  setSelectedItem = () => {},
+  lastColumnAction,
+  mutate,
+}: MemoInternalTableProps) => {
   const route = useRouter();
 
   const [items, setItems] = useState<any>({});
@@ -33,60 +48,68 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
   const [additionalItem, setAdditionalItem] = useState<any>({});
 
   const getPenerimaAndMengetahui = async (nomor: string) => {
-    const session = await getSession()
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/get/pm?no_surat=${nomor}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
+    const session = await getSession();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/get/pm?no_surat=${nomor}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${session?.rsiap?.access_token}`,
+        },
       }
-    }).then(res => res.json());
+    ).then((res) => res.json());
 
     return res;
-  }
+  };
 
   const onDelete = async (nomor: string) => {
-    const confirm = window.confirm('Apakah anda yakin ingin menghapus data ini?')
-    if (!confirm) return
+    const confirm = window.confirm(
+      'Apakah anda yakin ingin menghapus data ini?'
+    );
+    if (!confirm) return;
 
-    const session = await getSession()
-    const forData = new FormData()
+    const session = await getSession();
+    const forData = new FormData();
 
-    forData.append('no_surat', nomor)
+    forData.append('no_surat', nomor);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/delete`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session?.rsiap?.access_token}`,
-      },
-      body: forData
-    })
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/delete`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session?.rsiap?.access_token}`,
+        },
+        body: forData,
+      }
+    );
 
-    const data = await response.json()
+    const data = await response.json();
 
     if (data.success) {
-      toast.success('Berhasil menghapus data')
-      setSelectedItem({})
+      toast.success('Berhasil menghapus data');
+      setSelectedItem({});
     }
 
     if (!data.success) {
-      toast.error('Gagal menghapus data')
+      toast.error('Gagal menghapus data');
     }
 
-    mutate()
-  }
+    mutate();
+  };
 
   const columns = [
     {
       name: 'No. Surat',
       selector: 'No Surat',
       enableHiding: false,
-      data: (row: any) => <Badge variant={'secondary'}>{row.no_surat}</Badge>
+      data: (row: any) => <Badge variant={'secondary'}>{row.no_surat}</Badge>,
     },
     {
       name: 'Perihal',
       selector: 'perihal',
       enableHiding: false,
-      data: (row: any) => row.perihal.perihal
+      data: (row: any) => row.perihal.perihal,
     },
     {
       name: 'Dari',
@@ -96,7 +119,7 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
         <>
           <Badge variant={'outline'}>{row.dari}</Badge>
         </>
-      )
+      ),
     },
     {
       name: 'Tgl Terbit',
@@ -106,7 +129,7 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
         <Badge variant={'secondary'}>
           {getFullDateWithDayName(row.perihal.tgl_terbit)}
         </Badge>
-      )
+      ),
     },
     {
       // edit and delete
@@ -114,14 +137,14 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
       selector: 'action',
       enableHiding: false,
       data: (row: any) => (
-        <div className="flex gap-1 w-full justify-end">
+        <div className='flex w-full justify-end gap-1'>
           <Button
             size={'icon'}
             onClick={() => {
-              const url = `${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/render/${row.no_surat.replaceAll('/', '--')}`
-              window.open(url, '_blank')
+              const url = `${process.env.NEXT_PUBLIC_API_URL}/berkas/memo/internal/render/${row.no_surat.replaceAll('/', '--')}`;
+              window.open(url, '_blank');
             }}
-            className="bg-success text-white hover:bg-success/80 w-7 h-7"
+            className='h-7 w-7 bg-success text-white hover:bg-success/80'
           >
             <IconFileTypePdf size={18} />
           </Button>
@@ -129,10 +152,13 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
           <Button
             size={'icon'}
             onClick={() => {
-              const url = "/memo/internal/" + row.no_surat.toString().replaceAll('/', '--') + "/edit"
-              route.push(url)
+              const url =
+                '/memo/internal/' +
+                row.no_surat.toString().replaceAll('/', '--') +
+                '/edit';
+              route.push(url);
             }}
-            className="bg-primary text-white hover:bg-primary/80 w-7 h-7"
+            className='h-7 w-7 bg-primary text-white hover:bg-primary/80'
           >
             <IconPencilCog size={18} />
           </Button>
@@ -140,29 +166,29 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
           <Button
             size={'icon'}
             onClick={() => {
-              onDelete(row.no_surat)
+              onDelete(row.no_surat);
             }}
-            className="bg-danger text-white hover:bg-danger-600 w-7 h-7"
+            className='hover:bg-danger-600 h-7 w-7 bg-danger text-white'
           >
             <IconTrash size={18} />
           </Button>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   return (
     <>
-      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 dark:bg-gray-900/50 border border-border">
-        <div className="w-full space-y-1">
+      <div className='mb-4 mt-4 flex w-full flex-col items-center justify-end gap-4 rounded-xl border border-border bg-gray-100/50 p-4 dark:bg-gray-900/50 md:flex-row'>
+        <div className='w-full space-y-1'>
           <Label>Search</Label>
           <Input
-            type="search"
-            placeholder="Search..."
-            className="w-full"
+            type='search'
+            placeholder='Search...'
+            className='w-full'
             defaultValue={filterData?.keyword}
             onChange={(e) => {
-              setFilterData({ ...filterData, keyword: e.target.value })
+              setFilterData({ ...filterData, keyword: e.target.value });
             }}
           />
         </div>
@@ -175,11 +201,11 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
         setFilterData={setFilterData}
         isValidating={isValidating}
         onRowClick={(item: any) => {
-          setItems(item)
-          setOpenDialogMenu(true)
-          getPenerimaAndMengetahui(item.no_surat).then(res => {
-            setAdditionalItem(res)
-          })
+          setItems(item);
+          setOpenDialogMenu(true);
+          getPenerimaAndMengetahui(item.no_surat).then((res) => {
+            setAdditionalItem(res);
+          });
         }}
         lastColumnAction={true}
       />
@@ -191,7 +217,7 @@ const TablesMemoInternal = ({ data, filterData, setFilterData, isValidating, onR
         onOpenChange={(value: boolean) => setOpenDialogMenu(value)}
       />
     </>
-  )
-}
+  );
+};
 
 export default TablesMemoInternal;

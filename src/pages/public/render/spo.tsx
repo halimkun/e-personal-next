@@ -14,43 +14,48 @@ const RenderPage = ({ data, isMobile }: any) => {
   // }, [spoDetail])
 
   return (
-    <div className="h-full flex items-center px-4 py-5">
+    <div className='flex h-full items-center px-4 py-5'>
       <SPOHtml data={data} />
     </div>
-  )
-}
+  );
+};
 
 export async function getServerSideProps(context: any) {
-  const { token } = context.query
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/show?nomor=${context.query.nomor}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`
+  const { token } = context.query;
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/berkas/spo/show?nomor=${context.query.nomor}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
-  })
+  );
 
   // console.log(session?.rsiap?.access_token)
 
   const UA = context.req.headers['user-agent'];
-  const isMobile = Boolean(UA.match(
-    /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
-  ))
+  const isMobile = Boolean(
+    UA.match(
+      /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+    )
+  );
 
-  const data = await res.json()
+  const data = await res.json();
   if (data.success) {
     return {
       props: {
         data: data.data,
-        isMobile
-      }
-    }
+        isMobile,
+      },
+    };
   } else {
     return {
       props: {
         data: null,
-        isMobile
-      }
-    }
+        isMobile,
+      },
+    };
   }
 }
 
@@ -66,4 +71,4 @@ export async function getServerSideProps(context: any) {
 //   )
 // }
 
-export default RenderPage
+export default RenderPage;

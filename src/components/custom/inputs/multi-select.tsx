@@ -1,126 +1,132 @@
-import * as React from 'react'
-import { cn } from "@/lib/utils"
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
-import { IconCheck, IconX, IconCaretUpDown } from '@tabler/icons-react'
-import { Button } from "@/components/ui/button"
+import { IconCheck, IconX, IconCaretUpDown } from '@tabler/icons-react';
+import { Button } from '@/components/ui/button';
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-} from "@/components/ui/command"
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command';
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { Badge } from "@/components/ui/badge";
-
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Badge } from '@/components/ui/badge';
 
 export type OptionType = {
-    label: string;
-    value: string;
-}
+  label: string;
+  value: string;
+};
 
 interface MultiSelectProps {
-    options: OptionType[];
-    selected: string[];
-    valueSelected?: string[];
-    onChange: React.Dispatch<React.SetStateAction<string[]>>;
-    onValueChange?: (value: string[]) => void;
-    className?: string;
+  options: OptionType[];
+  selected: string[];
+  valueSelected?: string[];
+  onChange: React.Dispatch<React.SetStateAction<string[]>>;
+  onValueChange?: (value: string[]) => void;
+  className?: string;
 }
 
-function MultiSelect({ options, selected, onChange, className, ...props }: MultiSelectProps) {
+function MultiSelect({
+  options,
+  selected,
+  onChange,
+  className,
+  ...props
+}: MultiSelectProps) {
+  const [open, setOpen] = React.useState(false);
 
-    const [open, setOpen] = React.useState(false)
+  const handleUnselect = (item: string) => {
+    onChange(selected.filter((i) => i !== item));
+  };
 
-    const handleUnselect = (item: string) => {
-        onChange(selected.filter((i) => i !== item))
-    }
-
-    return (
-        <Popover open={open} onOpenChange={setOpen} {...props} modal={true}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className={`w-full justify-between ${selected.length > 1 ? "h-auto" : "h-9"}`}
-                    onClick={() => setOpen(!open)}
+  return (
+    <Popover open={open} onOpenChange={setOpen} {...props} modal={true}>
+      <PopoverTrigger asChild>
+        <Button
+          variant='outline'
+          role='combobox'
+          aria-expanded={open}
+          className={`w-full justify-between ${selected.length > 1 ? 'h-auto' : 'h-9'}`}
+          onClick={() => setOpen(!open)}
+        >
+          <div className='flex flex-wrap gap-1'>
+            {selected.map((item) => (
+              <Badge
+                variant='secondary'
+                key={item}
+                className='mr-1'
+                onClick={() => handleUnselect(item)}
+              >
+                {item}
+                <button
+                  className='ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2'
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleUnselect(item);
+                    }
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onClick={() => handleUnselect(item)}
                 >
-                    <div className="flex gap-1 flex-wrap">
-                        {selected.map((item) => (
-                            <Badge
-                                variant="secondary"
-                                key={item}
-                                className="mr-1"
-                                onClick={() => handleUnselect(item)}
-                            >
-                                {item}
-                                <button
-                                    className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Enter") {
-                                            handleUnselect(item);
-                                        }
-                                    }}
-                                    onMouseDown={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                    }}
-                                    onClick={() => handleUnselect(item)}
-                                >
-                                    <IconX className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                                </button>
-                            </Badge>
-                        ))}
-                    </div>
-                    <IconCaretUpDown className="h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-full p-0">
-                <Command className={className}>
-                    <CommandInput placeholder="Search ..." />
-                    <CommandEmpty>No item found.</CommandEmpty>
-                    <CommandGroup className='max-h-64 overflow-auto'>
-                        {options.map((option) => (
-                            <CommandItem
-                                key={option.value}
-                                onSelect={() => {
-                                    onChange(
-                                        selected.includes(option.label)
-                                            ? selected.filter((item) => item !== option.label)
-                                            : [...selected, option.label]
-                                    )
+                  <IconX className='h-3 w-3 text-muted-foreground hover:text-foreground' />
+                </button>
+              </Badge>
+            ))}
+          </div>
+          <IconCaretUpDown className='h-4 w-4 shrink-0 opacity-50' />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className='w-full p-0'>
+        <Command className={className}>
+          <CommandInput placeholder='Search ...' />
+          <CommandEmpty>No item found.</CommandEmpty>
+          <CommandGroup className='max-h-64 overflow-auto'>
+            {options.map((option) => (
+              <CommandItem
+                key={option.value}
+                onSelect={() => {
+                  onChange(
+                    selected.includes(option.label)
+                      ? selected.filter((item) => item !== option.label)
+                      : [...selected, option.label]
+                  );
 
-                                    if (props.onValueChange && props.valueSelected) {
-                                        props.onValueChange(
-                                            props.valueSelected.includes(option.value)
-                                                ? props.valueSelected.filter((item) => item !== option.value)
-                                                : [...props.valueSelected, option.value]
-                                        )
-                                    }
-                                    setOpen(true)
-                                }}
-                            >
-                                <IconCheck
-                                    className={cn(
-                                        "mr-2 h-4 w-4",
-                                        selected.includes(option.label)
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                    )}
-                                />
-                                {option.label}
-                            </CommandItem>
-                        ))}
-                    </CommandGroup>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    )
+                  if (props.onValueChange && props.valueSelected) {
+                    props.onValueChange(
+                      props.valueSelected.includes(option.value)
+                        ? props.valueSelected.filter(
+                            (item) => item !== option.value
+                          )
+                        : [...props.valueSelected, option.value]
+                    );
+                  }
+                  setOpen(true);
+                }}
+              >
+                <IconCheck
+                  className={cn(
+                    'mr-2 h-4 w-4',
+                    selected.includes(option.label)
+                      ? 'opacity-100'
+                      : 'opacity-0'
+                  )}
+                />
+                {option.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
-export { MultiSelect }
+export { MultiSelect };

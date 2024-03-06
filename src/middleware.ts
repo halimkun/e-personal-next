@@ -1,5 +1,5 @@
 // export { default } from "next-auth/middleware"
-import { withAuth } from "next-auth/middleware"
+import { withAuth } from 'next-auth/middleware';
 
 export default withAuth(
   function middleware(req) {
@@ -8,27 +8,31 @@ export default withAuth(
   {
     callbacks: {
       authorized: async ({ req, token }) => {
-        if (token) { // Check if token is present
+        if (token) {
+          // Check if token is present
           // Check token is valid or not from API server
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token.accessToken}`
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/me`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token.accessToken}`,
+              },
             }
-          });
+          );
 
           // If token is invalid, return false
           if (res.status != 200) {
-            return false
+            return false;
           }
 
           // If token is valid, return true
           const data = await res.json();
-          
+
           // If token is invalid, return false
           if (!data.success) {
-            return false
+            return false;
           }
 
           // Decode JWT Token
@@ -36,33 +40,30 @@ export default withAuth(
           // const decodedToken = jwt.decode(token.accessToken);
 
           // If token is valid,
-          return true
+          return true;
         }
 
         // If token is not present,
-        return false
+        return false;
       },
     },
   }
-)
-
-
+);
 
 export const config = {
   matcher: [
     /*
-        * Match all request paths except for the ones starting with:
-        * - api (API routes)
-        * - public routes
-        * - auth login (login page)
-        * - _next/static (static files)
-        * - _next/image (image optimization files)
-        * - favicon.ico (favicon file)
-        */
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - public routes
+     * - auth login (login page)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
     '/((?!api|public|auth/login|_next/static|_next/image|images|favicon.ico|manifest.json|site.webmanifest).*)',
-  ]
-}
-
+  ],
+};
 
 // import { NextResponse } from "next/server";
 // import type { NextRequest } from "next/server"

@@ -7,10 +7,10 @@ module.exports = {
       script: './node_modules/next/dist/bin/next',
       args: 'start',
       watch: true,
-      ignore_watch: ['node_modules', "\\.git", "*.log"],
+      ignore_watch: ['node_modules', '\\.git', '*.log'],
       env: {
         // environment variables for all environments
       },
     },
-  ]
-}
+  ],
+};

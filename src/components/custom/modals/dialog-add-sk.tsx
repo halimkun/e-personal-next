@@ -4,9 +4,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import FormAddSK from "../forms/add-sk"
+} from '@/components/ui/dialog';
+import FormAddSK from '../forms/add-sk';
 
 interface DialogAddSkProps {
   isOpenFormAdd: boolean;
@@ -18,9 +17,7 @@ interface DialogAddSkProps {
   mutate: () => void;
 }
 
-
 const DialogAddSk = (props: DialogAddSkProps) => {
-
   const {
     isOpenFormAdd,
     setIsOpenFormAdd,
@@ -29,15 +26,14 @@ const DialogAddSk = (props: DialogAddSkProps) => {
     jenis,
     setJenis,
     mutate,
-  } = props
+  } = props;
 
   return (
     <Dialog open={isOpenFormAdd} onOpenChange={setIsOpenFormAdd}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Surat Keputusan Direktur</DialogTitle>
-          <DialogDescription>
-          </DialogDescription>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <FormAddSK
           date={date}
@@ -49,7 +45,7 @@ const DialogAddSk = (props: DialogAddSkProps) => {
         />
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default DialogAddSk
+export default DialogAddSk;

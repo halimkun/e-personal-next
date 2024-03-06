@@ -1,37 +1,48 @@
-import useSWR from "swr";
-import dynamic from "next/dynamic";
-import fetcherGet from "@/utils/fetcherGet";
+import useSWR from 'swr';
+import dynamic from 'next/dynamic';
+import fetcherGet from '@/utils/fetcherGet';
 
-import { NextPageWithLayout } from "@/pages/_app";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { NextPageWithLayout } from '@/pages/_app';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 
-const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
-const TableNotulen = dynamic(() => import('@/components/custom/tables/notulen'), { ssr: false })
-const AppLayout = dynamic(() => import('@/components/layouts/app'), { ssr: false });
+const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), {
+  ssr: false,
+});
+const TableNotulen = dynamic(
+  () => import('@/components/custom/tables/notulen'),
+  { ssr: false }
+);
+const AppLayout = dynamic(() => import('@/components/layouts/app'), {
+  ssr: false,
+});
 
 const NotulenPage: NextPageWithLayout = () => {
-  const delayDebounceFn = useRef<any>(null)
-  const [filterData, setFilterData] = useState({})
-  const [filterQuery, setFilterQuery] = useState('')
+  const delayDebounceFn = useRef<any>(null);
+  const [filterData, setFilterData] = useState({});
+  const [filterQuery, setFilterQuery] = useState('');
 
-  const fetcher = (url: string) => fetcherGet({ url, filterQuery })
+  const fetcher = (url: string) => fetcherGet({ url, filterQuery });
 
-  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/undangan`, fetcher, {
-    revalidateOnFocus: false,
-    refreshWhenOffline: false,
-    refreshWhenHidden: true,
-  })
+  const { data, error, mutate, isLoading, isValidating } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/undangan`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      refreshWhenOffline: false,
+      refreshWhenHidden: true,
+    }
+  );
 
   useEffect(() => {
-    let fq = ''
+    let fq = '';
     for (const [key, value] of Object.entries(filterData)) {
       if (value) {
-        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`
+        fq += fq === '' ? `?${key}=${value}` : `&${key}=${value}`;
       }
     }
 
-    setFilterQuery(fq)
-  }, [filterData])
+    setFilterQuery(fq);
+  }, [filterData]);
 
   useEffect(() => {
     if (delayDebounceFn.current) {
@@ -45,15 +56,15 @@ const NotulenPage: NextPageWithLayout = () => {
     return () => clearTimeout(delayDebounceFn.current);
   }, [filterQuery]);
 
-  if (isLoading) return <Loading1 height={50} width={50} />
-  if (error) return <div>{error.message}</div>
-  if (!data) return <div>No data</div>
+  if (isLoading) return <Loading1 height={50} width={50} />;
+  if (error) return <div>{error.message}</div>;
+  if (!data) return <div>No data</div>;
 
   return (
     <>
-      <div className="w-full flex items-center justify-between">
-        <div className="px-2 border-l-4 border-primary bg-gray-100 dark:bg-gray-900 rounded-r">
-          <h4 className="text-xl font-semibold text-primary">
+      <div className='flex w-full items-center justify-between'>
+        <div className='rounded-r border-l-4 border-primary bg-gray-100 px-2 dark:bg-gray-900'>
+          <h4 className='text-xl font-semibold text-primary'>
             Data Undangan & Notulen
           </h4>
         </div>
@@ -75,13 +86,11 @@ const NotulenPage: NextPageWithLayout = () => {
         mutate={mutate}
       />
     </>
-  )
-}
+  );
+};
 
 NotulenPage.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <AppLayout>{page}</AppLayout>
-  )
-}
+  return <AppLayout>{page}</AppLayout>;
+};
 
 export default NotulenPage;

@@ -1,44 +1,41 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { IconCalendar } from "@tabler/icons-react"
-import { format } from "date-fns"
+import * as React from 'react';
+import { IconCalendar } from '@tabler/icons-react';
+import { format } from 'date-fns';
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover';
 
-export function DatePickerDemo({
-  date, setDate, placeholder
-}: any) {
-
+export function DatePickerDemo({ date, setDate, placeholder }: any) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           className={cn(
-            "min-w-[200px] w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            'w-full min-w-[200px] justify-start text-left font-normal',
+            !date && 'text-muted-foreground'
           )}
         >
-          <IconCalendar className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>{placeholder}</span>}
+          <IconCalendar className='mr-2 h-4 w-4' />
+          {date ? format(date, 'PPP') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className='w-auto p-0' align='start'>
         <Calendar
-          mode="single"
+          mode='single'
           selected={date}
           onSelect={setDate}
           initialFocus
         />
       </PopoverContent>
     </Popover>
-  )
+  );
 }

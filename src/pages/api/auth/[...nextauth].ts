@@ -14,12 +14,15 @@ const authOption: NextAuthOptions = {
       type: 'credentials',
       name: 'Credentials',
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "username" },
-        password: { label: "Password", type: "password" }
+        username: { label: 'Username', type: 'text', placeholder: 'username' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
         // request to API
-        const { username, password } = credentials as { username: string, password: string };
+        const { username, password } = credentials as {
+          username: string;
+          password: string;
+        };
         const response: any = await fetch(`${process.env.API_URL}/auth/login`, {
           method: 'POST',
           headers: {
@@ -29,7 +32,6 @@ const authOption: NextAuthOptions = {
         }).then((res) => res.json());
 
         if (response.success) {
-
           const jwt = require('jsonwebtoken');
           const decodedToken = jwt.decode(response.access_token);
 
@@ -38,23 +40,26 @@ const authOption: NextAuthOptions = {
           // }
 
           // has menu on this application or not
-          const menu = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?nik=${decodedToken.sub}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(res => res.json());
-          
+          const menu = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/v2/menu-epersonal?nik=${decodedToken.sub}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          ).then((res) => res.json());
+
           if (menu.data.length == 0) {
             throw new Error('User is not allowed to access this application');
           }
 
           return response;
         } else {
-          throw new Error("Invalid credentials");
+          throw new Error('Invalid credentials');
         }
       },
-    })
+    }),
   ],
 
   callbacks: {
@@ -77,7 +82,7 @@ const authOption: NextAuthOptions = {
       // }
 
       session.rsiap = session.rsiap ?? {}; // Create the `rsiap` object if it doesn't exist
-      if ("accessToken" in token) {
+      if ('accessToken' in token) {
         session.rsiap.access_token = token.accessToken;
         session.rsiap.token_type = token.tokenType;
       }
@@ -101,7 +106,7 @@ const authOption: NextAuthOptions = {
           sub: decodedToken.sub,
           name: decodedToken.sub,
           dep: decodedToken.kd_dep,
-          department: decodedToken.nm_dep
+          department: decodedToken.nm_dep,
         };
       }
 
@@ -110,8 +115,8 @@ const authOption: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth/login',
-    error: '/auth/login'
-  }
-}
+    error: '/auth/login',
+  },
+};
 
-export default NextAuth(authOption)
+export default NextAuth(authOption);

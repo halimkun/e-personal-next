@@ -1,3 +1,39 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "plugins": ["import"],
+  "rules": {
+    "import/no-unresolved": [
+      2,
+      {
+        "commonjs": true,
+        "amd": true
+      }
+    ],
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2,
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unused-modules": [
+      1,
+      {
+        "missingExports": true,
+        "unusedExports": true
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": true,
+      "typescript": true
+    }
+  }
 }

@@ -1,22 +1,28 @@
-import { getSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import toast from "react-hot-toast";
+import { getSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
-import { Button } from "@/components/ui/button"
-import { IconLogout } from "@tabler/icons-react";
+import { Button } from '@/components/ui/button';
+import { IconLogout } from '@tabler/icons-react';
 
 type LogoutButtonProps = {
-  className?: string
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  size?: 'default' | 'sm' | 'lg' | 'icon'
-  title?: string
-}
+  className?: string;
+  variant?:
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
+  title?: string;
+};
 
-export const LogoutButton = ({ 
+export const LogoutButton = ({
   className = '',
   variant = 'destructive',
   size = 'icon',
-  title = "Logout from the application"
+  title = 'Logout from the application',
 }: LogoutButtonProps) => {
   const router = useRouter();
   const handleSignOut = async () => {
@@ -25,13 +31,16 @@ export const LogoutButton = ({
 
     if (confirm) {
       // unauthenticate user from api
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sesstion?.rsiap?.access_token}`
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${sesstion?.rsiap?.access_token}`,
+          },
         }
-      });
+      );
 
       const data = await res.json();
       if (data?.success) {
@@ -46,11 +55,17 @@ export const LogoutButton = ({
         toast.error(data?.message);
       }
     }
-  }
+  };
 
   return (
-    <Button variant={variant} size={size} className={className} onClick={handleSignOut} title={title}>
-      <IconLogout className="w-5 h-5" />
+    <Button
+      variant={variant}
+      size={size}
+      className={className}
+      onClick={handleSignOut}
+      title={title}
+    >
+      <IconLogout className='h-5 w-5' />
     </Button>
-  )
-}
+  );
+};

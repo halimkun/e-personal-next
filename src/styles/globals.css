@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* @import '/node_modules/react-big-calendar/lib/sass/styles.scss'; */
 /* @import '/node_modules/react-big-calendar/lib/addons/dragAndDrop/styles.css'; */
 
@@ -68,7 +67,6 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border dark:border-neutral-700 dark:text-neutral-200;
@@ -80,32 +78,32 @@
 }
 
 .detail-spo ul {
-  @apply list-disc list-inside;
+  @apply list-inside list-disc;
 }
 
 .detail-spo ol {
-  @apply list-decimal list-inside;
+  @apply list-inside list-decimal;
 }
 
 /* button disable cursot not alowed + event none */
 button[disabled] {
-  @apply cursor-not-allowed pointer-events-none;
+  @apply pointer-events-none cursor-not-allowed;
 }
 
 ol {
-  @apply list-decimal list-inside;
+  @apply list-inside list-decimal;
 }
 
 .rbc-month-view {
-  @apply border border-border dark:border-gray-700 text-foreground dark:text-gray-300 rounded-xl;
+  @apply rounded-xl border border-border text-foreground dark:border-gray-700 dark:text-gray-300;
 }
 
 .rbc-off-range-bg {
   @apply bg-background dark:bg-gray-800;
 }
 
-.rbc-day-bg+.rbc-day-bg,
-.rbc-header+.rbc-header {
+.rbc-day-bg + .rbc-day-bg,
+.rbc-header + .rbc-header {
   @apply border-l border-border dark:border-gray-700;
 }
 
@@ -113,7 +111,7 @@ ol {
   @apply border-b border-border dark:border-gray-700;
 }
 
-.rbc-month-row+.rbc-month-row {
+.rbc-month-row + .rbc-month-row {
   @apply border-t border-border dark:border-gray-700;
 }
 
@@ -129,7 +127,7 @@ ol {
 }
 
 .rbc-overlay-header {
-  @apply bg-background text-foreground font-semibold;
+  @apply bg-background font-semibold text-foreground;
   padding: 0.5rem 1rem !important;
 }
 
@@ -138,30 +136,35 @@ ol {
 }
 
 #renderPDF iframe {
-  @apply w-full h-full;
+  @apply h-full w-full;
 }
 
 #renderPDF {
   @apply h-[95vh];
 }
 
-.tableSpo ol, .tableSpo ol {
-  @apply list-decimal list-outside;
+.tableSpo ol,
+.tableSpo ol {
+  @apply list-outside list-decimal;
 }
 
-.tableSpo ul, .tableSpo ul {
-  @apply list-disc list-outside;
+.tableSpo ul,
+.tableSpo ul {
+  @apply list-outside list-disc;
 }
 
-.tableSpo ul, .tableSpo ol {
+.tableSpo ul,
+.tableSpo ol {
   @apply ml-6;
 }
 
-.tableSpo li, .tableSpo li {
+.tableSpo li,
+.tableSpo li {
   @apply mb-1;
 }
 
-.tableSpo p, .tableSpo li {
+.tableSpo p,
+.tableSpo li {
   @apply dark:text-gray-800;
 }
 
@@ -176,5 +179,5 @@ ol {
 }
 
 .ck-content p {
-  @apply text-slate-900
+  @apply text-slate-900;
 }

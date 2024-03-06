@@ -4,9 +4,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import FormAddSK from "../forms/add-sk";
+} from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import FormAddSK from '../forms/add-sk';
 
 interface DialogEditSkProps {
   isFormEditOpen: boolean;
@@ -29,7 +29,7 @@ const DialogEditSk = (props: DialogEditSkProps) => {
     jenis,
     setJenis,
     mutate,
-  } = props
+  } = props;
 
   return (
     <Dialog open={isFormEditOpen} onOpenChange={setIsFormEditOpen}>
@@ -38,15 +38,28 @@ const DialogEditSk = (props: DialogEditSkProps) => {
           <DialogTitle>Edit Surat Keputusan Direktur</DialogTitle>
           <DialogDescription>
             {selectedData ? (
-              <Badge variant={selectedData.status === '1' ? 'default' : 'destructive'} className="mr-2">
-                {`${selectedData.nomor.toString().padStart(3, '0')}/${selectedData.jenis}/${selectedData.prefix}/${new Date(selectedData.tgl_terbit).toLocaleDateString('id-ID', {
-                  year: '2-digit',
-                  month: '2-digit',
-                  day: '2-digit'
-                }).split('/').join('')}`}
+              <Badge
+                variant={
+                  selectedData.status === '1' ? 'default' : 'destructive'
+                }
+                className='mr-2'
+              >
+                {`${selectedData.nomor.toString().padStart(3, '0')}/${selectedData.jenis}/${selectedData.prefix}/${new Date(
+                  selectedData.tgl_terbit
+                )
+                  .toLocaleDateString('id-ID', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })
+                  .split('/')
+                  .join('')}`}
               </Badge>
-            ) : <></>}
-            You can edit this data. but be careful editing number can cause duplicate data in the database and possibly cause errors.
+            ) : (
+              <></>
+            )}
+            You can edit this data. but be careful editing number can cause
+            duplicate data in the database and possibly cause errors.
           </DialogDescription>
         </DialogHeader>
         <FormAddSK
@@ -60,7 +73,7 @@ const DialogEditSk = (props: DialogEditSkProps) => {
         />
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
 export default DialogEditSk;
