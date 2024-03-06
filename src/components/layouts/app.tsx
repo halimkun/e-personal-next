@@ -17,6 +17,7 @@ import { LogoutButton } from '../custom/buttons/logout'
 import { useKeyboardShortcut } from '@/lib/useKeyboardShortcut'
 import { Toaster } from 'react-hot-toast'
 import dynamic from 'next/dynamic'
+import Head from 'next/head'
 
 const SearchMenu = dynamic(() => import('../custom/search-menu'), { ssr: false })
 const UserMenu = dynamic(() => import('../menu/user-menu'), { ssr: false })
