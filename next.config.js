@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
+  i18n: {
+    locales: ['id', 'en'],
+    defaultLocale: 'id',
+  },
   env: {
     PORT: process.env.NEXT_PUBLIC_PORT,
     APP_ENV: process.env.NEXT_PUBLIC_NODE_ENV,
@@ -9,11 +14,25 @@ const nextConfig = {
 
     // API
     NEXT_PUBLIC_BASE_API_URL: process.env.NEXT_PUBLIC_BASE_API_URL,
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     // Berkas
     NEXT_PUBLIC_BASE_BERKAS_URL: process.env.NEXT_PUBLIC_BASE_BERKAS_URL,
   }
 }
 
-module.exports = nextConfig
+const {
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} = require("next/constants");
+
+module.exports = (phase) => {
+  if (phase === PHASE_DEVELOPMENT_SERVER || phase === PHASE_PRODUCTION_BUILD) {
+    const withPWA = require("@ducanh2912/next-pwa").default({
+      dest: "public"
+    });
+    return withPWA(nextConfig);
+  }
+  return nextConfig;
+};
+
