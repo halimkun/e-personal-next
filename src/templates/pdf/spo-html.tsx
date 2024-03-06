@@ -99,7 +99,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
                     {item.toUpperCase()}
                   </span>
                 </td>
-                <td colSpan={2} className="border border-border p-5 dark:text-gray-900 detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as String }}></td>
+                <td colSpan={2} className="border border-border p-5 dark:text-gray-900 detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as string }}></td>
               </tr>
             ))}
             {/* end loop detailSpo */}
@@ -165,7 +165,7 @@ const SPOHtml = ({ data }: SPOHtmlProps) => {
           {detailSpo.map((item, index) => (
             <div key={index} className="w-full flex flex-col gap-1 mt-2 tableSpo">
               <span className="dark:text-gray-900 text-left text-sm font-bold">{item.toUpperCase()}</span>
-              <div className="dark:text-gray-900 text-left text-sm detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as String }}></div>
+              <div className="dark:text-gray-900 text-left text-sm detail-spo" dangerouslySetInnerHTML={{ __html: decodedHTML(data?.detail[item]) as string }}></div>
             </div>
           ))}
 

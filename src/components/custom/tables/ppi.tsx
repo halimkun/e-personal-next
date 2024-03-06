@@ -21,8 +21,7 @@ interface tablePpiProps {
 }
 
 const TablePPI = ({ data, filterData, mutate, setFilterData, isValidating, onRowClick, onDelete }: tablePpiProps) => {
-
-
+  
   const columns = [
     {
       name: 'Nomor',
