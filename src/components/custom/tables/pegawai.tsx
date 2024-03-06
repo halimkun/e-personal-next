@@ -6,75 +6,73 @@ import fetcherGet from "@/utils/fetcherGet"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@radix-ui/react-menubar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useDebounce } from "use-debounce"
 
 const LaravelPagingx = dynamic(() => import('@/components/custom-ui/laravel-paging'), { ssr: false })
-const Loading1 = dynamic(() => import('@/components/custom/icon-loading'), { ssr: false })
 
 interface TablePegawaiProps {
   columnsData: any
   datatables?: string | '0' | '1'
   select?: string
+  withTable?: string
 }
 
 // default value for datatables is true
 const propsDefault: TablePegawaiProps = {
   columnsData: [],
   datatables: '0',
-  select: 'nik,nama,bidang,jbtn'
+  select: 'nik,nama,bidang,jbtn',
+  withTable: 'dpt',
 }
 
 const TablePegawai = (props: TablePegawaiProps) => {
-  const { columnsData, datatables, select } = { ...propsDefault, ...props }
+  const { columnsData, datatables, select, withTable } = { ...propsDefault, ...props }
 
-  const delayDebounceFn = useRef<any>(null)
   const [filterQuery, setFilterQuery] = useState('')
   const [filterData, setFilterData] = useState<any>({})
+  const [debouncedFilterQuery] = useDebounce(filterQuery, 1000)
 
   const fetcher = (url: string) => fetcherGet({ url, filterQuery });
 
-  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=${datatables}&select=${select}`, fetcher, {
+  const { data, error, mutate, isLoading, isValidating } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pegawai?datatables=${datatables}&select=${select}&with=${withTable}`, fetcher, {
     revalidateOnFocus: false,
     refreshWhenOffline: false,
     refreshWhenHidden: true,
   });
 
   useEffect(() => {
-    let fq = ''
-    for (const [key, value] of Object.entries(filterData)) {
-      if (value) {
-        fq += fq === '' ? `&${key}=${value}` : `&${key}=${value}`
-      }
-    }
+    const count = Object.keys(filterData).length
 
-    setFilterQuery(fq)
-  }, [filterData])
+    if (count > 0) {
+      let fq = '';
+      for (const [key, value] of Object.entries(filterData)) {
+        if (value) {
+          fq += fq === '' ? `&${key}=${value}` : `&${key}=${value}`;
+        }
+      }
+      setFilterQuery(fq);
+    }
+  }, [filterData]);
 
   useEffect(() => {
-    if (delayDebounceFn.current) {
-      clearTimeout(delayDebounceFn.current);
-    }
-
-    delayDebounceFn.current = setTimeout(() => {
-      mutate();
-    }, 250);
-
-    return () => clearTimeout(delayDebounceFn.current);
-  }, [filterQuery]);
+    mutate()
+  }, [debouncedFilterQuery, mutate]);
 
   return data && (
     <>
-      <div className="w-full space-y-1">
-        <Label>Search</Label>
-        <Input
-          type="search"
-          placeholder="Search..."
-          className="w-full"
-          defaultValue={filterData?.keyword}
-          onChange={(e) => {
-            setFilterData({ ...filterData, keyword: e.target.value })
-          }}
-        />
+      <div className="mt-4 mb-4 w-full flex flex-col md:flex-row items-center justify-end gap-4 p-4 rounded-xl bg-gray-100/50 dark:bg-gray-900/50 border border-border">
+        <div className="w-full space-y-1">
+          <Label>Search</Label>
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full border-border"
+            defaultValue={filterData?.keyword}
+            onChange={(e) => {
+              setFilterData({ ...filterData, keyword: e.target.value })
+            }}
+          />
+        </div>
       </div>
 
       <LaravelPagingx
