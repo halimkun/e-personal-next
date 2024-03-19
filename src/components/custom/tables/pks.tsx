@@ -4,6 +4,7 @@ import { Combobox } from '../inputs/combo-box';
 import { useState } from 'react';
 
 import LaravelPagingx from '@/components/custom-ui/laravel-paging';
+import MonthPicker from '@/components/ui/month-picker';
 
 interface PksProps {
   data: any;
@@ -45,6 +46,12 @@ const TabelPKS = ({
             }}
             selectedItem={filterData.jenis}
             placeholder='Jenis PKS'
+          />
+        </div>
+        <div className='w-full space-y-1'>
+          <Label>Tanggal Akhir</Label>
+          <MonthPicker 
+            setFilterData={setFilterData}
           />
         </div>
         <div className='w-full space-y-1'>
