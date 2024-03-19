@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Combobox } from '../inputs/combo-box';
 import { IconLoader } from '@tabler/icons-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DatePickerDemo } from '../inputs/date-picker';
+import { DatePicker } from '../inputs/date-picker';
 import {
   Card,
   CardContent,
@@ -285,7 +285,7 @@ const FormAddMemoInternal = (props: FormAddMemoInternalProps) => {
                     >
                       Tanggal Terbit
                     </Label>
-                    <DatePickerDemo
+                    <DatePicker
                       date={tglTerbit}
                       setDate={setTglTerbit}
                       placeholder='pilih tanggal'

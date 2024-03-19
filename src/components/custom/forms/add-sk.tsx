@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '../inputs/combo-box';
-import { DatePickerDemo } from '../inputs/date-picker';
+import { DatePicker } from '../inputs/date-picker';
 import { IconDeviceSdCard, IconLoader } from '@tabler/icons-react';
 import { getSession } from 'next-auth/react';
 
@@ -255,7 +255,7 @@ const FormAddSK = ({
                 .reverse()
                 .join('-')}
             />
-            <DatePickerDemo
+            <DatePicker
               date={data ? d : date}
               setDate={setDate}
               placeholder='pilih tanggal terbit'

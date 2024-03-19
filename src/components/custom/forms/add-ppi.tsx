@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import { DatePickerDemo } from '../inputs/date-picker';
+import { DatePicker } from '../inputs/date-picker';
 import { Combobox } from '../inputs/combo-box';
 import { IconLoader } from '@tabler/icons-react';
 import { getSession } from 'next-auth/react';
@@ -72,7 +72,7 @@ const FormAddPPI = (props: formAddPpiProps) => {
             <Label className='font-semibold text-primary' htmlFor='tgl_terbit'>
               Tanggal Terbit
             </Label>
-            <DatePickerDemo
+            <DatePicker
               date={tglTerbit}
               setDate={setTglTerbit}
               placeholder='pilih tanggal'

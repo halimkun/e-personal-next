@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import { DatePickerDemo } from '../inputs/date-picker';
+import { DatePicker } from '../inputs/date-picker';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import { Combobox } from '../inputs/combo-box';
@@ -167,7 +167,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
                 .reverse()
                 .join('-')}
             />
-            <DatePickerDemo
+            <DatePicker
               date={no_simrs}
               setDate={setNoSimrs}
               placeholder='pilih tanggal'
@@ -231,7 +231,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
                 .reverse()
                 .join('-')}
             />
-            <DatePickerDemo
+            <DatePicker
               date={tgl_surat}
               setDate={setTglSurat}
               placeholder='pilih tanggal'
@@ -255,7 +255,7 @@ const FormAddSuratMasuk = (props: formAddSuratMasukProps) => {
                 .reverse()
                 .join('-')}
             />
-            <DatePickerDemo
+            <DatePicker
               date={tgl_pelaksanaan}
               setDate={setTglPelaksanaan}
               placeholder='pilih tanggal'
