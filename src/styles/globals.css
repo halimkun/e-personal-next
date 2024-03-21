@@ -178,6 +178,35 @@ ol {
   }
 }
 
-.ck-content p {
+.ck-content * {
   @apply text-slate-900;
+}
+
+/* gap on bnottom after p */
+.ck-content p {
+  @apply leading-7;
+}
+
+.ck-content p::after {
+  content: '';
+  display: block;
+  height: .5rem;
+}
+
+.ck-content ul::after, .ck-content ol::after {
+  content: '';
+  display: block;
+  height: .7rem;
+}
+
+.ck-content ul {
+  @apply list-inside ml-4;
+}
+
+.ck-content ul li {
+  @apply list-disc;
+}
+
+.ck-content li ol, .ck-content li ul {
+  @apply list-inside ml-6;
 }
