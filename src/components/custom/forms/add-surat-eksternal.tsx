@@ -16,51 +16,64 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
   const { data } = useSession();
 
   const [selectedPj, setSelectedPj] = useState('');
+  const [tglTerbit, setTglTerbit] = useState('');
   const [tanggal, setTanggal] = useState('');
   const [lastNomorSurat, setLastNomorSurat] = useState('');
   const [newNomorSurat, setNewNomorSurat] = useState('');
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
 
-  useEffect(() => {
-    const r = async () => {
-      const rs = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal/last-nomor`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${data?.rsiap?.access_token}`,
-          },
-        }
-      );
-
-      const result = await rs.json();
-      console.log(result);
-      if (result.success) {
-        setLastNomorSurat(result.data.no_surat);
-      } else {
-        setLastNomorSurat('');
+  const fetchLastNomor = async () => {
+    const rs = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/surat/eksternal/last-nomor?tgl_terbit=${tglTerbit}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${data?.rsiap?.access_token}`,
+        },
       }
-    };
+    );
 
-    r();
+    const result = await rs.json();
+    if (result.success) {
+      setLastNomorSurat(result.data?.no_surat);
+    } else {
+      setLastNomorSurat('');
+    }
+  }
+
+  useEffect(() => {
+    fetchLastNomor();
   }, []);
 
   useEffect(() => {
-    parseNomorSurat();
-  }, [lastNomorSurat, tanggal, data?.rsiap?.access_token]);
+    fetchLastNomor().then(() => {
+      parseNomorSurat();
+    });
+  }, [lastNomorSurat, tglTerbit, data?.rsiap?.access_token]);
 
   const parseNomorSurat = () => {
-    const splitNomorSurat = lastNomorSurat.split('/');
-    const nomorSurat = isNaN(parseInt(splitNomorSurat[0]))
-      ? 1
-      : parseInt(splitNomorSurat[0]) + 1;
+    let nomorSurat = 0;
+    
+    if (lastNomorSurat){
+      const splitNomorSurat = lastNomorSurat.split('/');
+      nomorSurat = isNaN(parseInt(splitNomorSurat[0]))
+        ? 1
+        : parseInt(splitNomorSurat[0]) + 1;
+    } else {
+      nomorSurat = 1;
+    }
+
     const ns = nomorSurat.toString().padStart(3, '0');
 
-    const tgl = tanggal
-      ? new Date(tanggal).toLocaleDateString('id-ID', { day: '2-digit' })
+    const tgl = tglTerbit
+      ? new Date(tglTerbit).toLocaleDateString('id-ID', { day: '2-digit' })
       : new Date().toLocaleDateString('id-ID', { day: '2-digit' });
-    const bulan = new Date().toLocaleDateString('id-ID', { month: '2-digit' });
-    const tahun = new Date().toLocaleDateString('id-ID', { year: '2-digit' });
+    const bulan = tglTerbit
+      ? new Date(tglTerbit).toLocaleDateString('id-ID', { month: '2-digit' })
+      : new Date().toLocaleDateString('id-ID', { month: '2-digit' });
+    const tahun = tglTerbit
+      ? new Date(tglTerbit).toLocaleDateString('id-ID', { year: '2-digit' })
+      : new Date().toLocaleDateString('id-ID', { year: '2-digit' });
 
     const nomor = `${ns}/B/S-RSIA/${tgl}${bulan}${tahun}`;
     setNewNomorSurat(nomor);
@@ -169,8 +182,21 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
         </div>
         <div className='flex flex-col gap-4 md:flex-row'>
           <div className='w-[60%] space-y-1'>
+            <Label className='text-primary' htmlFor='tgl_terbit'>
+              Tannggal Terbit
+            </Label>
+            <Input
+              type='date'
+              name='tgl_terbit'
+              placeholder='tanggal terbit surat'
+              id='tgl_terbit'
+              onChange={(e) => setTglTerbit(e.target.value)}
+            />
+            <p className='tanggal-terbit-error text-xs text-danger'></p>
+          </div>
+          <div className='w-[60%] space-y-1'>
             <Label className='text-primary' htmlFor='tanggal'>
-              Tannggal
+              Tannggal Surat
             </Label>
             <Input
               type='datetime-local'
