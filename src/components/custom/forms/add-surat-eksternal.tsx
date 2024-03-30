@@ -16,8 +16,9 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
   const { data } = useSession();
 
   const [selectedPj, setSelectedPj] = useState('');
-  const [tglTerbit, setTglTerbit] = useState('');
-  const [tanggal, setTanggal] = useState('');
+  // tgl terbit default to current date with format dd/mm/yyyy
+  const [tglTerbit, setTglTerbit] = useState(new Date().toISOString().split('T')[0]);
+  const [tanggal, setTanggal] = useState(new Date().toISOString().split('.')[0]);
   const [lastNomorSurat, setLastNomorSurat] = useState('');
   const [newNomorSurat, setNewNomorSurat] = useState('');
   const [selectedKaryawan, setSelectedKaryawan] = useState<string[]>([]);
@@ -190,6 +191,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
               name='tgl_terbit'
               placeholder='tanggal terbit surat'
               id='tgl_terbit'
+              defaultValue={tglTerbit}
               onChange={(e) => setTglTerbit(e.target.value)}
             />
             <p className='tanggal-terbit-error text-xs text-danger'></p>
@@ -203,6 +205,7 @@ export default function FormAddSuratEksternal(penanggungJawab: any) {
               name='tanggal'
               placeholder='Tanggal Kegiatan'
               id='tanggal'
+              defaultValue={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
             />
             <p className='tanggal-error text-xs text-danger'></p>
